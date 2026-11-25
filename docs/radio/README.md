@@ -1,10 +1,10 @@
 # Radio
 
-**Try it:** the prototype is `src/radio.html` (also published at https://claude.ai/artifact/B4LwEVPvKPVaxYYiSsCMNb).
-To run locally, serve `src/` (ES modules need http, not file://):
+**Try it:** the prototype is `app/radio.html` (also published at https://claude.ai/artifact/B4LwEVPvKPVaxYYiSsCMNb).
+To run locally, serve `app/` (ES modules need http, not file://):
 
 ```bash
-python3 -m http.server -d src 8000
+python3 -m http.server -d app 8000
 ```
 
 Then open http://localhost:8000/radio.html.
@@ -17,10 +17,10 @@ All first-version audio is generated in code. No audio files.
 
 | File | What it does |
 |---|---|
-| `src/audio/synth.js` | NES-style synth: pulse 12/25/50%, triangle, noise drums. Parses text songs. |
-| `src/audio/babble.js` | Babble voices: a blip every two letters, pauses at punctuation, deterministic per line. |
-| `src/audio/radio.js` | Stations on their own clocks; tune in mid-song or mid-sentence; status for the display. |
-| `src/audio/stations.js` | All content: voices, songs, ads, station programs. Edit this, not the engine. |
+| `app/audio/synth.js` | NES-style synth: pulse 12/25/50%, triangle, noise drums. Parses text songs. |
+| `app/audio/babble.js` | Babble voices: a blip every two letters, pauses at punctuation, deterministic per line. |
+| `app/audio/radio.js` | Stations on their own clocks; tune in mid-song or mid-sentence; status for the display. |
+| `app/audio/stations.js` | All content: voices, songs, ads, station programs. Edit this, not the engine. |
 
 ## Song format
 

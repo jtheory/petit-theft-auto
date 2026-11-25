@@ -1,0 +1,49 @@
+<title>Petit Theft SFX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<style>
+  /* Layout: a sound-board grid of pads, grouped like the code (UI / world). Single dark look: a mixing desk. */
+  :root {
+    --bg: #101118; --pad: #1b1d27; --pad-hi: #262a38; --line: #30344a; --text: #eceef5; --muted: #8d92a6; --gold: #f3c98b;
+    --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); }
+  main { max-width: 520px; margin: 0 auto; padding-block: 20px 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 18px; }
+  .eyebrow { font: 600 10.5px var(--font); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 700 22px/1.15 var(--font); margin: 6px 0 0; }
+  h2 { font: 700 11px var(--font); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+  button { font: 600 13px var(--font); color: var(--text); background: var(--pad); border: 1px solid var(--line); border-radius: 10px; padding: 16px 8px; cursor: pointer; text-align: left; }
+  button small { display: block; font-weight: 400; font-size: 11px; color: var(--muted); margin-top: 4px; }
+  button:active, button.hit { background: var(--pad-hi); border-color: var(--gold); }
+  button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  p { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 0; }
+</style>
+<main>
+  <header>
+    <div class="eyebrow">Petit Theft Auto &middot; Sound effects</div>
+    <h1>SFX board</h1>
+  </header>
+  <section><h2>Interface</h2><div class="grid" id="ui"></div></section>
+  <section><h2>World</h2><div class="grid" id="world"></div></section>
+  <p>Every sound is generated in code from the same NES-style waves as the radio. Edit them in <code>app/audio/sfx.js</code>.</p>
+</main>
+<script type="module">
+  import { sfx } from './audio/sfx.js';
+  const NOTES = {
+    click: 'Buttons', toast: 'Notifications', card: 'Mission card swoosh', prompt: 'New prompt', heartUp: 'Relationship up',
+    heartDown: 'Relationship down', passed: 'Mission passed', seagull: 'The realistic one', ring: 'Phone ringing',
+    textPing: 'Text message', hammer: 'Re-shingling', grout: 'Re-grouting', paint: 'Porch paint', drumroll: 'Restoration complete',
+    siren: 'Police', drill: 'Safe drill', register: 'Cash register', gateBuzz: 'Prison gate', static: 'Between stations', drone: 'Cold open',
+  };
+  const UI = ['click', 'toast', 'card', 'prompt', 'heartUp', 'heartDown', 'passed'];
+  for (const name of sfx.names) {
+    const b = document.createElement('button');
+    b.id = 'sfx-' + name;
+    b.innerHTML = `${name}<small>${NOTES[name] ?? ''}</small>`;
+    b.addEventListener('click', () => { sfx.play(name); b.classList.add('hit'); setTimeout(() => b.classList.remove('hit'), 200); });
+    document.getElementById(UI.includes(name) ? 'ui' : 'world').append(b);
+  }
+</script>

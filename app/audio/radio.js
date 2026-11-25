@@ -1,12 +1,15 @@
 // The radio: stations run on their own clocks like live radio. Tuning in starts mid-song or
 // mid-sentence; tuning back later picks up wherever that station has got to.
-// Game code only needs: power(), tune(i), next(), prev(), and status() for the display.
+// Game code only needs: power() / turnOn() / turnOff(), tune(i or id, { segment }), next(), prev(),
+// and status() for the display.
 
-import { Synth, parseSong } from './synth.js';
+import { parseSong } from './synth.js';
 import { planLine, playLine, revealed } from './babble.js';
+import { audioCore } from './core.js';
 
 export class Radio {
-  constructor(data) {
+  constructor(data, core = audioCore()) {
+    this.core = core;
     this.data = data;
     this.songs = Object.fromEntries(Object.entries(data.songs).map(([id, s]) => [id, { id, ...parseSong(s) }]));
     this.stations = data.stations.map(st => this.build(st));
@@ -38,19 +41,36 @@ export class Radio {
     return { ...st, segs, cycle, phase: Math.random() * cycle };
   }
 
-  async power() {
+  async ensureAudio() {
+    await this.core.start();
     if (!this.ctx) {
-      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* older browsers */ }
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const comp = this.ctx.createDynamicsCompressor();
+      this.ctx = this.core.ctx;
+      this.synth = this.core.synth;
       this.master = this.ctx.createGain();
-      this.master.gain.value = 0.7;
-      this.master.connect(comp).connect(this.ctx.destination);
-      this.synth = new Synth(this.ctx, this.master);
+      this.master.connect(this.core.buses.music);
     }
-    await this.ctx.resume();
-    this.on = !this.on;
-    if (this.on) this.tune(this.index); else this.stop();
+  }
+
+  async power() { return this.on ? this.turnOff() : this.turnOn(); }
+
+  async turnOn(station = this.index, opts = {}) {
+    await this.ensureAudio();
+    this.on = true;
+    this.tune(station, opts);
+  }
+
+  turnOff() {
+    this.on = false;
+    this.stop();
+  }
+
+  // Radio-only volume (the music bus also has its own fader in the audio core).
+  volume(v, secs = 0.5) {
+    if (!this.master) return;
+    const g = this.master.gain, t = this.ctx.currentTime;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(g.value, t);
+    g.linearRampToValueAtTime(v, t + secs);
   }
 
   stop() {
@@ -68,16 +88,25 @@ export class Radio {
   next() { this.tune(this.index + 1); }
   prev() { this.tune(this.index - 1); }
 
-  tune(i) {
+  // i: station index or id. opts.segment: start that program segment from its beginning
+  // (the station's clock is moved so it stays consistent afterwards). opts.quiet: no static.
+  tune(i, opts = {}) {
+    if (typeof i === 'string') i = this.stations.findIndex(s => s.id === i);
     this.index = (i + this.stations.length) % this.stations.length;
     if (!this.on) return;
     this.stop();
     const now = this.ctx.currentTime;
     const sb = this.ctx.createGain();
     sb.connect(this.master);
-    this.synth.staticBurst(sb, now, 0.22);
+    if (!opts.quiet) this.synth.staticBurst(sb, now, 0.22);
     setTimeout(() => sb.disconnect(), 600);
     const st = this.stations[this.index];
+    if (opts.segment !== undefined) {
+      const k = opts.segment, before = st.segs.slice(0, k).reduce((a, s) => a + s.dur, 0);
+      st.phase = (((before - (now + 0.2)) % st.cycle) + st.cycle) % st.cycle;
+      this.play(st, k, now + 0.2, 0);
+      return;
+    }
     let t = (now + st.phase) % st.cycle, k = 0;
     while (t >= st.segs[k].dur) { t -= st.segs[k].dur; k++; }
     this.play(st, k, now + 0.2, t);

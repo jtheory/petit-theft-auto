@@ -4,7 +4,9 @@ A tiny, mobile-only parody crime game, playable as a PWA (installable web app).
 
 **The pitch:** a full-scale, emotionally serious crime epic about an outlaw couple in a sunny swamp state, where every system is shrunk to its smallest form and everything is rendered in ultra-simple NES-style pixels. The text, dialogue and UI believe this is a prestige blockbuster. The screen shows three rectangles.
 
-Status: pre-production (brainstorming and storyboarding). No code yet.
+Status: early prototype. The title screen and Mission 1 are playable; the radio and sound effects work.
+
+**Play locally:** `python3 -m http.server -d app 8000`, then open http://localhost:8000 (phone or desktop). See [docs/tech.md](docs/tech.md).
 
 ## Tone rules
 
@@ -18,6 +20,7 @@ Status: pre-production (brainstorming and storyboarding). No code yet.
 - [Storyboard](docs/storyboard.md): beats, panel-by-panel scenes and frames
 - [Characters](docs/characters.md): Lucita, Jase, the car
 - [Radio](docs/radio/README.md): stations, ad scripts, audio tools and tech
+- [Tech](docs/tech.md): how the game is built, run and deployed
 
 ## License
 
