@@ -143,4 +143,18 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .warning .wp { font: 500 12px var(--font-ui); color: #888; margin-top: 26px; }
 .warning .cont { margin-top: 60px; }
 
+.thread { left: 50%; top: 74px; transform: translate(-50%, 10px); width: 270px; background: #f4f2ee; color: #111; border-radius: 22px; padding: 12px 12px 14px; box-shadow: 0 18px 40px rgba(0,0,0,.55); pointer-events: auto; }
+.thread.show { transform: translate(-50%, 0); }
+.thread .th-h { display: flex; align-items: center; gap: 8px; font: 600 13px var(--font-ui); padding-bottom: 10px; border-bottom: 1px solid #ddd; margin-bottom: 10px; }
+.thread .dot { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #f0a070, #b5654a); color: #fff; display: grid; place-items: center; font: 700 11px var(--font-ui); }
+.thread .msg { max-width: 78%; padding: 7px 11px; border-radius: 16px; font: 400 13px/1.3 var(--font-ui); margin: 4px 0; width: fit-content; }
+.thread .them { background: #e2e0dc; }
+.thread .me { background: #2f7fe8; color: #fff; margin-left: auto; }
+.thread .replies { margin-top: 12px; display: grid; gap: 6px; }
+.thread .replies div { border: 1.5px solid #2f7fe8; color: #2f7fe8; border-radius: 12px; padding: 9px 10px; font: 600 13px var(--font-ui); text-align: center; cursor: pointer; }
+.thread .replies div:active { background: #2f7fe8; color: #fff; }
+.side-hint { inset: 0; display: flex; pointer-events: none; }
+.side-hint div { flex: 1; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 150px; font: 800 30px var(--font-ui); color: rgba(255,255,255,.22); transition: color .1s; }
+.side-hint div.go { color: rgba(255,255,255,.85); text-shadow: 0 0 12px rgba(255,255,255,.5); }
+
 @media (prefers-reduced-motion: reduce) { .ui { transition: none; } .sub .next, .press, .cont, .phone .row .ans { animation: none; } }

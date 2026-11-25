@@ -522,5 +522,23 @@ export function makeArt(g) {
     }
   }
 
-  return { g, R, rain, pot, sedan, cone, gator, chaseStreet, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  // ---- Mission 4: a lagoon that scrolls past ----
+  function lagoon(scroll, sunY = 110) {
+    const m = (v, n) => ((v % n) + n) % n;
+    sky(sunY);
+    R(0, 176, W, 144, '#2f8f8a');
+    for (let i = 0; i < 40; i++) R(m((i * 37) - scroll * 0.7, W), 182 + (i * 23) % 130, 6, 1, '#7fd6cc');
+    const ms = scroll * 0.4, first = Math.floor(ms / 41);
+    for (let i = -1; i < 7; i++) {
+      const idx = first + i, x = i * 41 - m(ms, 41) - 10, h = 18 + ((idx * 7) % 14 + 14) % 14, y0 = 180;
+      R(x, y0 - h - 10, 34, 14, idx % 2 ? '#1f5a32' : '#2a6e3c'); R(x + 4, y0 - h - 16, 24, 8, '#2f7a44');
+      for (let k = 0; k < 4; k++) { R(x + 4 + k * 8, y0 - h + 2, 2, h - 2, '#5a4632'); R(x + 2 + k * 8, y0 - 2, 6, 2, '#5a4632'); }
+    }
+  }
+  function dock(x, y) {
+    R(x, y, 70, 6, '#8a6a42'); R(x, y, 70, 1, '#a8885a');
+    for (let k = 0; k < 4; k++) R(x + 4 + k * 20, y + 6, 4, 22, '#5a4632');
+  }
+
+  return { g, R, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

@@ -229,6 +229,14 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 **Panel 4: End card** *(frame 4)*
 - `DATE COMPLETE — Low Tide` / `Mangroves paddled: 1 of 1` / `Relationship: Level 2 — "Seeing Where It Goes"`
 
+**As built (Mission 4)**
+
+- **Asking (text thread):** "kayak tomorrow? i found a spot" / "u up" ("it's 7pm jase" / "ask me properly") / "Don't ask". Not asking skips the date: Lucita texts "ok", `skippedDate` is saved (pays off later: "You never take me anywhere.").
+- **Coffee:** she said bring coffee. At 5:48 AM a "Grab the coffee" prompt gives you 3.5 seconds. At the dock: "You brought coffee." or "No coffee."
+- **Paddling:** tap the LEFT and RIGHT halves of the screen in turn (L / R hints light up). Same side twice spins the kayak ("We're going in circles.", then "Other side, Jase."). The Gator plays on a Bluetooth speaker whose battery drains to 0% ("It was a good speaker.").
+- **Manatee:** at about 70% it surfaces. HOLD to sit still (within 7 seconds): it stays, "I'd hate them with you.", +1 heart ("A manatee was involved."). Fidget: "It left. You have to be still sometimes, Jase."
+- **End card:** DATE COMPLETE, "Mangroves paddled: 1 of 1", relationship level.
+
 ---
 
 ## Beat 5: The Text (draft 1)

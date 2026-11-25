@@ -80,6 +80,14 @@ export class UI {
     this.el('progress', 'progress ' + where, `<div class="lbl"><span>${esc(label)}</span><span>${Math.round(pct)}%</span></div><div class="bar"><div style="width:${pct}%"></div></div>`);
   }
 
+  // A text-message thread. msgs: [['me'|'them', text]]; opts (tappable replies): [[key, label]]
+  thread(name, msgs, opts = null) {
+    if (!name) return this.hide('thread');
+    this.el('thread', 'thread', `<div class="th-h"><span class="dot">${esc(name[0])}</span>${esc(name)}</div>` +
+      msgs.map(([who, t]) => `<div class="msg ${who}">${esc(t)}</div>`).join('') +
+      (opts ? `<div class="replies">${opts.map(([k, l]) => `<div data-choice="${esc(k)}">${esc(l)}</div>`).join('')}</div>` : ''));
+  }
+
   // Tappable options (resolve them with input.pick()). opts: [[key, label]]
   choices(title, opts) {
     if (!title) return this.hide('choices');
