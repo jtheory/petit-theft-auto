@@ -271,6 +271,15 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 - `MISSION PASSED — Cash for Gold` / `$2,340` / `Oat milk: unresolved.`
 - Running gag: an `Oat milk` entry stays in the stats page as "Unresolved" until a hidden errand near the ending.
 
+**As built (Mission 5)**
+
+- **Drop-off:** if the store was robbed, Ma's voicemail: "Benny's mother called my mother. We'll talk about it." Lucita: "I'll be out here. Text me." / Jase: "It's a pawn shop. What could happen."
+- **The drill:** HOLD to drill (about 20 seconds of drilling). Heat rises while held and falls when you let go; at full heat the drill jams for 3 seconds and restarts warm. Drilling in rhythm (hold about 3 s, rest about 1 s) works; holding nonstop does not.
+- **Patrol timer:** 45 seconds (plus 6 per retry). Run out: BUSTED ("i said patrol was coming"), retry the drill.
+- **The text** arrives at 50%. While the thread is open you can't drill, and the timer keeps running. ❤️ "Already in the fridge, babe": heart holds (and later "You said it was in the fridge."). 👍: -1 heart, "Lucita felt dismissed." Ignore: -1 heart, "Lucita felt ignored.", then a text: "ok."
+- **Escape:** "Did you get it or not." / "The safe? Yeah." / "The milk, Jase." End card: $2,340, "Oat milk: unresolved."
+- Tested: rhythm opens the safe with about 11 seconds left; holding nonstop gets busted.
+
 ---
 
 ## Beat 6: The Channel (draft 1)
