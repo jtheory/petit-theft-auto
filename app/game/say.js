@@ -11,6 +11,9 @@ export const VOICES = {
   lucita:   { wave: 'pulse50',  pitch: 215, range: 0.25, rate: 0.050, blip: 0.05,  vol: 0.08 },
   ma:       { wave: 'triangle', pitch: 265, range: 0.45, rate: 0.058, blip: 0.06,  vol: 0.2 },
   benny:    { wave: 'pulse12',  pitch: 240, range: 0.50, rate: 0.048, blip: 0.045, vol: 0.08 },
+  rudy:     { wave: 'pulse12',  pitch: 115, range: 0.40, rate: 0.058, blip: 0.06,  vol: 0.1 },
+  tina:     { wave: 'triangle', pitch: 260, range: 0.08, rate: 0.038, blip: 0.035, vol: 0.18 },
+  doug:     { wave: 'pulse25',  pitch: 120, range: 0.10, rate: 0.080, blip: 0.08,  vol: 0.09 },
 };
 
 export function makeSay(ui, input) {

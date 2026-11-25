@@ -203,12 +203,14 @@ export default async function lateNightSpecial(game, radio) {
 }
 
 // The chase: returns 'escaped' or 'busted'. gap 1 = far ahead, 0 = caught.
-export async function chase(game, stars, startGap, busts) {
+// opts: { day, time, intro } so other missions can reuse the chase
+export async function chase(game, stars, startGap, busts, opts = {}) {
   const { ui, say, input, state } = game;
   const c = { scroll: 0, lane: 0, y: LANES[0], gap: startGap, obs: [], t: 0, flash: 0, shake: 0, copY: LANES[0] };
   window.__chase = c;   // for tests and the console
-  const speed = 80 + stars * 8, spawnEvery = Math.max(0.9, 1.5 - stars * 0.15);
-  const drift = 0.006 + stars * 0.003;   // how fast the cruiser closes in on its own (per second)
+  const diff = opts.difficulty ?? stars;   // the HUD shows `stars`; the traffic follows `diff`
+  const speed = 80 + diff * 8, spawnEvery = Math.max(0.9, 1.5 - diff * 0.15);
+  const drift = 0.006 + diff * 0.003;   // how fast the cruiser closes in on its own (per second)
   const turns = [{ at: 7, dir: 'up' }, { at: 15, dir: 'down' }, { at: 23, dir: 'up' }];
   const END = 30;
   let seed = 7 + busts * 13;
@@ -219,7 +221,7 @@ export async function chase(game, stars, startGap, busts) {
   game.setScene((a, t, dt) => {
     const sx = c.shake > 0 ? Math.round((Math.random() - 0.5) * 4 * c.shake) : 0;
     a.g.save(); a.g.translate(sx, 0);
-    a.chaseStreet(c.scroll);
+    a.chaseStreet(c.scroll, opts.day);
     for (const o of c.obs) {
       const y = LANES[o.lane];
       if (o.x > 176) { if (Math.floor(t * 8) % 2) { a.R(172, y - 20, 4, 9, '#ffd23f'); a.R(172, y - 9, 4, 3, '#ffd23f'); } continue; }   // incoming
@@ -234,11 +236,11 @@ export async function chase(game, stars, startGap, busts) {
     if (c.flash > 0) { a.g.fillStyle = `rgba(255,255,255,${c.flash * 0.6})`; a.g.fillRect(0, 0, 180, 320); }
   });
   ui.dim(false);
-  const hud = () => ui.hud({ hearts: state.hearts, money: state.money, time: '11:55 PM', wanted: stars, minimap: false });
+  const hud = () => ui.hud({ hearts: state.hearts, money: state.money, time: opts.time ?? '11:55 PM', wanted: stars, minimap: false });
   hud();
   ui.prompt('SWIPE ↑↓', 'Change lanes', 'high');
   setTimeout(() => { if (!turn) ui.prompt(null); }, 2500);
-  if (busts === 0) line('LUCITA', 'Drive. DRIVE.', 'lucita');
+  if (busts === 0 && opts.intro !== false) line('LUCITA', 'Drive. DRIVE.', 'lucita');
 
   const changeLane = to => {
     if (to === c.lane) return;

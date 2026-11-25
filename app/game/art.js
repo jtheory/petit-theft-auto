@@ -488,15 +488,15 @@ export function makeArt(g) {
     for (let i = 0; i < 5; i++) R(x + 4 + i * 5, y - 9, 2, 1, '#2f5a2a');
     R(x + 30, y - 6, 2, 1, '#ffe08a'); R(x + 4, y - 1, 3, 2, '#2f5a2a'); R(x + 20, y - 1, 3, 2, '#2f5a2a'); R(x - 8, y - 4, 8, 2, '#3f6a3a');
   }
-  function chaseStreet(scroll) {
+  function chaseStreet(scroll, day = false) {
     const m = (v, n) => ((v % n) + n) % n;
-    nightSky(18);
+    if (day) daySky(); else nightSky(18);
     const bs = scroll * 0.35, first = Math.floor(bs / 40);
     for (let i = -1; i < 6; i++) {
       const idx = first + i, bx = i * 40 - m(bs, 40), h = 50 + ((idx * 7919) % 5 + 5) % 5 * 16;
-      R(bx, 200 - h, 38, h, idx % 2 ? '#1e2236' : '#252a40');
+      R(bx, 200 - h, 38, h, day ? (idx % 2 ? '#d8c8a8' : '#c8d0d8') : (idx % 2 ? '#1e2236' : '#252a40'));
       for (let wy = 200 - h + 6; wy < 194; wy += 12) for (let wx = 4; wx < 34; wx += 10)
-        if (((idx * 31 + wx * 7 + wy * 3) % 5) === 0) R(bx + wx, wy, 5, 6, '#ffd97a');
+        if (day ? (wx + wy) % 3 === 0 : ((idx * 31 + wx * 7 + wy * 3) % 5) === 0) R(bx + wx, wy, 5, 6, day ? '#7a9ab8' : '#ffd97a');
     }
     R(0, 200, W, 36, '#2b2b33'); R(0, 234, W, 2, '#55555e');
     for (let x = -60; x < W + 60; x += 60) {
@@ -540,5 +540,25 @@ export function makeArt(g) {
     for (let k = 0; k < 4; k++) R(x + 4 + k * 20, y + 6, 4, 22, '#5a4632');
   }
 
-  return { g, R, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  // ---- Mission 6: a searchlight, and the channel ----
+  function spotlight(x, topY, bottomY, half) {
+    for (let y = topY; y < bottomY; y += 2) {
+      const k = (y - topY) / (bottomY - topY), hw = Math.round(2 + k * half);
+      g.fillStyle = 'rgba(255,245,190,.2)'; g.fillRect(Math.round(x) - hw, y, hw * 2, 2);
+    }
+    g.fillStyle = 'rgba(255,245,190,.38)'; g.fillRect(Math.round(x) - half - 2, bottomY, (half + 2) * 2, 5);
+  }
+  function channel(scroll) {
+    const m = (v, n) => ((v % n) + n) % n;
+    nightSky(20);
+    R(0, 120, W, 200, '#132a4a');
+    for (let i = 0; i < 30; i++) R((i * 43) % W, m(130 + (i * 17) % 180 + scroll * 0.6, 190) + 120, 6, 1, '#24466e');
+    for (let y = 120; y < 320; y += 20) {
+      const w = 40 - (y - 120) / 10, j = m(scroll * 0.6 + y, 40) < 20 ? 2 : 0;
+      R(0, y, w + j, 20, '#163a24'); R(W - w - j, y, w + j, 20, '#163a24');
+      R(w, y + 18, 4, 2, '#4a3a2a'); R(W - w - 4, y + 18, 4, 2, '#4a3a2a');
+    }
+  }
+
+  return { g, R, spotlight, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

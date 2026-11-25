@@ -9,6 +9,9 @@ import beat2 from '../missions/beat2.js';
 import beat3 from '../missions/beat3.js';
 import beat4 from '../missions/beat4.js';
 import beat5 from '../missions/beat5.js';
+import beat6 from '../missions/beat6.js';
+import beat7 from '../missions/beat7.js';
+import beat8 from '../missions/beat8.js';
 
 const game = new Game(document.getElementById('stage'));
 const radio = new Radio(stations);
@@ -21,7 +24,7 @@ const TIPS = [
   'TIP: Answer your mother.',
 ];
 
-const MISSIONS = [beat1, beat2, beat3, beat4, beat5];
+const MISSIONS = [beat1, beat2, beat3, beat4, beat5, beat6, beat7, beat8];
 const NEXT_UP = { 6: ['Mission 5', 'Wake', 'In development. A yacht named Reel Estate.'] };
 
 // Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.

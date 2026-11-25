@@ -316,6 +316,13 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
   - Jase: "That felt fun."
 - *Audio:* Engine cuts. Water. A long held chord. No radio.
 
+**As built (Mission 6)**
+
+- **Marina:** "It's not stealing. It's a test drive." / "It's called Reel Estate." RAPID TAP to hotwire.
+- **Searchlight:** DRAG left/right to keep the boat out of the helicopter's light for 25 seconds. "Spotted" fills while lit and drains when clear; full = BUSTED (Lucita: "They have a helicopter, Jase." / "Stay. Out. Of. The. Light." / "It is a very big light."), retry. The light sweeps in from off-screen, follows with a lag and a sway, and speeds up over time. The trick: move away from it, and when pinned at an edge, cross under it fast.
+- **Hard left:** SWIPE ↑ within 3.5 s ("LEFT, Jase. The channel was on the LEFT." if missed; no penalty). The escape-room coupon exchange in the channel.
+- **Lost them:** "That felt fun." +1 heart ("Shared near-death experience."). End card: "Boats returned: 0".
+
 ---
 
 ## Beat 7: The Job (draft 1)
@@ -361,9 +368,22 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
   - Lucita: "Drive like you mean it."
   - Jase: "I always mean it."
 
+**As built (Mission 7)**
+
+- **Crew:** lines as storyboarded, plus Tina's Doug briefing. Approach reactions: Smart ("Finally."), Loud ("Now we are talking."), Ceiling ("Why is it always the ceiling with you.").
+- **Walk-in:** masked crew crossing to the bank, 11:58 AM card.
+- **Approach mini-games:** Smart: TAP only while the camera light is green (red: +1 star, "Doug is on his phone"). Loud: RAPID TAP to yell, 3 stars ("EVERYBODY DOWN!" / Doug: "...Okay."). Ceiling: HOLD to crawl with a creak meter; full = you fall through, +1 star ("Doug looks up." / "Hi." / "Hey, Doug.").
+- **Betrayal:** Rudy's Eternal Shores timeshare. Trust Lucita: Rudy folds, +1 heart, $4.2M. Trust Rudy: he leaves with half, -1 heart, $2.1M.
+- **Getaway:** the Mission 3 chase in daylight, stars +2 (difficulty capped at 3), BUSTED/retry with Tina's line.
+
 ---
 
 ## Beat 8: The Ending (draft 1)
+
+**As built:** all three endings are in (A Ride Home at level 4, B Still Here at level 3, C Walking Away at 0–2), including the SwampFeed comments that depend on your choices and the callbacks ("You never take me anywhere.", "And it was the green cap."). The credits roll for about 45 seconds (HOLD to skip) and end with a "Your story" section: restoration %, Ma, jerky, the date, the text, who you trusted, times busted, final take, oat milk, relationship level and ending. Then "The End" and a restart.
+
+Perfect play reaches level 4: porch (+1), manatee (+1), the text ❤️ (keeps it), the channel (+1), trusting Lucita (+1).
+
 
 ![Beat 8 storyboard frames](storyboard/beat8-sheet.png)
 
