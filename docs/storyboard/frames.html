@@ -15,7 +15,7 @@
   .mission .kicker { font: 600 10px Inter; letter-spacing: .32em; color: #f3c98b; text-transform: uppercase; }
   .mission .title { font: italic 700 30px "Bitstream Charter", "DejaVu Serif", serif; line-height: 1.05; margin-top: 6px; text-shadow: 0 2px 12px rgba(0,0,0,.6); }
   .mission .rule { width: 46px; height: 2px; background: #f3c98b; margin-top: 10px; }
-  .sub { left: 24px; right: 24px; bottom: 22px; text-align: center; font: 500 14px/1.4 Inter; text-shadow: 0 1px 3px #000, 0 0 10px rgba(0,0,0,.8); }
+  .sub { padding: 6px 8px; border-radius: 6px; background: rgba(0,0,0,.28); left: 24px; right: 24px; bottom: 22px; text-align: center; font: 500 14px/1.4 Inter; text-shadow: 0 1px 3px #000, 0 0 10px rgba(0,0,0,.8); }
   .sub b { color: #f3c98b; font-weight: 700; }
   .sub i { font-style: italic; color: #f0eadf; }
   .hud-hearts { top: 16px; left: 16px; display: flex; gap: 4px; }
@@ -75,42 +75,85 @@ const P = {
 };
 
 // ---------- sprites (each char = one game pixel, drawn at scale) ----------
-const PAL = { h: '#3a2416', s: '#d9a066', e: '#1a1010', t: '#f0f0e8', T: '#cfcfc4', j: '#3a5a9a', J: '#2a4478', b: '#222' };
-const DALE = [
+const PAL = {
+  h: '#3a2416', s: '#d9a066', e: '#1a1010', B: '#4a2e1c',            // Jase: hair, skin, eyes, beard
+  g: '#9a9a96', G: '#7c7c78', x: '#34506a',                          // gray tank, shade, tattoo ink
+  j: '#3a5a9a', J: '#2a4478', b: '#222',                             // jeans, shoes
+  c: '#1e1412', k: '#b97a4e', o: '#ffd23f',                          // Lucita: curls, skin, gold hoops
+  r: '#f07a1e', R: '#c85e10',                                        // orange jumpsuit
+  w: '#f4f1ea', W: '#d6d1c6', d: '#4f74b8', D: '#3a5a94',            // white tank, jean shorts
+  p: '#ff5d8f',                                                      // heart pink
+};
+// Jase: brown hair, short beard, gray tank, tattoo sleeve on his right arm (left of sprite)
+const JASE = [
   '..hhhh..',
   '.hhhhhh.',
   '.hsesse.',
-  '.ssssss.',
-  '..ssss..',
+  '.hssssh.',
+  '.sBBBBs.',
+  '..BBBB..',
   '...ss...',
-  '.tttttt.',
-  'sttttTts',
-  'sttttTts',
-  's.tttT.s',
-  '..tttt..',
+  '.gggggg.',
+  'xggggGgs',
+  'xggggGgs',
+  'x.gggG.s',
+  '..gggg..',
   '..jjjJ..',
-  '..jj.J..',
   '..jj.J..',
   '..j..J..',
   '..b..b..',
 ];
-const DALE_SIT = [
+const JASE_SIT = [
   '..hhhh..',
   '.hhhhhh.',
   '.hsesse.',
-  '.ssssss.',
-  '..ssss..',
+  '.hssssh.',
+  '.sBBBBs.',
+  '..BBBB..',
   '...ss...',
-  '.tttttt.',
-  'sttttTts',
-  'sttttTts',
-  's.tttT.s',
+  '.gggggg.',
+  'xggggGgs',
+  'xggggGgs',
+  'x.gggG.s',
   '..jjjjJJ',
   '..jjjjJJ',
   '......jJ',
   '......jJ',
   '......bb',
 ];
+// Lucita: dark curls in a high ponytail, gold hoops
+const LUCITA_HEAD = [
+  '....ccc..',
+  '..cccccc.',
+  '.cccccccc',
+  '.cckekkc.',
+  '.okkkkko.',
+  '..kkkk...',
+  '...kk....',
+];
+const LUCITA_JUMP = LUCITA_HEAD.concat([
+  '.rrrrrr..',
+  'krrrrRrk.',
+  'krrrrRrk.',
+  'k.rrRr.k.',
+  '..rrrr...',
+  '..rr.R...',
+  '..rr.R...',
+  '..r..R...',
+  '..b..b...',
+]);
+const LUCITA_CASUAL = LUCITA_HEAD.concat([
+  '.wwwwww..',
+  'kwwwwWwk.',
+  'kwwwwWwk.',
+  'k.ddDd.k.',
+  '..dddD...',
+  '..kk.k...',
+  '..kk.k...',
+  '..k..k...',
+  '..b..b...',
+]);
+const BAG = ['WWWW', 'WWWW', 'WwwW', 'WWWW', 'WWWW'];  // paper bag of belongings
 function sprite(rows, x, y, sc = 2, pal = PAL) {
   rows.forEach((row, ry) => [...row].forEach((ch, rx) => {
     if (pal[ch]) R(x + rx * sc, y + ry * sc, sc, sc, pal[ch]);
@@ -202,6 +245,75 @@ function hotspot(x, y, label) {
   R(x - 1, y - 1, 2, 2, '#fff');
 }
 
+
+// red convertible, top down, sun-faded, one primer-gray door. (x, y) = left end, wheel bottom.
+function convertible(x, y, riders = false) {
+  const red = '#c9443f', redD = '#9a2f2c', redL = '#e8716a', chrome = '#d9dde2';
+  if (riders) {
+    sprite(LUCITA_CASUAL.slice(0, 9), x + 22, y - 38);   // passenger, head and shoulders
+    sprite(JASE.slice(0, 9), x + 42, y - 38);            // driver
+  }
+  R(x + 2, y - 20, 84, 12, red);                  // body
+  R(x + 2, y - 20, 84, 2, redL);                  // shoulder highlight
+  R(x + 6, y - 24, 22, 4, red); R(x + 60, y - 24, 22, 4, red);   // rear deck + hood
+  R(x + 36, y - 20, 20, 10, '#8a8f94');           // mismatched primer door
+  R(x + 37, y - 15, 4, 1, '#666');                // door handle
+  R(x + 66, y - 34, 2, 10, chrome); R(x + 68, y - 34, 2, 2, chrome);  // windshield frame
+  R(x + 68, y - 32, 2, 8, 'rgba(190,225,245,.55)');
+  R(x, y - 12, 4, 4, chrome); R(x + 84, y - 12, 6, 4, chrome);       // bumpers
+  R(x + 86, y - 18, 3, 3, '#ffe9a8'); R(x, y - 18, 3, 3, '#ff4a3a'); // lights
+  R(x + 2, y - 8, 84, 2, redD);
+  [18, 70].forEach(cx => {                         // wheels
+    R(x + cx - 5, y - 10, 10, 2, '#1b1b1f'); R(x + cx - 7, y - 8, 14, 8, '#1b1b1f');
+    R(x + cx - 3, y - 6, 6, 4, '#a9adb3');
+  });
+}
+// midday sky for the prison: flat, harsh, bright
+function daySky() {
+  ['#3d8fd6', '#5aa3e0', '#78b8e8', '#98ccef', '#b9def5', '#d7ecf8'].forEach((c, i) => R(0, i * 26, W, 26, c));
+  R(0, 156, W, 60, '#e6f2f9');
+  const cx = 30, cy = 40, r = 12;
+  for (let dy = -r; dy <= r; dy += 2) { const hw = Math.floor(Math.sqrt(r * r - dy * dy) / 2) * 2; R(cx - hw, cy + dy, hw * 2, 2, '#fff6cf'); }
+}
+function prison() {
+  R(0, 140, W, 66, '#a3a39c');                                     // wall
+  for (let y = 146; y < 206; y += 8) R(0, y, W, 1, '#8b8b84');
+  for (let x = 0; x < W; x += 16) for (let y = 146; y < 206; y += 16) R(x + ((y / 8) % 2) * 8, y, 1, 8, '#8b8b84');
+  for (let x = 0; x < W; x += 6) { R(x, 132 + (x % 12 ? 0 : 2), 4, 2, '#c8c8c8'); R(x + 2, 135, 2, 2, '#888'); }  // razor wire
+  R(0, 138, W, 2, '#6e6e68');
+  R(8, 88, 26, 118, '#8f8f88'); R(4, 80, 34, 10, '#6e6e68'); R(10, 90, 22, 8, '#2b2f45');   // guard tower
+  R(14, 90, 4, 8, '#ffe08a');
+  R(70, 158, 52, 48, '#4a4c52');                                   // gate
+  for (let x = 72; x < 122; x += 6) R(x, 160, 2, 46, '#2e3035');
+  R(66, 154, 60, 4, '#6e6e68');
+  R(128, 150, 40, 14, '#2f5a3a'); R(130, 152, 36, 10, '#3f7a4c');  // sign
+  for (let i = 0; i < 4; i++) R(133 + i * 8, 156, 6, 2, '#e8e8e0');
+  R(0, 206, W, 60, '#7b7b80');                                     // parking lot
+  for (let x = 10; x < W; x += 34) R(x, 226, 2, 26, '#e8e8e0');
+  R(0, 266, W, 54, P.road); for (let x = 4; x < W; x += 24) R(x, 292, 12, 2, P.roadL);
+  palm(150, 206);
+}
+// overseas highway: causeway over shallow teal water
+function causeway() {
+  sky(120);
+  R(0, 176, W, 24, '#2f8fa0');                                      // far water
+  R(20, 170, 60, 8, '#3a7a4a'); palmSmall(40, 172); palmSmall(58, 172);   // distant key
+  R(0, 200, W, 120, '#3fb3b8');                                     // near water
+  for (let i = 0; i < 40; i++) R((i * 37) % W, 204 + (i * 23) % 110, 6, 1, '#8fe3df');
+  R(0, 232, W, 30, '#5a5a62'); R(0, 232, W, 2, '#c9c9c2'); R(0, 260, W, 2, '#c9c9c2');  // road deck
+  for (let x = 4; x < W; x += 24) R(x, 246, 12, 2, P.roadL);
+  for (let x = 0; x < W; x += 20) R(x, 262, 6, 16, '#8f8f88');      // pilings
+  R(0, 226, W, 2, '#d8d8d0'); for (let x = 0; x < W; x += 8) R(x, 226, 2, 6, '#d8d8d0');  // rail
+}
+function palmSmall(x, y) {
+  for (let i = 0; i < 14; i += 2) R(x, y - i, 2, 2, P.trunkD);
+  [[-1, 0], [1, 0], [-1, 1], [1, 1]].forEach(([dx, dy]) => { for (let k = 0; k < 4; k++) R(x + dx * k * 2, y - 14 + dy * k, 2, 2, '#1f6a3a'); });
+}
+function pixelHeart(x, y) {
+  ['.xx.xx.', 'xxxxxxx', 'xxxxxxx', '.xxxxx.', '..xxx..', '...x...'].forEach((r, ry) =>
+    [...r].forEach((c, rx) => { if (c === 'x') R(x + rx * 2, y + ry * 2, 2, 2, PAL.p); }));
+}
+
 // ---------- UI helpers ----------
 function ui(html) { frame.insertAdjacentHTML('beforeend', html); }
 function letterbox() { ui('<div class="ui letterbox" style="top:0"></div><div class="ui letterbox" style="bottom:0"></div>'); }
@@ -228,30 +340,31 @@ function hud(hearts = 0, money = '$0', time = '6:42 PM') {
 
 // ---------- frames ----------
 const FRAMES = {
-  // 1-2: Establishing shot + mission card
-  establish() {
+  // ===== Beat 1: The House =====
+  // Establishing shot + mission card
+  'b1-establish'() {
     sky(152); ground(); house('old'); palm(10, 214); palm(166, 206);
-    sprite(DALE, 132, 212);
+    sprite(JASE, 132, 212);
     letterbox();
     ui(`<div class="ui mission"><div class="kicker">Mission 1 &nbsp;·&nbsp; Port Mangrove</div>
         <div class="title">Where the<br>Heart Is</div><div class="rule"></div></div>`);
   },
   // 3: Phone call from Ma
-  phone() {
+  'b1-phone'() {
     sky(152); ground(); house('old'); palm(10, 214); palm(166, 206);
     ui('<div class="dim" style="background:rgba(5,5,15,.35)"></div>');
-    sprite(DALE, 128, 212);
+    sprite(JASE, 128, 212);
     ui(`<div class="ui phone"><div class="scr"><div class="av">M</div><div class="nm">Ma</div><div class="st2">00:47</div>
         <div class="row"><div></div><div class="end"></div><div></div></div></div></div>`);
-    ui(`<div class="ui sub"><b>DALE:</b> I'm fixing up the house, Ma. Before she gets out.</div>`);
+    ui(`<div class="ui sub"><b>JASE:</b> I'm fixing up the house, Ma. Before she gets out.</div>`);
   },
   // 4: Repair gameplay
-  repair() {
+  'b1-repair'() {
     sky(152); ground(); house('old');
     // re-shingled strip in progress: slightly different brown
     for (let i = 0; i < 6; i++) { const y = 106 + i * 2, inset = 56 - i * 3.3; R(Math.round(28 + inset), y, Math.round(124 - inset * 2), 2, i % 3 ? P.roofNew : P.roofNewD); }
     palm(10, 214); palm(166, 206);
-    sprite(DALE, 60, 214);
+    sprite(JASE, 60, 214);
     hotspot(76, 124); hotspot(124, 168); hotspot(44, 190);
     hud(0, '$12', '6:51 PM');
     ui(`<div class="ui progress"><div class="lbl"><span>Home Restoration</span><span>34%</span></div><div class="bar"><div style="width:34%"></div></div></div>`);
@@ -259,26 +372,83 @@ const FRAMES = {
     ui(`<div class="ui prompt"><span class="btn">HOLD</span>Re-shingle the roof</div>`);
   },
   // 5: Quiet moment on the porch steps
-  porch() {
+  'b1-porch'() {
     sky(176); ground(); house('fixed'); palm(10, 214); palm(166, 206);
-    sprite(DALE_SIT, 82, 194);
+    sprite(JASE_SIT, 82, 194);
     letterbox();
     ui(`<div class="ui radio"><div class="st">SMOOTH SENIORS 101.1</div><div class="np">"Gloria's Song (For Gloria)" · DJ Merle</div></div>`);
     ui(`<div class="ui sub"><i>She used to say the porch was the only part of this house that was hers. Three years.<br>I hope blue is still her color.</i></div>`);
   },
   // 6: Mission passed
-  passed() {
+  'b1-passed'() {
     sky(180); ground(); house('fixed'); palm(10, 214); palm(166, 206);
-    sprite(DALE_SIT, 82, 194);
+    sprite(JASE_SIT, 82, 194);
     ui('<div class="dim" style="background:rgba(5,5,15,.45)"></div>');
     ui(`<div class="ui passed"><div class="big">MISSION PASSED</div><div class="mn">Where the Heart Is</div>
         <div class="fx">Hidden effect logged</div><div class="fx2">Someone will notice.</div></div>`);
   },
+
+  // ===== Beat 2: Coming Home =====
+  // The gate opens
+  'b2-release'() {
+    daySky(); prison();
+    sprite(LUCITA_JUMP, 88, 190); sprite(BAG, 106, 206);
+    letterbox();
+    ui(`<div class="ui mission"><div class="kicker">Mission 2 &nbsp;·&nbsp; Release Day</div>
+        <div class="title">Coming<br>Home</div><div class="rule"></div></div>`);
+  },
+  // He's waiting at the curb
+  'b2-curb'() {
+    daySky(); prison();
+    convertible(70, 290);
+    sprite(JASE, 40, 252);
+    sprite(LUCITA_JUMP, 88, 214); sprite(BAG, 106, 230);
+    letterbox();
+    ui(`<div class="ui sub"><b>LUCITA:</b> You kept your father's car.<br><b>JASE:</b> It kept me.</div>`);
+  },
+  // The drive: long silence, one station change
+  'b2-drive'() {
+    causeway();
+    convertible(46, 260, true);
+    hud(0, '$12', '4:18 PM');
+    ui(`<div class="ui radio"><div class="st">NEON 88.8</div><div class="np">"Midnight Coastline" · The Velvet Tides</div></div>`);
+    ui(`<div class="ui prompt" style="bottom:auto;top:118px"><span class="btn">SWIPE</span>Change station</div>`);
+    ui(`<div class="ui sub" style="left:100px;right:16px;bottom:26px;text-align:left"><b>LUCITA:</b> Three years and they're still playing this song.<br><b>JASE:</b> It's a classic.</div>`);
+  },
+  // She sees the porch
+  'b2-porch'() {
+    sky(168); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    convertible(84, 286);
+    sprite(LUCITA_JUMP, 84, 216);
+    sprite(JASE, 128, 214);
+    letterbox();
+    ui(`<div class="ui sub"><b>LUCITA:</b> ...You painted the porch.<br><i>(long pause)</i><br><b>LUCITA:</b> Jase. You remembered.</div>`);
+  },
+  // Take her hand
+  'b2-hand'() {
+    sky(172); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    convertible(84, 286);
+    sprite(LUCITA_JUMP, 92, 216);
+    sprite(JASE, 106, 214);
+    pixelHeart(98, 196);
+    hud(1, '$12', '7:03 PM');
+    ui(`<div class="ui toast" style="border-color:#ff5d8f"><div class="t" style="color:#ff5d8f">Relationship ↑</div>Lucita noticed the effort.</div>`);
+    ui(`<div class="ui prompt"><span class="btn">HOLD</span>Take her hand</div>`);
+  },
+  'b2-passed'() {
+    sky(182); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    convertible(84, 286);
+    sprite(LUCITA_JUMP, 92, 216); sprite(JASE, 106, 214);
+    ui('<div class="dim" style="background:rgba(5,5,15,.45)"></div>');
+    ui(`<div class="ui passed"><div class="big">MISSION PASSED</div><div class="mn">Coming Home</div>
+        <div class="fx" style="color:#ff8fb1">Relationship: Level 1</div><div class="fx2">"Complicated"</div></div>`);
+  },
 };
 
-const name = location.hash.slice(1) || 'establish';
+const name = location.hash.slice(1) || 'b1-establish';
 FRAMES[name]();
 document.title = 'ready';
+window.FRAME_NAMES = Object.keys(FRAMES);
 </script>
 </body>
 </html>

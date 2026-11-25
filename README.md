@@ -15,7 +15,8 @@ Status: pre-production (brainstorming and storyboarding). No code yet.
 
 ## Docs
 
-- [Storyboard](docs/storyboard.md): beats and panel-by-panel scenes
+- [Storyboard](docs/storyboard.md): beats, panel-by-panel scenes and frames
+- [Characters](docs/characters.md): Lucita, Jase, the car
 - [Radio](docs/radio/README.md): stations, ad scripts, audio tools and tech
 
 ## License
