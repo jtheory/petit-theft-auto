@@ -65,13 +65,13 @@ export class UI {
     const hearts = [0, 1, 2, 3].map(i => `<span class="heart${i < state.hearts ? ' on' : ''}"></span>`).join('');
     const stars = state.wanted ? `<div class="wanted">${[0, 1, 2, 3, 4].map(i => `<span class="${i < state.wanted ? 'on' : ''}">★</span>`).join('')}</div>` : '';
     this.el('hud', 'hud', `<div class="hearts">${hearts}</div><div class="money">$${state.money.toLocaleString('en-US')}</div><div class="time">${esc(state.time)}</div>${stars}
-      <div class="minimap"><i class="road h"></i><i class="road v"></i><i class="blk a"></i><i class="blk b"></i><i class="blk c"></i><i class="you"></i><i class="goal"></i></div>`);
+      ${state.minimap === false ? '' : `<div class="minimap"><i class="road h"></i><i class="road v"></i><i class="blk a"></i><i class="blk b"></i><i class="blk c"></i><i class="you"></i><i class="goal"></i></div>`}`);
   }
 
   // A gesture prompt. Returns a setter for its fill (0..1), used by hold/swipe/taps.
-  prompt(btn, label) {
+  prompt(btn, label, where = '') {
     if (!btn) { this.hide('prompt'); return () => {}; }
-    const e = this.el('prompt', 'prompt', `<span class="fill"></span><span class="btn">${esc(btn)}</span><span>${esc(label)}</span>`);
+    const e = this.el('prompt', 'prompt ' + where, `<span class="fill"></span><span class="btn">${esc(btn)}</span><span>${esc(label)}</span>`);
     return p => e.style.setProperty('--p', p);
   }
 

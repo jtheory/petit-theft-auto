@@ -135,6 +135,20 @@ export const SOUNDS = {
     s.tone(out, 'pulse50', 2400, t + 0.02, 0.03, 0.03);
   },
   drip: (ctx, out, t, s) => { const g = env(ctx, out, t, 0.18, 0.002, 0.12); const o = osc(ctx, s, g, 'sine', 1400, t, 0.14); o.frequency.exponentialRampToValueAtTime(700, t + 0.1); },
+  crash: (ctx, out, t, s) => {
+    noise(ctx, s, env(ctx, out, t, 0.6, 0.002, 0.35), t, 0.4, 'lowpass', 1200);
+    const o = osc(ctx, s, env(ctx, out, t, 0.5, 0.002, 0.25), 'triangle', 110, t, 0.3);
+    o.frequency.exponentialRampToValueAtTime(40, t + 0.25);
+    s.drum(out, 'c', t + 0.02, 0.8);
+  },
+  whoosh: (ctx, out, t, s) => { const f = noise(ctx, s, env(ctx, out, t, 0.3, 0.03, 0.25), t, 0.3, 'bandpass', 300, 1); f.frequency.exponentialRampToValueAtTime(2500, t + 0.25); },
+  busted: (ctx, out, t, s) => {
+    melody(ctx, s, out, 'pulse25', t, 0.16, [['E5', 1], ['C5', 1], ['A4', 1], ['F4', 4]], 0.09);
+    melody(ctx, s, out, 'triangle', t, 0.16, [['A2', 3], ['D2', 4]], 0.3);
+  },
+  wash: (ctx, out, t, s) => {
+    for (let i = 0; i < 6; i++) { const f = noise(ctx, s, env(ctx, out, t + i * 0.5, 0.2, 0.1, 0.35), t + i * 0.5, 0.5, 'bandpass', 600, 0.8); f.frequency.exponentialRampToValueAtTime(1800, t + i * 0.5 + 0.4); }
+  },
   rain: (ctx, out, t, s) => noise(ctx, s, env(ctx, out, t, 0.06, 0.8, 1.5, 4), t, 6.4, 'bandpass', 2600, 0.4),
   drone: (ctx, out, t, s) => {
     const g = env(ctx, out, t, 0.12, 1.2, 2.5, 2);

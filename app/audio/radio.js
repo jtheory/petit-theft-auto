@@ -12,14 +12,27 @@ export class Radio {
     this.core = core;
     this.data = data;
     this.songs = Object.fromEntries(Object.entries(data.songs).map(([id, s]) => [id, { id, ...parseSong(s) }]));
+    this.flags = {};
     this.stations = data.stations.map(st => this.build(st));
     this.index = 0;
     this.on = false;
     this.current = null;
   }
 
+  // Story flags decide which program items play (items marked before/after a flag).
+  setContext(flags = {}) {
+    this.flags = flags;
+    const phases = Object.fromEntries(this.stations.map(st => [st.id, st.phase]));
+    this.stations = this.data.stations.map(st => {
+      const built = this.build(st);
+      built.phase = (phases[st.id] ?? built.phase) % built.cycle;
+      return built;
+    });
+  }
+
   build(st) {
-    const segs = st.program.map(item => {
+    const items = st.program.filter(it => (!it.after || this.flags[it.after]) && (!it.before || !this.flags[it.before]));
+    const segs = items.map(item => {
       if (item.song) {
         const song = this.songs[item.song];
         return { kind: 'song', song, dur: song.len * (item.loops ?? 2) };

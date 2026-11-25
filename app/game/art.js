@@ -474,5 +474,53 @@ export function makeArt(g) {
   }
 
 
-  return { g, R, rain, pot, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  // ---- Mission 3: traffic, a street that scrolls, a car wash ----
+  function sedan(x, y, body = '#5a7a9a') {   // closed car, side view; y = wheel bottom
+    R(x + 2, y - 18, 68, 10, body); R(x + 14, y - 27, 40, 9, body);
+    R(x + 18, y - 25, 14, 6, '#9fc3dc'); R(x + 34, y - 25, 16, 6, '#9fc3dc');
+    R(x + 2, y - 10, 68, 3, '#222');
+    [14, 56].forEach(cx => { R(x + cx - 6, y - 8, 12, 8, '#111'); R(x + cx - 2, y - 6, 4, 4, '#999'); });
+    R(x + 68, y - 16, 3, 3, '#ffe9a8'); R(x, y - 16, 3, 3, '#ff4a3a');
+  }
+  function cone(x, y) { R(x + 3, y - 14, 4, 3, '#ff7a1a'); R(x + 2, y - 11, 6, 3, '#fff'); R(x + 1, y - 8, 8, 4, '#ff7a1a'); R(x - 2, y - 4, 14, 4, '#d0601a'); }
+  function gator(x, y) {
+    R(x, y - 6, 30, 5, '#3f6a3a'); R(x + 26, y - 5, 12, 3, '#3f6a3a'); R(x + 4, y - 8, 20, 2, '#4f7f48');
+    for (let i = 0; i < 5; i++) R(x + 4 + i * 5, y - 9, 2, 1, '#2f5a2a');
+    R(x + 30, y - 6, 2, 1, '#ffe08a'); R(x + 4, y - 1, 3, 2, '#2f5a2a'); R(x + 20, y - 1, 3, 2, '#2f5a2a'); R(x - 8, y - 4, 8, 2, '#3f6a3a');
+  }
+  function chaseStreet(scroll) {
+    const m = (v, n) => ((v % n) + n) % n;
+    nightSky(18);
+    const bs = scroll * 0.35, first = Math.floor(bs / 40);
+    for (let i = -1; i < 6; i++) {
+      const idx = first + i, bx = i * 40 - m(bs, 40), h = 50 + ((idx * 7919) % 5 + 5) % 5 * 16;
+      R(bx, 200 - h, 38, h, idx % 2 ? '#1e2236' : '#252a40');
+      for (let wy = 200 - h + 6; wy < 194; wy += 12) for (let wx = 4; wx < 34; wx += 10)
+        if (((idx * 31 + wx * 7 + wy * 3) % 5) === 0) R(bx + wx, wy, 5, 6, '#ffd97a');
+    }
+    R(0, 200, W, 36, '#2b2b33'); R(0, 234, W, 2, '#55555e');
+    for (let x = -60; x < W + 60; x += 60) {
+      const lx = x - m(scroll * 0.9, 60);
+      R(lx + 10, 120, 3, 80, '#555'); R(lx + 6, 118, 12, 3, '#888');
+      g.fillStyle = 'rgba(255,240,180,.07)'; g.fillRect(lx - 2, 121, 28, 115);
+    }
+    R(0, 236, W, 84, P.road);
+    for (let x = -24; x < W + 24; x += 24) R(x - m(scroll, 24) + 4, 276, 12, 2, P.roadL);
+  }
+  function carWash(t, foam = 0) {
+    nightSky(10);
+    R(0, 200, W, 66, '#2b2b33'); R(0, 266, W, 54, P.road);
+    for (let x = 4; x < W; x += 24) R(x, 292, 12, 2, P.roadL);
+    R(16, 116, 148, 100, '#e8eef4'); R(16, 116, 148, 8, '#3a8fd8'); R(16, 130, 148, 3, '#3a8fd8');
+    R(40, 146, 100, 70, '#1c2430');
+    for (let k = 0; k < 4; k++) R(48 + k * 24, 148, 6, 64, (Math.floor(t * 10) + k) % 2 ? '#4aa3df' : '#2f7fb8');
+    R(52, 96, 76, 16, '#151515'); R(52, 96, 76, 1, '#5ad1ff'); R(52, 111, 76, 1, '#5ad1ff');
+    text('CAR WASH', 90 - textW('CAR WASH', 2) / 2 + 1, 99, '#5ad1ff', 2);
+    for (let i = 0; i < Math.round(60 * foam); i++) {
+      const fx = 40 + ((i * 53) % 100), fy = 150 + ((i * 37 + Math.floor(t * 20)) % 64);
+      R(fx, fy, 3, 2, '#ffffff');
+    }
+  }
+
+  return { g, R, rain, pot, sedan, cone, gator, chaseStreet, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

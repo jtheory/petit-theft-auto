@@ -191,6 +191,16 @@ Hearts go down for: dismissive replies (👍), ignoring texts, trusting Rudy, sk
 - `MISSION PASSED — Late Night Special` / `$186 · 1 Beef Jerky (Teriyaki)` / `Benny has called your mother.`
 - Follow-up: next time the phone opens, Ma has left a voicemail: "Benny's mother called my mother."
 
+**As built (Mission 3)**
+
+- **Approach:** Loud (2 stars; "EVERYBODY DOWN!" / "It's just me, man."), Quiet (1 star), Buy something first (1 star; $3 slushie; "Do you still want the slushie?" / "...Yes.").
+- **Hold-up:** HOLD to keep Benny calm while the register empties. Let go for more than about a second: "Silent alarm — Benny pressed it with his knee." (+1 star). Haul: $186.
+- **Jerky:** Teriyaki / Original ("I said teriyaki.") / Leave it ("Jase.").
+- **Chase (first real fail state):** about 30 seconds. SWIPE up/down to change lanes; traffic, cones and the occasional gator come from the right, flagged by a blinking marker. Three called turns ("Left! LEFT!"): swipe the right way in time to gain ground. The cruiser closes in from the left; if it catches you, **BUSTED**, and you retry the chase with a slightly bigger head start. Lucita's busted lines escalate: "We are not doing this again." / "We are doing this again." / "Jase. Left is the one on the left."
+- **Escape:** a car wash, top down. "...Did we just get the car washed?" / "Two birds." / "The top was down, Jase."
+- **Radio:** Talk 1490 covers the porch (HOA) before this mission and the robbery after it.
+- Balance (simulated): 1 star comfortable, 2 stars tight, 3 stars usually needs a retry; doing nothing is busted in about 8 seconds.
+
 ---
 
 ## Beat 4: The Date (draft 1)

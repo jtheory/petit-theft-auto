@@ -66,6 +66,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 
 .prompt { left: 50%; bottom: 118px; transform: translate(-50%, 6px); white-space: nowrap; background: rgba(10,10,14,.82); border: 1px solid rgba(255,255,255,.18); border-radius: 22px; padding: 9px 16px 9px 10px; font: 600 13px var(--font-ui); display: flex; align-items: center; gap: 10px; overflow: hidden; }
 .prompt.show { transform: translate(-50%, 0); }
+.prompt.high { bottom: auto; top: 124px; }
 .prompt .fill { position: absolute; inset: 0; width: calc(var(--p, 0) * 100%); background: rgba(243,201,139,.28); }
 .prompt .btn, .prompt span { position: relative; }
 .prompt .btn { padding: 0 8px; height: 22px; border-radius: 11px; background: #fff; color: #111; font: 800 11px var(--font-ui); letter-spacing: .06em; display: grid; place-items: center; }
@@ -100,6 +101,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .passed { left: 0; right: 0; top: 220px; text-align: center; transform: scale(.96); }
 .passed.show { transform: none; }
 .passed .big { font: 900 34px var(--font-ui); letter-spacing: .04em; color: var(--gold); text-shadow: 0 3px 0 #5a3410, 0 0 24px rgba(0,0,0,.7); }
+.passed.busted .big { color: #ff5a4a; text-shadow: 0 3px 0 #5a1010, 0 0 24px rgba(0,0,0,.7); }
 .passed .mn { font: italic 400 20px var(--font-title); margin-top: 6px; }
 .passed .fx { font: 600 11px var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: #9fd4ff; margin-top: 22px; }
 .passed .fx2 { font: 500 11px var(--font-ui); opacity: .6; margin-top: 6px; }

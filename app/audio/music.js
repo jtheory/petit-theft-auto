@@ -23,6 +23,16 @@ export const SCORE = {
         'c . h . s . h . | k . h . s . h k | k . h . s . h . | k k s k s s c .' },
     },
   },
+  // The chase. A minor, fast, mostly bass and panic.
+  chase: {
+    title: 'Pursuit', bpm: 168,
+    tracks: {
+      lead:  { wave: 'pulse25',  vol: 0.07, gate: 0.6, notes: 'A4 . A4 C5 . A4 D5 . | E5 . E5 D5 C5 . A4 . | A4 . A4 C5 . A4 D5 . | G5 . F5 E5 D5 . E5 .' },
+      stab:  { wave: 'pulse12',  vol: 0.04, gate: 0.3, notes: 'A3 . . A3 . . A3 . | F3 . . F3 . E3 . . | A3 . . A3 . . A3 . | G3 . . G3 . E3 . .' },
+      bass:  { wave: 'triangle', vol: 0.34, notes: 'A2 A2 A3 A2 A2 A2 G2 G3 | F2 F2 F3 F2 E2 E2 E3 E2 | A2 A2 A3 A2 A2 A2 G2 G3 | G2 G2 G3 G2 E2 E2 E3 E2' },
+      drums: { wave: 'drums',    vol: 1.0,  notes: 'k h s h k k s h | k h s h k s s s | k h s h k k s h | k h s k k s s c' },
+    },
+  },
   // Under the warning screen and shader bar: one held chord, very serious.
   pad: {
     title: 'Loading', bpm: 60,

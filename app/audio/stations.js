@@ -4,6 +4,7 @@
 // Song format: one token per eighth note.  C4 F#3 Bb2 = notes   . = rest   - = hold   | = bar (ignored)
 // Drum tokens: k kick, s snare, h hat, c crash.
 // Waves: pulse12 / pulse25 / pulse50 (NES duty cycles), triangle, drums.
+// Program items can carry `before: 'flag'` or `after: 'flag'` to follow the story (see Radio.setContext).
 
 export default {
   voices: {
@@ -200,7 +201,12 @@ export default {
       id: 'talk', freq: '1490', band: 'AM', name: 'Talk 1490', tagline: 'News & call-in', bed: null,
       program: [
         { song: 'bumper', loops: 1 },
-        { label: 'Action 7 News', bed: null, lines: [
+        // Before Mission 3 the news is about a porch. After it, the news is about you.
+        { label: 'Action 7 News', bed: null, before: 'robbedStore', lines: [
+          ['Dana Reyes', 'dana', 'Action 7 news at the top of the hour. A Port Mangrove man has repainted his porch, reportedly without approval from the homeowners association.'],
+          ['Dana Reyes', 'dana', 'The HOA is calling the color, quote, a provocation. More at eleven.'],
+        ] },
+        { label: 'Action 7 News', bed: null, after: 'robbedStore', lines: [
           ['Dana Reyes', 'dana', 'Action 7 news at the top of the hour. A convenience store on Route 9 was robbed by two suspects described by witnesses as, quote, a couple, probably.'],
           ['Dana Reyes', 'dana', 'Police ask the public not to give the suspects a heart on social media, which, quote, only encourages them.'],
         ] },

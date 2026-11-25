@@ -6,6 +6,7 @@ import { playLoop } from '../audio/music.js';
 import stations from '../audio/stations.js';
 import beat1 from '../missions/beat1.js';
 import beat2 from '../missions/beat2.js';
+import beat3 from '../missions/beat3.js';
 
 const game = new Game(document.getElementById('stage'));
 const radio = new Radio(stations);
@@ -18,8 +19,8 @@ const TIPS = [
   'TIP: Answer your mother.',
 ];
 
-const MISSIONS = [beat1, beat2];
-const NEXT_UP = { 3: ['Mission 3', 'Late Night Special', 'In development. Route 9. The good jerky.'] };
+const MISSIONS = [beat1, beat2, beat3];
+const NEXT_UP = { 4: ['Date  ·  Optional', 'Low Tide', 'In development. Kayaks. A manatee.'] };
 
 // Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.
 const params = new URLSearchParams(location.search);
@@ -118,6 +119,7 @@ async function run() {
   }
   while (true) {
     const m = MISSIONS[game.state.mission - 1];
+    radio.setContext(game.state.flags);
     if (m) await m(game, radio);
     else await comingSoon();
   }
