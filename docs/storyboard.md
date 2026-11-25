@@ -126,6 +126,14 @@ Mission 1 can't be failed, but it can be done badly. Results are saved as flags 
 **Panel 6: End card** *(frame 6)*
 - *UI:* `MISSION PASSED — Coming Home` / `Relationship: Level 1` / `"Complicated"`
 
+**As built (Mission 2)**
+
+- **Morning:** if the roof wasn't fixed, it's raining; tap the porch to put out a pot ("Pot deployed — Leak contained. Mostly."). The pot stays for the rest of the mission. If Ma was ignored she leaves a second voicemail ("I'm calling your aunt."); if you were honest she texts "did u buy a vegetable". HOLD to start the car.
+- **Release and curb:** as storyboarded; HOLD to open her door (saved as `openedDoor`, unused so far).
+- **The drive:** HOLD to drive (about 24 seconds of holding), SWIPE left/right to change station. Lucita reacts once per station: Gator "...Fine.", Seniors "Are we old now?", WVIRAL "Absolutely not." (switches back), Talk "No news. Not today." (switches back). If you never touch the radio, she changes it herself at about two-thirds of the way.
+- **The porch:** porch painted → "You remembered." and the first heart. Not painted → "It's still standing." and "Relationship unchanged — She let you. She's thinking about it." Pot present → "Is that a pot?" / "It's load-bearing."
+- **End card:** `Relationship: Level N` with the level name (0 is "It's Been a While").
+
 ## Relationship ladder
 
 Four hearts. Level names appear on end cards.

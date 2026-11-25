@@ -251,16 +251,34 @@ export function makeArt(g) {
     palm(150, 206);
   }
   // overseas highway: causeway over shallow teal water
-  function causeway() {
-    sky(120);
+  // scroll: world pixels travelled (moves the road, rail and pilings; the far key drifts slowly)
+  function causeway(scroll = 0, sunY = 120) {
+    const m = (v, n) => ((v % n) + n) % n;
+    sky(sunY);
     R(0, 176, W, 24, '#2f8fa0');                                      // far water
-    R(20, 170, 60, 8, '#3a7a4a'); palmSmall(40, 172); palmSmall(58, 172);   // distant key
+    const kx = 20 - Math.round(m(scroll * 0.08, W + 80));
+    R(kx, 170, 60, 8, '#3a7a4a'); palmSmall(kx + 20, 172); palmSmall(kx + 38, 172);   // distant key
+    R(kx + W + 80, 170, 60, 8, '#3a7a4a'); palmSmall(kx + W + 100, 172);
     R(0, 200, W, 120, '#3fb3b8');                                     // near water
-    for (let i = 0; i < 40; i++) R((i * 37) % W, 204 + (i * 23) % 110, 6, 1, '#8fe3df');
+    for (let i = 0; i < 40; i++) R(m((i * 37) - scroll * 0.5, W), 204 + (i * 23) % 110, 6, 1, '#8fe3df');
     R(0, 232, W, 30, '#5a5a62'); R(0, 232, W, 2, '#c9c9c2'); R(0, 260, W, 2, '#c9c9c2');  // road deck
-    for (let x = 4; x < W; x += 24) R(x, 246, 12, 2, P.roadL);
-    for (let x = 0; x < W; x += 20) R(x, 262, 6, 16, '#8f8f88');      // pilings
-    R(0, 226, W, 2, '#d8d8d0'); for (let x = 0; x < W; x += 8) R(x, 226, 2, 6, '#d8d8d0');  // rail
+    for (let x = -24; x < W + 24; x += 24) R(x - m(scroll, 24) + 4, 246, 12, 2, P.roadL);
+    for (let x = -20; x < W + 20; x += 20) R(x - m(scroll, 20), 262, 6, 16, '#8f8f88');      // pilings
+    R(0, 226, W, 2, '#d8d8d0'); for (let x = -8; x < W + 8; x += 8) R(x - m(scroll, 8), 226, 2, 6, '#d8d8d0');  // rail
+  }
+  // falling rain over everything; t in seconds
+  function rain(t, n = 70) {
+    g.fillStyle = 'rgba(20,24,40,.35)'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < n; i++) {
+      const x = (i * 53 + Math.floor(t * 40) * 3) % (W + 20) - 10, y = ((i * 97) + t * 260) % (H + 20) - 10;
+      R(Math.round(x - (y % 20) * 0.2), Math.round(y), 1, 5, 'rgba(190,210,235,.55)');
+    }
+  }
+  // a cooking pot, catching a drip
+  function pot(x, y, t = 0) {
+    R(x, y, 10, 6, '#9aa0a8'); R(x - 1, y, 12, 1, '#c8ccd2'); R(x - 3, y + 1, 2, 2, '#6a7078'); R(x + 11, y + 1, 2, 2, '#6a7078');
+    const d = (t * 1.6) % 1;
+    if (d < 0.8) R(x + 4, y - 30 + Math.round(d * 34), 1, 2, '#bfe6ff');
   }
   function palmSmall(x, y) {
     for (let i = 0; i < 14; i += 2) R(x, y - i, 2, 2, P.trunkD);
@@ -456,5 +474,5 @@ export function makeArt(g) {
   }
 
 
-  return { g, R, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  return { g, R, rain, pot, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

@@ -71,6 +71,8 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .prompt .btn { padding: 0 8px; height: 22px; border-radius: 11px; background: #fff; color: #111; font: 800 11px var(--font-ui); letter-spacing: .06em; display: grid; place-items: center; }
 
 .progress { left: 50%; transform: translateX(-50%); top: 74px; width: 220px; }
+.progress.left { left: 16px; transform: none; top: 44px; width: 120px; }
+.hud.show ~ .sub { left: 100px; text-align: left; }
 .progress .lbl { display: flex; justify-content: space-between; font: 700 10px var(--font-ui); letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 1px 2px #000; }
 .progress .bar { height: 6px; background: rgba(0,0,0,.55); border-radius: 3px; margin-top: 5px; overflow: hidden; }
 .progress .bar div { height: 100%; background: linear-gradient(90deg, var(--gold), #ff8a5c); transition: width .5s ease; }

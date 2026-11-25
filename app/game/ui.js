@@ -75,9 +75,9 @@ export class UI {
     return p => e.style.setProperty('--p', p);
   }
 
-  progress(label, pct) {
+  progress(label, pct, where = '') {
     if (label === false) return this.hide('progress');
-    this.el('progress', 'progress', `<div class="lbl"><span>${esc(label)}</span><span>${Math.round(pct)}%</span></div><div class="bar"><div style="width:${pct}%"></div></div>`);
+    this.el('progress', 'progress ' + where, `<div class="lbl"><span>${esc(label)}</span><span>${Math.round(pct)}%</span></div><div class="bar"><div style="width:${pct}%"></div></div>`);
   }
 
   // Tappable options (resolve them with input.pick()). opts: [[key, label]]

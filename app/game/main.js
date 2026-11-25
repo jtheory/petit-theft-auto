@@ -5,6 +5,7 @@ import { Radio } from '../audio/radio.js';
 import { playLoop } from '../audio/music.js';
 import stations from '../audio/stations.js';
 import beat1 from '../missions/beat1.js';
+import beat2 from '../missions/beat2.js';
 
 const game = new Game(document.getElementById('stage'));
 const radio = new Radio(stations);
@@ -17,7 +18,15 @@ const TIPS = [
   'TIP: Answer your mother.',
 ];
 
-const MISSIONS = [beat1];
+const MISSIONS = [beat1, beat2];
+const NEXT_UP = { 3: ['Mission 3', 'Late Night Special', 'In development. Route 9. The good jerky.'] };
+
+// Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.
+const params = new URLSearchParams(location.search);
+if (params.has('mission')) {
+  game.state.mission = Number(params.get('mission')) || 1;
+  game.state.flags = { roofFixed: false, grouted: true, porchPainted: true, ma: 'ignored', ...game.state.flags };
+}
 
 function isPhone() {
   return matchMedia('(pointer: coarse)').matches || new URLSearchParams(location.search).has('desktop');
@@ -87,10 +96,11 @@ async function title(pad) {
 
 async function comingSoon() {
   const ui = game.ui;
+  const [k, t, d] = NEXT_UP[game.state.mission] ?? [`Mission ${game.state.mission}`, 'Coming soon', 'In development.'];
   game.setScene(a => { a.sky(182); a.ground(); a.house('fixed'); a.palm(10, 214); a.palm(166, 206); a.sprite(a.JASE_SIT, 82, 194); });
   ui.dim(true, 0.55);
-  ui.el('soon', 'soon', `<div class="k">Mission 2</div><div class="t">Coming Home</div><div class="d">In development. Lucita gets out soon.</div>
-    <div class="b">Tap to replay Mission 1</div>`);
+  ui.el('soon', 'soon', `<div class="k">${k}</div><div class="t">${t}</div><div class="d">${d}</div>
+    <div class="b">Tap to start over from Mission 1</div>`);
   await game.input.tap();
   ui.hide('soon');
   ui.dim(false);
@@ -100,9 +110,12 @@ async function comingSoon() {
 
 async function run() {
   await gate();
-  const pad = await warning();
-  await shaders();
-  await title(pad);
+  if (params.has('skip')) await audioCore().start().catch(() => {});
+  else {
+    const pad = await warning();
+    await shaders();
+    await title(pad);
+  }
   while (true) {
     const m = MISSIONS[game.state.mission - 1];
     if (m) await m(game, radio);

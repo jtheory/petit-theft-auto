@@ -122,6 +122,20 @@ export const SOUNDS = {
     osc(ctx, s, env(ctx, out, t + 0.75, 0.4, 0.002, 0.2), 'triangle', 80, t + 0.75, 0.22);
   },
   static: (ctx, out, t, s) => s.staticBurst(out, t, 0.3),
+  engine: (ctx, out, t, s) => {
+    const g = env(ctx, out, t, 0.12, 0.05, 0.6, 1.1);
+    const o = osc(ctx, s, g, 'pulse12', 38, t, 1.8);
+    o.frequency.setValueAtTime(38, t); o.frequency.linearRampToValueAtTime(70, t + 0.35);
+    o.frequency.linearRampToValueAtTime(52, t + 0.8); o.frequency.linearRampToValueAtTime(58, t + 1.7);
+    noise(ctx, s, env(ctx, out, t, 0.15, 0.01, 0.2), t, 0.25, 'lowpass', 600);
+  },
+  carDoor: (ctx, out, t, s) => {
+    noise(ctx, s, env(ctx, out, t, 0.5, 0.002, 0.12), t, 0.15, 'lowpass', 700);
+    osc(ctx, s, env(ctx, out, t, 0.5, 0.002, 0.1), 'triangle', 90, t, 0.12);
+    s.tone(out, 'pulse50', 2400, t + 0.02, 0.03, 0.03);
+  },
+  drip: (ctx, out, t, s) => { const g = env(ctx, out, t, 0.18, 0.002, 0.12); const o = osc(ctx, s, g, 'sine', 1400, t, 0.14); o.frequency.exponentialRampToValueAtTime(700, t + 0.1); },
+  rain: (ctx, out, t, s) => noise(ctx, s, env(ctx, out, t, 0.06, 0.8, 1.5, 4), t, 6.4, 'bandpass', 2600, 0.4),
   drone: (ctx, out, t, s) => {
     const g = env(ctx, out, t, 0.12, 1.2, 2.5, 2);
     for (const f of [55, 82.4]) osc(ctx, s, g, 'triangle', f, t, 5.8);

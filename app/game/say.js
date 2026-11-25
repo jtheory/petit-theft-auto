@@ -1,5 +1,6 @@
 // Dialogue: a subtitle that reveals in step with the speaker's babble voice.
 // Tap while it's still talking to finish the line; tap again (or wait) to move on.
+// opts: { italic, keep (leave the subtitle up), hold (ms to wait after), passive (don't touch input) }
 
 import { planLine, playLine, revealed } from '../audio/babble.js';
 import { audioCore } from '../audio/core.js';
@@ -32,6 +33,7 @@ export function makeSay(ui, input) {
         requestAnimationFrame(tick);
       };
       tick();
+      if (opts.passive) return;   // hands are busy (driving): no skipping
       // a tap during the line finishes it (and silences the rest of the babble)
       input.tap().then(() => {
         if (finished) return;
@@ -43,8 +45,11 @@ export function makeSay(ui, input) {
     });
     // after the line: wait for a tap, or move on by itself
     const pause = opts.hold ?? Math.max(1800, text.length * 35);
-    await Promise.race([input.tap(), new Promise(r => setTimeout(r, pause))]);
-    input.waiter = null;
+    if (opts.passive) await new Promise(r => setTimeout(r, pause));
+    else {
+      await Promise.race([input.tap(), new Promise(r => setTimeout(r, pause))]);
+      input.waiter = null;
+    }
     setTimeout(() => bus.disconnect(), 300);
     if (!opts.keep) ui.hide('sub');
   };
