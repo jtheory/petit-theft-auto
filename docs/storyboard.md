@@ -21,6 +21,10 @@ The radio is reachable from every vehicle, including the kayak.
 
 ## Beat 1: The House (draft 1)
 
+![Beat 1 storyboard frames](storyboard/beat1-sheet.png)
+
+Frames are rendered from [`storyboard/frames.html`](storyboard/frames.html) with `node tools/render-storyboard.js` (needs Playwright). The game layer is 180×320 pixels scaled 2×; UI and text render at full resolution on purpose.
+
 **Panel 1: Cold open**
 - *Screen:* Black. White text fades in.
 - *Text:* `Port Mangrove. 1,094 days since Marisol went inside.`

@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PTA storyboard frames</title>
+<style>
+  /* Phone-sized frame: 360x640 CSS px. Game layer is 180x320 pixels, scaled 2x.
+     UI/text layer is full resolution on purpose: the words are "AAA", the world is not. */
+  html, body { margin: 0; background: #111; }
+  #frame { position: relative; width: 360px; height: 640px; overflow: hidden; font-family: Inter, sans-serif; color: #fff; }
+  canvas { position: absolute; inset: 0; width: 360px; height: 640px; image-rendering: pixelated; }
+  .ui { position: absolute; }
+  .letterbox { left: 0; right: 0; height: 64px; background: #000; }
+  .mission { left: 22px; bottom: 92px; }
+  .mission .kicker { font: 600 10px Inter; letter-spacing: .32em; color: #f3c98b; text-transform: uppercase; }
+  .mission .title { font: italic 700 30px "Bitstream Charter", "DejaVu Serif", serif; line-height: 1.05; margin-top: 6px; text-shadow: 0 2px 12px rgba(0,0,0,.6); }
+  .mission .rule { width: 46px; height: 2px; background: #f3c98b; margin-top: 10px; }
+  .sub { left: 24px; right: 24px; bottom: 22px; text-align: center; font: 500 14px/1.4 Inter; text-shadow: 0 1px 3px #000, 0 0 10px rgba(0,0,0,.8); }
+  .sub b { color: #f3c98b; font-weight: 700; }
+  .sub i { font-style: italic; color: #f0eadf; }
+  .hud-hearts { top: 16px; left: 16px; display: flex; gap: 4px; }
+  .hud-money { top: 14px; right: 16px; font: 800 20px Inter; letter-spacing: .02em; color: #9be37a; text-shadow: 0 2px 0 #1b3a12, 0 0 6px rgba(0,0,0,.6); }
+  .hud-time { top: 40px; right: 16px; font: 600 11px Inter; color: #fff; opacity: .85; text-shadow: 0 1px 2px #000; }
+  .minimap { left: 14px; bottom: 14px; width: 74px; height: 74px; border-radius: 50%; background: #1d2b22; border: 3px solid rgba(255,255,255,.85); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+  .minimap i { position: absolute; display: block; }
+  .prompt { left: 50%; transform: translateX(-50%); bottom: 118px; white-space: nowrap; background: rgba(10,10,14,.82); border: 1px solid rgba(255,255,255,.18); border-radius: 22px; padding: 9px 16px 9px 10px; font: 600 13px Inter; display: flex; align-items: center; gap: 10px; }
+  .btn { padding: 0 8px; height: 22px; border-radius: 11px; letter-spacing: .06em; background: #fff; color: #111; font: 800 11px Inter; display: grid; place-items: center; }
+  .progress { left: 50%; transform: translateX(-50%); top: 74px; width: 220px; }
+  .progress .lbl { display: flex; justify-content: space-between; font: 700 10px Inter; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 1px 2px #000; }
+  .progress .bar { height: 6px; background: rgba(0,0,0,.55); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+  .progress .bar div { height: 100%; background: linear-gradient(90deg, #f3c98b, #ff8a5c); }
+  .toast { right: 14px; top: 120px; width: 176px; background: rgba(12,12,16,.86); border-left: 3px solid #9be37a; padding: 9px 11px; font: 500 11.5px/1.35 Inter; border-radius: 4px; }
+  .toast .t { font: 800 9.5px Inter; letter-spacing: .16em; color: #9be37a; text-transform: uppercase; margin-bottom: 3px; }
+  .radio { top: 74px; width: 320px; left: 50%; transform: translateX(-50%); text-align: center; }
+  .radio .st { font: 800 16px Inter; letter-spacing: .06em; color: #f8d9a0; text-shadow: 0 2px 8px #000; }
+  .radio .np { white-space: nowrap; font: 500 10.5px Inter; opacity: .85; margin-top: 2px; text-shadow: 0 1px 3px #000; }
+  .phone { left: 34px; top: 150px; transform: rotate(-4deg); width: 150px; height: 276px; border-radius: 30px; background: #0c0c0f; padding: 10px; box-shadow: 0 18px 40px rgba(0,0,0,.6), inset 0 0 0 2px #2a2a30; }
+  .phone .scr { width: 100%; height: 100%; border-radius: 22px; background: linear-gradient(170deg, #3b3e5a, #1c1d29 60%); display: flex; flex-direction: column; align-items: center; padding-top: 34px; box-sizing: border-box; }
+  .phone .av { width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg, #e9a77a, #b5654a); display: grid; place-items: center; font: 700 30px Inter; }
+  .phone .nm { font: 600 18px Inter; margin-top: 10px; }
+  .phone .st2 { font: 400 12px Inter; opacity: .7; margin-top: 4px; }
+  .phone .row { display: flex; gap: 18px; margin-top: auto; margin-bottom: 24px; }
+  .phone .row div { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.14); }
+  .phone .row .end { background: #e5484d; }
+  .passed { left: 0; right: 0; top: 230px; text-align: center; }
+  .passed .big { font: 900 34px Inter; letter-spacing: .04em; color: #f3c98b; text-shadow: 0 3px 0 #5a3410, 0 0 24px rgba(0,0,0,.7); }
+  .passed .mn { font: italic 600 18px "Bitstream Charter", serif; margin-top: 6px; }
+  .passed .fx { font: 600 11px Inter; letter-spacing: .2em; text-transform: uppercase; color: #9fd4ff; margin-top: 22px; }
+  .passed .fx2 { font: 500 11px Inter; opacity: .6; margin-top: 6px; }
+  .tagline { left: 0; right: 0; top: 182px; text-align: center; font: 500 12px Inter; letter-spacing: .28em; text-transform: uppercase; color: #ddd; }
+  .tagline2 { left: 0; right: 0; top: 206px; text-align: center; font: 300 22px Inter; color: #fff; letter-spacing: .02em; }
+  .dim { position: absolute; inset: 0; background: rgba(5,5,15,.55); }
+</style>
+</head>
+<body>
+<div id="frame"><canvas id="c" width="180" height="320"></canvas></div>
+<script>
+const W = 180, H = 320;
+const cv = document.getElementById('c');
+const g = cv.getContext('2d');
+const frame = document.getElementById('frame');
+const R = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+
+// ---------- palette ----------
+const P = {
+  sky: ['#2a1b4d', '#46205f', '#6e2a6a', '#9b3a6b', '#c94e69', '#e8705f', '#f59a5a', '#f9c66b'],
+  grass: '#3f8a3a', grassD: '#2f6d2d', grassL: '#56a447',
+  walk: '#a9a290', walkD: '#8c8574', road: '#3a3a42', roadL: '#f2d45c',
+  wall: '#b08a5a', wallD: '#8a6a42', wallL: '#c9a36f',
+  roof: '#6a4634', roofD: '#4f3326', roofNew: '#7c4b30', roofNewD: '#5e3722',
+  porchOld: '#857463', porchOldD: '#675a4c', blue: '#4aa3df', blueD: '#2f7fb8',
+  win: '#2b2f45', winLit: '#ffd97a', board: '#9c7a4a',
+  trunk: '#8a6a3a', trunkD: '#6a4f2a', frond: '#2f9a4a', frondD: '#1f7036',
+  sun: '#ffe08a',
+};
+
+// ---------- sprites (each char = one game pixel, drawn at scale) ----------
+const PAL = { h: '#3a2416', s: '#d9a066', e: '#1a1010', t: '#f0f0e8', T: '#cfcfc4', j: '#3a5a9a', J: '#2a4478', b: '#222' };
+const DALE = [
+  '..hhhh..',
+  '.hhhhhh.',
+  '.hsesse.',
+  '.ssssss.',
+  '..ssss..',
+  '...ss...',
+  '.tttttt.',
+  'sttttTts',
+  'sttttTts',
+  's.tttT.s',
+  '..tttt..',
+  '..jjjJ..',
+  '..jj.J..',
+  '..jj.J..',
+  '..j..J..',
+  '..b..b..',
+];
+const DALE_SIT = [
+  '..hhhh..',
+  '.hhhhhh.',
+  '.hsesse.',
+  '.ssssss.',
+  '..ssss..',
+  '...ss...',
+  '.tttttt.',
+  'sttttTts',
+  'sttttTts',
+  's.tttT.s',
+  '..jjjjJJ',
+  '..jjjjJJ',
+  '......jJ',
+  '......jJ',
+  '......bb',
+];
+function sprite(rows, x, y, sc = 2, pal = PAL) {
+  rows.forEach((row, ry) => [...row].forEach((ch, rx) => {
+    if (pal[ch]) R(x + rx * sc, y + ry * sc, sc, sc, pal[ch]);
+  }));
+}
+
+// ---------- scene pieces ----------
+function sky(sunY = 150) {
+  const bands = P.sky, bh = 22;
+  bands.forEach((c, i) => R(0, i * bh, W, bh, c));
+  R(0, bands.length * bh, W, 210 - bands.length * bh, bands[bands.length - 1]);
+  // stepped sun
+  const cx = 150, r = 16;
+  for (let dy = -r; dy <= r; dy += 2) {
+    const hw = Math.floor(Math.sqrt(r * r - dy * dy) / 2) * 2;
+    R(cx - hw, sunY + dy, hw * 2, 2, P.sun);
+  }
+  // cloud streaks
+  R(10, 120, 60, 2, '#f7b37a'); R(24, 124, 40, 2, '#f7b37a');
+  R(110, 98, 50, 2, '#d8667a'); R(120, 102, 30, 2, '#d8667a');
+}
+function ground() {
+  R(0, 200, W, 52, P.grass);
+  for (let x = 0; x < W; x += 6) R(x + ((x / 6) % 2) * 3, 204 + (x % 4), 2, 2, P.grassD);
+  for (let x = 3; x < W; x += 9) R(x, 230 + (x % 5), 2, 2, P.grassL);
+  R(0, 252, W, 12, P.walk); for (let x = 0; x < W; x += 20) R(x, 252, 1, 12, P.walkD);
+  R(0, 264, W, 56, P.road);
+  for (let x = 4; x < W; x += 24) R(x, 290, 12, 2, P.roadL);
+}
+function palm(x, y) {
+  for (let i = 0; i < 46; i += 2) {
+    const off = Math.round(Math.sin(i / 14) * 4);
+    R(x + off, y - i, 4, 2, i % 4 ? P.trunk : P.trunkD);
+  }
+  const tx = x + Math.round(Math.sin(44 / 14) * 4) + 2, ty = y - 46;
+  const fr = [[-1, 0], [1, 0], [-1, 1], [1, 1], [0, -1]];
+  fr.forEach(([dx, dy]) => {
+    for (let k = 0; k < 9; k++) {
+      const px = tx + dx * k * 2, py = ty + dy * k + (k > 4 ? (k - 4) : 0) * (dy === -1 ? -1 : 1);
+      R(px, py, 3, 2, k % 3 ? P.frond : P.frondD);
+    }
+  });
+}
+function house(state) {
+  // state: 'old' | 'fixed'
+  const x0 = 34, x1 = 146, wy = 142, gy = 200;
+  // roof (stepped triangle)
+  for (let i = 0; i < 18; i++) {
+    const y = 106 + i * 2, inset = 56 - i * 3.3;
+    const c = state === 'fixed' ? (i % 3 ? P.roofNew : P.roofNewD) : (i % 3 ? P.roof : P.roofD);
+    R(Math.round(x0 - 6 + inset), y, Math.round((x1 - x0 + 12) - inset * 2), 2, c);
+  }
+  if (state === 'old') { // holes + a tarp
+    R(72, 122, 8, 4, P.sky[6]); R(110, 132, 6, 4, P.sky[6]);
+    R(90, 116, 14, 8, '#3d6fb6'); R(90, 116, 14, 2, '#5d8fd6');
+  }
+  // walls with planks
+  R(x0, wy, x1 - x0, gy - wy, P.wall);
+  for (let y = wy + 4; y < gy; y += 6) R(x0, y, x1 - x0, 1, P.wallD);
+  if (state === 'old') { R(x0 + 6, wy + 10, 10, 14, '#9a7a4e'); R(x1 - 20, wy + 30, 12, 10, '#9a7a4e'); }
+  // door
+  R(82, 164, 16, 32, state === 'fixed' ? '#7a3b2a' : '#5a4232'); R(94, 180, 2, 2, '#f3c98b');
+  // windows
+  const lit = state === 'fixed' ? P.winLit : P.win;
+  R(46, 156, 22, 18, '#e8dcc2'); R(48, 158, 18, 14, lit); R(56, 158, 2, 14, '#e8dcc2');
+  R(112, 156, 22, 18, '#e8dcc2'); R(114, 158, 18, 14, lit); R(122, 158, 2, 14, '#e8dcc2');
+  if (state === 'old') { // boarded window
+    R(110, 160, 26, 3, P.board); R(110, 166, 26, 3, P.board); R(110, 160, 2, 12, P.board);
+  }
+  // porch: floor, posts, rail
+  const pc = state === 'fixed' ? P.blue : P.porchOld, pd = state === 'fixed' ? P.blueD : P.porchOldD;
+  R(26, 196, 128, 6, pc); R(26, 201, 128, 1, pd);
+  R(26, 202, 128, 4, pd); // steps shadow
+  R(80, 202, 20, 3, pc); R(78, 205, 24, 3, pc);
+  [28, 62, 112, 148].forEach(px => R(px, 150, 3, 46, pc));
+  R(26, 148, 128, 3, pc);
+  R(28, 182, 50, 2, pc); R(104, 182, 48, 2, pc);
+  for (let px = 32; px < 78; px += 6) R(px, 184, 2, 12, pd);
+  for (let px = 106; px < 150; px += 6) R(px, 184, 2, 12, pd);
+  if (state === 'old') { R(40, 184, 4, 12, P.wall); R(126, 184, 2, 12, P.wall); R(120, 182, 8, 2, P.wall); }
+  // mailbox
+  R(160, 222, 2, 18, '#555'); R(156, 216, 10, 7, state === 'fixed' ? P.blue : '#8a8a8a');
+}
+function hotspot(x, y, label) {
+  // pulsing ring (drawn static at "peak")
+  g.fillStyle = 'rgba(255,224,138,0.35)'; g.fillRect(x - 6, y - 6, 12, 12);
+  R(x - 6, y - 6, 12, 2, '#ffe08a'); R(x - 6, y + 4, 12, 2, '#ffe08a');
+  R(x - 6, y - 6, 2, 12, '#ffe08a'); R(x + 4, y - 6, 2, 12, '#ffe08a');
+  R(x - 1, y - 1, 2, 2, '#fff');
+}
+
+// ---------- UI helpers ----------
+function ui(html) { frame.insertAdjacentHTML('beforeend', html); }
+function letterbox() { ui('<div class="ui letterbox" style="top:0"></div><div class="ui letterbox" style="bottom:0"></div>'); }
+function heart(full) {
+  const px = full ? '#ff5d8f' : 'rgba(255,255,255,.25)';
+  const rows = ['.xx.xx.', 'xxxxxxx', 'xxxxxxx', '.xxxxx.', '..xxx..', '...x...'];
+  let s = '<svg width="17" height="15" viewBox="0 0 7 6" shape-rendering="crispEdges">';
+  rows.forEach((r, y) => [...r].forEach((c, x) => { if (c === 'x') s += `<rect x="${x}" y="${y}" width="1" height="1" fill="${px}"/>`; }));
+  return s + '</svg>';
+}
+function hud(hearts = 0, money = '$0', time = '6:42 PM') {
+  ui(`<div class="ui hud-hearts">${[0, 1, 2, 3].map(i => heart(i < hearts)).join('')}</div>`);
+  ui(`<div class="ui hud-money">${money}</div><div class="ui hud-time">${time}</div>`);
+  ui(`<div class="ui minimap">
+        <i style="left:0;right:0;top:44px;height:6px;background:#4a4a52"></i>
+        <i style="left:30px;top:0;bottom:0;width:5px;background:#4a4a52"></i>
+        <i style="left:12px;top:18px;width:12px;height:12px;background:#6b5a46"></i>
+        <i style="left:44px;top:14px;width:16px;height:10px;background:#6b5a46"></i>
+        <i style="left:44px;top:56px;width:10px;height:10px;background:#6b5a46"></i>
+        <i style="left:33px;top:33px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #fff"></i>
+        <i style="left:14px;top:20px;width:8px;height:8px;border-radius:50%;background:#ffe08a;box-shadow:0 0 0 2px #000"></i>
+      </div>`);
+}
+
+// ---------- frames ----------
+const FRAMES = {
+  // 1-2: Establishing shot + mission card
+  establish() {
+    sky(152); ground(); house('old'); palm(10, 214); palm(166, 206);
+    sprite(DALE, 132, 212);
+    letterbox();
+    ui(`<div class="ui mission"><div class="kicker">Mission 1 &nbsp;·&nbsp; Port Mangrove</div>
+        <div class="title">Where the<br>Heart Is</div><div class="rule"></div></div>`);
+  },
+  // 3: Phone call from Ma
+  phone() {
+    sky(152); ground(); house('old'); palm(10, 214); palm(166, 206);
+    ui('<div class="dim" style="background:rgba(5,5,15,.35)"></div>');
+    sprite(DALE, 128, 212);
+    ui(`<div class="ui phone"><div class="scr"><div class="av">M</div><div class="nm">Ma</div><div class="st2">00:47</div>
+        <div class="row"><div></div><div class="end"></div><div></div></div></div></div>`);
+    ui(`<div class="ui sub"><b>DALE:</b> I'm fixing up the house, Ma. Before she gets out.</div>`);
+  },
+  // 4: Repair gameplay
+  repair() {
+    sky(152); ground(); house('old');
+    // re-shingled strip in progress: slightly different brown
+    for (let i = 0; i < 6; i++) { const y = 106 + i * 2, inset = 56 - i * 3.3; R(Math.round(28 + inset), y, Math.round(124 - inset * 2), 2, i % 3 ? P.roofNew : P.roofNewD); }
+    palm(10, 214); palm(166, 206);
+    sprite(DALE, 60, 214);
+    hotspot(76, 124); hotspot(124, 168); hotspot(44, 190);
+    hud(0, '$12', '6:51 PM');
+    ui(`<div class="ui progress"><div class="lbl"><span>Home Restoration</span><span>34%</span></div><div class="bar"><div style="width:34%"></div></div></div>`);
+    ui(`<div class="ui toast"><div class="t">Skill increased</div>Grout: Professional Grade</div>`);
+    ui(`<div class="ui prompt"><span class="btn">HOLD</span>Re-shingle the roof</div>`);
+  },
+  // 5: Quiet moment on the porch steps
+  porch() {
+    sky(176); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    sprite(DALE_SIT, 82, 194);
+    letterbox();
+    ui(`<div class="ui radio"><div class="st">SMOOTH SENIORS 101.1</div><div class="np">"Gloria's Song (For Gloria)" · DJ Merle</div></div>`);
+    ui(`<div class="ui sub"><i>She used to say the porch was the only part of this house that was hers. Three years.<br>I hope blue is still her color.</i></div>`);
+  },
+  // 6: Mission passed
+  passed() {
+    sky(180); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    sprite(DALE_SIT, 82, 194);
+    ui('<div class="dim" style="background:rgba(5,5,15,.45)"></div>');
+    ui(`<div class="ui passed"><div class="big">MISSION PASSED</div><div class="mn">Where the Heart Is</div>
+        <div class="fx">Hidden effect logged</div><div class="fx2">Someone will notice.</div></div>`);
+  },
+};
+
+const name = location.hash.slice(1) || 'establish';
+FRAMES[name]();
+document.title = 'ready';
+</script>
+</body>
+</html>
