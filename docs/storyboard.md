@@ -10,12 +10,12 @@ Frames are rendered from [`storyboard/frames.html`](storyboard/frames.html) with
 
 1. **The House:** Lucita is in prison. Jase fixes up the house before she gets out.
 2. **Coming Home:** Jase picks her up in his father's convertible. She notices the porch.
-3. **The Store:** a convenience store hold-up, done as a couple.
-4. **The Date:** kayaking at sunset.
-5. **The Text:** a message arrives mid-heist ("did u get the oat milk").
-6. **The Channel:** a speedboat chase.
-7. **The Job:** the big heist, planned and played with total seriousness.
-8. **The Ending:** relationship level decides it; epilogue on the in-game social feed.
+3. **The Store** (*Late Night Special*): a convenience store hold-up, done as a couple. The clerk knows Jase from Little League.
+4. **The Date** (*Low Tide*, optional): kayaking at dawn; a manatee.
+5. **The Text** (*Cash for Gold*): Lucita is lookout and texts about oat milk mid-safecrack.
+6. **The Channel** (*Wake*): a stolen speedboat, a helicopter, a mangrove channel.
+7. **The Job**: the big bank heist with a crew; a betrayal; a five-star getaway.
+8. **The Ending**: relationship level decides it; epilogue on the in-game social feed; very long credits.
 
 The radio is reachable from every vehicle, including the kayak.
 
@@ -108,9 +108,231 @@ The radio is reachable from every vehicle, including the kayak.
 **Panel 6: End card** *(frame 6)*
 - *UI:* `MISSION PASSED — Coming Home` / `Relationship: Level 1` / `"Complicated"`
 
-## Beats 3–8
+## Relationship ladder
 
-To be drafted.
+Four hearts. Level names appear on end cards.
+
+| Level | Name | Typical point |
+|---|---|---|
+| 1 | "Complicated" | After Beat 2 |
+| 2 | "Seeing Where It Goes" | After the date (Beat 4) |
+| 3 | "Something Real" | After the channel (Beat 6) |
+| 4 | "All In" | Trusting Lucita in Beat 7, plus no dismissed texts |
+
+Hearts go down for: dismissive replies (👍), ignoring texts, trusting Rudy, skipping the date. The frames from Beat 6 on assume the ❤️ reply in Beat 5.
+
+---
+
+## Beat 3: The Store (draft 1)
+
+![Beat 3 storyboard frames](storyboard/beat3-sheet.png)
+
+**Panel 1: Arrival** *(frame 1)*
+- *Screen:* Night. The Gas N Gator: neon green sign, lit windows with shelves, a pump showing `419`. The convertible pulls in. Letterbox.
+- *UI:* Mission card **Late Night Special**, kicker `Mission 3 · Route 9`.
+- *Audio:* Buzzing neon. Crickets. The car radio is still on, faintly.
+
+**Panel 2: The plan** *(frame 2)*
+- *Screen:* Both in the parked car. Scene dims for a choice.
+- *Text:*
+  - Lucita: "In and out. Nobody gets hurt."
+  - Jase: "And we get the good jerky."
+- *Choice:* `Loud` / `Quiet` / `Buy something first`. ("Buy something first" plays the same robbery, but Jase pays for a slushie before pulling the gun. Benny is more confused.)
+
+**Panel 3: The hold-up** *(frame 3)*
+- *Screen:* Interior under fluorescent light: shelves, a slush machine, a cigarette rack. Benny behind the counter in a red uniform. Lucita and Jase in ski masks, pistols up.
+- *UI:* Full HUD; 1 wanted star.
+- *Text:*
+  - Jase: "Hands where I can see them, Benny. Nobody's gotta be a hero tonight."
+  - Benny: "Jase? From Little League?"
+
+**Panel 4: Recognized** *(frame 4)*
+- *Screen:* Same shot. One pink pixel appears on Jase's mask (he's blushing).
+- *UI:* Toast `Witness — Benny will tell your mother.`
+- *Text:*
+  - Benny: "Man, your mom's gonna hear about this."
+  - Lucita: "Register. Now. And the teriyaki."
+
+**Panel 5: The chase** *(frame 5)*
+- *Screen:* Streetlights, red and blue wash. The convertible ahead, one police car behind.
+- *UI:* 2 stars. Toast `Wanted level increased — Units responding: 1`.
+- *Text:*
+  - Lucita: "Left! LEFT!"
+  - Jase: "I'm going left!"
+- *Gameplay:* swipe lanes; 3 turns; lose the cruiser behind the car wash.
+
+**Panel 6: End card** *(frame 6)*
+- `MISSION PASSED — Late Night Special` / `$186 · 1 Beef Jerky (Teriyaki)` / `Benny has called your mother.`
+- Follow-up: next time the phone opens, Ma has left a voicemail: "Benny's mother called my mother."
+
+---
+
+## Beat 4: The Date (draft 1)
+
+Optional. Skipping it costs a heart later ("You never take me anywhere.").
+
+![Beat 4 storyboard frames](storyboard/beat4-sheet.png)
+
+**Panel 1: Asking** *(frame 1)*
+- *Screen:* Jase on the lawn at sunset. A text thread fills most of the screen.
+- *Text (thread):* Jase: "kayak tomorrow? i found a spot" / Lucita: "who is this" / "lol" / "ok. 6am. bring coffee"
+- *UI:* Card **Low Tide**, kicker `Date · Optional`.
+
+**Panel 2: Paddling** *(frame 2)*
+- *Screen:* Dawn over a mangrove shoreline, teal water, an orange tandem kayak.
+- *UI:* Station card `WGTR "THE GATOR" 97.3 — Bluetooth speaker · 12% battery`. Prompt `L · R Paddle in rhythm` (alternate thumbs; drifting out of rhythm turns the kayak in slow circles).
+- *Text:*
+  - Lucita: "Do you ever think about just... not going back? A little place in the Keys. Chickens."
+  - Jase: "You'd hate chickens."
+
+**Panel 3: The manatee** *(frame 3)*
+- *Screen:* A manatee surfaces beside the kayak. A heart rises.
+- *UI:* Toast `Wildlife spotted — West Indian Manatee (1 of 1)`. Second heart fills.
+- *Text:* Lucita: "I'd hate them *with you.*"
+
+**Panel 4: End card** *(frame 4)*
+- `DATE COMPLETE — Low Tide` / `Mangroves paddled: 1 of 1` / `Relationship: Level 2 — "Seeing Where It Goes"`
+
+---
+
+## Beat 5: The Text (draft 1)
+
+![Beat 5 storyboard frames](storyboard/beat5-sheet.png)
+
+**Panel 1: The safe** *(frame 1)*
+- *Screen:* Back room of the Cash 4 Gold pawn shop: guitars, a TV, boxes, a big safe. Jase in a mask, drilling; sparks. Letterbox.
+- *UI:* `Drilling 41%`. Toast `Silent alarm — Patrol arrives in 0:47`. Card **Cash for Gold**, kicker `Mission 4 · Lucita is lookout`.
+- *Audio:* Drill whine; a ticking clock under the music.
+
+**Panel 2: The text** *(frame 2)*
+- *Screen:* The heist keeps running behind a dimmed overlay. The drill progress keeps climbing while you read.
+- *Text (thread, Lucita):* "all clear out here" / "also did u get the oat milk" / "not the vanilla one. the one with the green cap"
+- *Choices:* `❤️ "Already in the fridge, babe"` / `👍` / `Ignore`
+- *Design:* the alarm timer does **not** pause. Replying costs real seconds.
+
+**Panel 3: Consequence** *(frame 3, the 👍 path)*
+- *UI:* One heart drains. Toast `Relationship ↓ — Lucita felt dismissed.` Drilling hits 97%.
+- *Text:* *You sent 👍.*
+- *❤️ path:* toast `Relationship holds — She'll check the fridge.` *Ignore path:* a second text arrives at 99%: "ok."
+
+**Panel 4: Escape** *(frame 4)*
+- *Screen:* Back alley. Lucita is in the driver's seat. Jase runs out with a duffel bag.
+- *UI:* `$2,538`, 1 star.
+- *Text:*
+  - Lucita: "Did you get it or not."
+  - Jase: "The safe? Yeah."
+  - Lucita: "The milk, Jase."
+
+**Panel 5: End card** *(frame 5)*
+- `MISSION PASSED — Cash for Gold` / `$2,340` / `Oat milk: unresolved.`
+- Running gag: an `Oat milk` entry stays in the stats page as "Unresolved" until a hidden errand near the ending.
+
+---
+
+## Beat 6: The Channel (draft 1)
+
+![Beat 6 storyboard frames](storyboard/beat6-sheet.png)
+
+**Panel 1: The marina** *(frame 1)*
+- *Screen:* Sunset over the Bayside Yacht Club: silhouetted yachts, a dock, a white speedboat with a red stripe. Letterbox.
+- *UI:* Card **Wake**, kicker `Mission 5 · Bayside Yacht Club`.
+- *Text:*
+  - Jase: "It's not stealing. It's a test drive."
+  - Lucita: "It has a name, Jase. It's called *Reel Estate.*"
+
+**Panel 2: The chase** *(frame 2)*
+- *Screen:* Night water. A helicopter's spotlight sweeps the boat. A police boat behind. Red and blue wash.
+- *UI:* 3 stars.
+- *Text:*
+  - Lucita: "They've got a chopper on us!"
+  - Jase: "Hard left into the channel. Tide's too low for the cutters."
+- *Gameplay:* stay out of the spotlight cone; it follows with a delay.
+
+**Panel 3: The channel** *(frame 3)*
+- *Screen:* A narrowing mangrove channel, dark walls of roots on both sides.
+- *UI:* Prompt `TILT Thread the channel`.
+- *Text:*
+  - Lucita: "Jase, if we die out here—"
+  - Jase: "We're not dying out here. We still have that coupon for the escape room."
+
+**Panel 4: Lost them** *(frame 4)*
+- *Screen:* Open water under a full sky of stars. The boat drifts. A heart rises.
+- *UI:* `WANTED LEVEL LOST` in green. Third heart fills.
+- *Text:*
+  - Lucita: "...Was that fun? That felt fun."
+  - Jase: "That felt fun."
+- *Audio:* Engine cuts. Water. A long held chord. No radio.
+
+---
+
+## Beat 7: The Job (draft 1)
+
+![Beat 7 storyboard frames](storyboard/beat7-sheet.png)
+
+**Panel 1: The crew** *(frame 1)*
+- *Screen:* A garage war room: corkboard with photos and red string, a lamp, a blueprint on the table. Crew left to right: **Rudy** (loud yellow shirt), **Tina** (purple hair, hoodie, laptop), Lucita, Jase. Letterbox.
+- *UI:* Card **The Job**, kicker `Mission 6 · The Big One`.
+- *Text:*
+  - Lucita: "Everybody in this room is gonna be tempted. Be tempted somewhere else."
+  - Rudy: "I'm just here for the snacks."
+
+**Panel 2: The approach** *(frame 2)*
+- *Choice:* `The Smart Way` / `The Loud Way` / `Through the Ceiling Tiles`
+- *Text:* Tina: "Vault's on a 90-second timer. Cameras loop every 40. The guard's name is Doug and he is going through a divorce."
+- *Design:* each approach is a different 60-second mini-sequence; all three end in the same vault.
+
+**Panel 3: Walk-in** *(frame 3)*
+- *Screen:* First Bank: columns, steps. Four masked figures walk toward the doors in slow motion. Letterbox.
+- *UI:* Timestamp card `11:58 AM — First Bank of Port Mangrove`.
+- *Audio:* Music drops out; only footsteps and a heartbeat sample.
+
+**Panel 4: The vault** *(frame 4)*
+- *Screen:* The vault door swung open. Shelves of gold bars and cash bricks.
+- *UI:* Toast `Vault cracked — Estimated take: $4,200,000`. 2 stars.
+- *Text:*
+  - Jase: "...It's bigger than I thought."
+  - Lucita: "Everything's bigger than you thought."
+
+**Panel 5: Betrayal** *(frame 5)*
+- *Screen:* Red-tinted. Rudy has the bag and a pistol. Lucita has hers on him.
+- *Choice:* `Who do you trust?` — `Lucita` / `Rudy`
+- *Text:*
+  - Rudy: "Nothing personal. I've got a timeshare."
+  - Lucita: "Rudy. Put it down."
+- *Outcomes:* **Lucita** → Rudy folds; heart +1. **Rudy** → Rudy leaves with half; Lucita stops talking for the rest of the mission; heart −1. (Rudy's timeshare is Eternal Shores, from the radio.)
+
+**Panel 6: Getaway** *(frame 6)*
+- *Screen:* Downtown in daylight. Convertible, police cruiser behind, helicopter overhead.
+- *UI:* `$4,200,000`, 5 stars.
+- *Text:*
+  - Lucita: "Drive like you mean it."
+  - Jase: "I always mean it."
+
+---
+
+## Beat 8: The Ending (draft 1)
+
+![Beat 8 storyboard frames](storyboard/beat8-sheet.png)
+
+The ending is chosen by relationship level after Beat 7.
+
+**Ending A, Level 4: Ride Home** *(frames 1–2)*
+- *Frame 1:* Sunset causeway, convertible heading into the sun, a heart above them. Letterbox. Card **Ride Home**, kicker `Ending · Relationship: Level 4`. No dialogue at all. A stirring chiptune "orchestral" swell.
+- *Frame 2:* The phone opens on **SwampFeed**. Action 7 Eyewitness Swamp News: `LOCAL COUPLE STILL AT LARGE; NEIGHBORS DESCRIBE THEM AS "GENUINELY KIND"`. ♥ 2.4M. Comments:
+  - `gatorgirl88`: honestly goals
+  - `benny_littleleague`: I've known him since he was 9 and he still owes me jerky
+  - `porthoa_president`: that porch color was NOT approved
+
+**Ending B, Level 3: Still Here** *(not drawn yet)*
+- They sit on the blue porch at night, the bag between them. Lucita: "We can't stay." Jase: "I know." Neither moves. The radio plays the 4-second loop until the screen fades.
+
+**Ending C, Level 1–2: Walking Away** *(frame 3)*
+- *Screen:* Home at dusk. Lucita walks down the sidewalk with a paper bag, the same one from Beat 2. Jase stands by the car. Letterbox.
+- *Text:* Lucita: "I needed you to *show up,* Jase. Not just for the jobs."
+- *Callback:* if the oat milk was never resolved, she adds, without turning around: "And it was the green cap."
+
+**Credits** *(frame 4)*
+- Long, sincere, skippable. Examples: Lead Rectangle Artist; Senior Slightly Different Brown; Seagull (Recorded on location); Shader Compilation Consultant; Hand-Holding Animation Team (14); Manatee Wrangler; "Midnight Coastline" (4 sec.) by The Velvet Tides; Oat Milk (Unresolved); "...and 400 more names". `HOLD to skip`.
 
 ## Running ideas
 
@@ -120,3 +342,5 @@ To be drafted.
 - Option to leave Lucita in prison; a counter quietly tracks days. Fishing is very peaceful.
 - Relationship meter: 4 pixel-hearts, with level names ("Complicated", ...). Ignoring texts decays it.
 - Lucita changes the radio station herself if you don't.
+- Ma's voicemails react to missions ("Benny's mother called my mother.").
+- Hidden errand: buy the oat milk (green cap) to resolve the running gag before the ending.

@@ -14,6 +14,7 @@
   .mission { left: 22px; bottom: 92px; }
   .mission .kicker { font: 600 10px Inter; letter-spacing: .32em; color: #f3c98b; text-transform: uppercase; }
   .mission .title { font: italic 700 30px "Bitstream Charter", "DejaVu Serif", serif; line-height: 1.05; margin-top: 6px; text-shadow: 0 2px 12px rgba(0,0,0,.6); }
+  .mission[style*='right:20px'] .rule { margin-left: auto; }
   .mission .rule { width: 46px; height: 2px; background: #f3c98b; margin-top: 10px; }
   .sub { padding: 6px 8px; border-radius: 6px; background: rgba(0,0,0,.28); left: 24px; right: 24px; bottom: 22px; text-align: center; font: 500 14px/1.4 Inter; text-shadow: 0 1px 3px #000, 0 0 10px rgba(0,0,0,.8); }
   .sub b { color: #f3c98b; font-weight: 700; }
@@ -50,6 +51,37 @@
   .tagline { left: 0; right: 0; top: 182px; text-align: center; font: 500 12px Inter; letter-spacing: .28em; text-transform: uppercase; color: #ddd; }
   .tagline2 { left: 0; right: 0; top: 206px; text-align: center; font: 300 22px Inter; color: #fff; letter-spacing: .02em; }
   .dim { position: absolute; inset: 0; background: rgba(5,5,15,.55); }
+  .wanted { top: 58px; right: 12px; display: flex; gap: 1px; padding: 1px 6px; border-radius: 9px; background: rgba(0,0,0,.45); font-size: 15px; color: rgba(255,255,255,.22); text-shadow: 0 1px 2px #000; }
+  .wanted .on { color: #fff; }
+  .thread { left: 50%; top: 70px; transform: translateX(-50%); width: 260px; background: #f4f2ee; color: #111; border-radius: 22px; padding: 12px 12px 14px; box-shadow: 0 18px 40px rgba(0,0,0,.55); }
+  .thread .th-h { display: flex; align-items: center; gap: 8px; font: 600 13px Inter; padding-bottom: 10px; border-bottom: 1px solid #ddd; margin-bottom: 10px; }
+  .thread .dot, .feed .dot { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #f0a070, #b5654a); color: #fff; display: grid; place-items: center; font: 700 11px Inter; }
+  .thread .msg { max-width: 78%; padding: 7px 11px; border-radius: 16px; font: 400 12.5px/1.3 Inter; margin: 4px 0; width: fit-content; }
+  .thread .them { background: #e2e0dc; }
+  .thread .me { background: #2f7fe8; color: #fff; margin-left: auto; }
+  .thread .choices { margin-top: 12px; display: grid; gap: 6px; }
+  .thread .choices div { border: 1.5px solid #2f7fe8; color: #2f7fe8; border-radius: 12px; padding: 7px 10px; font: 600 12px Inter; text-align: center; }
+  .thread .choices div:first-child { background: #2f7fe8; color: #fff; }
+  .choice { left: 50%; top: 150px; transform: translateX(-50%); width: 236px; background: rgba(10,10,14,.9); border: 1px solid rgba(255,255,255,.16); border-radius: 10px; padding: 12px; }
+  .choice .ct { font: 700 10px Inter; letter-spacing: .2em; text-transform: uppercase; color: #f3c98b; margin-bottom: 8px; }
+  .choice .co { font: 600 14px Inter; padding: 9px 10px; border-radius: 6px; margin-top: 4px; background: rgba(255,255,255,.06); }
+  .choice .co.sel { background: #f3c98b; color: #111; }
+  .feed { left: 50%; top: 50px; transform: translateX(-50%); width: 280px; background: #fff; color: #111; border-radius: 22px; overflow: hidden; box-shadow: 0 18px 40px rgba(0,0,0,.55); }
+  .feed .fh { font: 800 18px Inter; letter-spacing: -.02em; padding: 12px 14px; border-bottom: 1px solid #eee; }
+  .feed .post { padding: 10px 14px 14px; }
+  .feed .who { display: flex; align-items: center; gap: 8px; font: 600 11.5px Inter; }
+  .feed .ver { color: #2f7fe8; }
+  .feed .pic { height: 120px; margin: 10px -14px; background: linear-gradient(#e8705f, #f9c66b 55%, #3fb3b8 55%); position: relative; }
+  .feed .pic::after { content: ""; position: absolute; left: 96px; top: 58px; width: 60px; height: 12px; background: #c9443f; box-shadow: 18px -6px 0 -2px #c9443f; }
+  .feed .hd { font: 800 13.5px/1.25 Inter; }
+  .feed .meta { font: 600 11px Inter; color: #555; margin: 8px 0; }
+  .feed .cm { font: 400 11.5px/1.35 Inter; margin-top: 4px; }
+  .credits { inset: 0; padding: 90px 30px 0; text-align: center; }
+  .credits .cr-t { font: italic 700 24px "Bitstream Charter", serif; margin-bottom: 34px; color: #f3c98b; }
+  .credits .cr { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font: 400 12px/1.2 Inter; margin: 10px 0; text-align: left; }
+  .credits .cr span { text-align: right; color: #9a9a9a; text-transform: uppercase; font-size: 9.5px; letter-spacing: .12em; padding-top: 2px; }
+  .credits .cr-n { margin-top: 30px; font: italic 400 12px Inter; color: #777; }
+  .credits .cr-skip { position: absolute; bottom: 30px; left: 0; right: 0; font: 600 10px Inter; letter-spacing: .2em; color: #555; }
 </style>
 </head>
 <body>
@@ -314,6 +346,199 @@ function pixelHeart(x, y) {
     [...r].forEach((c, rx) => { if (c === 'x') R(x + rx * 2, y + ry * 2, 2, 2, PAL.p); }));
 }
 
+
+// ===================== shared pieces for beats 3-8 =====================
+Object.assign(PAL, {
+  y: '#f2c14e', Y: '#d19a2a',          // Rudy's loud shirt
+  n: '#2a2a30', N: '#18181c',          // Tina's black hoodie
+  v: '#8a5cc0',                        // Tina's purple hair
+  a: '#c8313a', A: '#9a2028',          // store uniform red
+  m: '#2b2b2b',                        // ski mask
+  K: '#1b1b1f',                        // duffel bag
+});
+const recolor = (rows, map) => rows.map(r => [...r].map(c => map[c] ?? c).join(''));
+const masked = rows => rows.map((r, i) => i < 7 ? [...r].map(c => 'hsBckov'.includes(c) ? 'm' : c).join('') : r);
+const CLERK = recolor(JASE, { B: 's', g: 'a', G: 'A', x: 's' });
+const RUDY = recolor(JASE, { h: 'c', B: 'c', s: 'k', g: 'y', G: 'Y', x: 'k' });
+const TINA = recolor(LUCITA_CASUAL, { c: 'v', w: 'n', W: 'N', d: 'j', D: 'J', o: 'k' });
+const LUCITA_MASK = masked(LUCITA_CASUAL), JASE_MASK = masked(JASE);
+const RUDY_MASK = masked(RUDY), TINA_MASK = masked(TINA);
+const pistol = (x, y) => { R(x, y, 5, 2, '#3a3a40'); R(x, y + 2, 2, 2, '#3a3a40'); };
+const duffel = (x, y) => { R(x, y + 2, 14, 8, PAL.K); R(x + 3, y, 8, 2, PAL.K); R(x + 2, y + 5, 10, 1, '#3a3a44'); };
+
+// variable-width 5px-tall pixel font for signs
+const FONT = {"A": [".#.", "#.#", "###", "#.#", "#.#"], "B": ["##.", "#.#", "##.", "#.#", "##."], "C": [".##", "#..", "#..", "#..", ".##"], "D": ["##.", "#.#", "#.#", "#.#", "##."], "E": ["###", "#..", "##.", "#..", "###"], "F": ["###", "#..", "##.", "#..", "#.."], "G": [".###", "#...", "#.##", "#..#", ".###"], "H": ["#.#", "#.#", "###", "#.#", "#.#"], "I": ["###", ".#.", ".#.", ".#.", "###"], "J": ["..#", "..#", "..#", "#.#", ".#."], "K": ["#.#", "#.#", "##.", "#.#", "#.#"], "L": ["#..", "#..", "#..", "#..", "###"], "M": ["#...#", "##.##", "#.#.#", "#...#", "#...#"], "N": ["#..#", "##.#", "#.##", "#..#", "#..#"], "O": [".##.", "#..#", "#..#", "#..#", ".##."], "P": ["##.", "#.#", "##.", "#..", "#.."], "Q": [".##.", "#..#", "#..#", "#.#.", ".#.#"], "R": ["##.", "#.#", "##.", "#.#", "#.#"], "S": [".##", "#..", ".#.", "..#", "##."], "T": ["###", ".#.", ".#.", ".#.", ".#."], "U": ["#.#", "#.#", "#.#", "#.#", "###"], "V": ["#.#", "#.#", "#.#", "#.#", ".#."], "W": ["#...#", "#...#", "#.#.#", "##.##", "#...#"], "X": ["#.#", "#.#", ".#.", "#.#", "#.#"], "Y": ["#.#", "#.#", ".#.", ".#.", ".#."], "Z": ["###", "..#", ".#.", "#..", "###"], "0": ["###", "#.#", "#.#", "#.#", "###"], "1": [".#.", "##.", ".#.", ".#.", "###"], "2": ["##.", "..#", ".#.", "#..", "###"], "3": ["##.", "..#", ".#.", "..#", "##."], "4": ["#.#", "#.#", "###", "..#", "..#"], "5": ["###", "#..", "##.", "..#", "##."], "6": [".##", "#..", "###", "#.#", "###"], "7": ["###", "..#", ".#.", ".#.", ".#."], "8": ["###", "#.#", "###", "#.#", "###"], "9": ["###", "#.#", "###", "..#", "##."], ".": [".", ".", ".", ".", "#"], "-": ["...", "...", "###", "...", "..."], "!": ["#", "#", "#", ".", "#"], "'": ["#", "#", ".", ".", "."], "$": [".##", "##.", ".#.", ".##", "##."], " ": ["..", "..", "..", "..", ".."]};
+function text(str, x, y, c, sc = 1) {
+  let cx = x;
+  for (const ch of str.toUpperCase()) {
+    const rows = FONT[ch] || FONT[' '];
+    rows.forEach((r, ry) => [...r].forEach((p, rx) => { if (p === '#') R(cx + rx * sc, y + ry * sc, sc, sc, c); }));
+    cx += (rows[0].length + 1) * sc;
+  }
+}
+const textW = (str, sc = 1) => [...str.toUpperCase()].reduce((w, ch) => w + ((FONT[ch] || FONT[' '])[0].length + 1) * sc, -sc);
+
+function nightSky(stars = 30) {
+  ['#0b0d24', '#11153a', '#181d48', '#202656', '#283063', '#313a70'].forEach((c, i) => R(0, i * 34, W, 34, c));
+  for (let i = 0; i < stars; i++) R((i * 53) % W, (i * 29) % 150, 1, 1, i % 3 ? '#cfd6ff' : '#fff');
+  const cx = 150, cy = 84, r = 8;
+  for (let dy = -r; dy <= r; dy += 2) { const hw = Math.floor(Math.sqrt(r * r - dy * dy) / 2) * 2; R(cx - hw, cy + dy, hw * 2, 2, '#f4f1d0'); }
+  R(cx + 2, cy - 6, 6, 10, '#11153a');
+}
+function policeCar(x, y, flip = false) {
+  R(x + 2, y - 18, 72, 10, '#f2f2f2'); R(x + 16, y - 26, 38, 8, '#f2f2f2'); R(x + 20, y - 24, 30, 5, '#8fb7d6');
+  R(x + 2, y - 10, 72, 4, '#1b1b1f'); R(x + 30, y - 30, 6, 4, '#ff3b3b'); R(x + 36, y - 30, 6, 4, '#3b7bff');
+  text('POLICE', x + 26, y - 16, '#1b2a5a');
+  [16, 60].forEach(cx => { R(x + cx - 6, y - 8, 12, 8, '#111'); R(x + cx - 2, y - 6, 4, 4, '#999'); });
+  R(flip ? x + 72 : x, y - 16, 3, 3, flip ? '#ffe9a8' : '#ff4a3a');
+}
+function sirenGlow() { g.fillStyle = 'rgba(255,40,60,.10)'; g.fillRect(0, 0, W / 2, H); g.fillStyle = 'rgba(40,90,255,.10)'; g.fillRect(W / 2, 0, W / 2, H); }
+function helicopter(x, y, beamTo = null) {
+  if (beamTo) for (let i = 0; i < beamTo; i += 2) { const hw = 3 + i * 0.35; g.fillStyle = 'rgba(255,245,190,.18)'; g.fillRect(Math.round(x + 14 - hw), y + 8 + i, Math.round(hw * 2), 2); }
+  R(x - 10, y - 4, 50, 1, '#9aa0aa');                      // rotor
+  R(x + 13, y - 3, 2, 3, '#2a2d35');
+  R(x + 4, y, 22, 8, '#2a2d35'); R(x + 18, y + 1, 6, 4, '#7fb0d6'); // body + canopy
+  R(x - 14, y + 2, 18, 2, '#2a2d35'); R(x - 16, y - 1, 2, 6, '#2a2d35'); // tail
+  R(x + 6, y + 9, 18, 1, '#2a2d35');                         // skids
+}
+function speedboat(x, y, riders = true) {
+  // y = waterline
+  if (riders) { sprite(LUCITA_CASUAL.slice(0, 8), x + 30, y - 26); sprite(JASE.slice(0, 8), x + 46, y - 26); }
+  for (let i = 0; i < 8; i++) R(x + i * 2, y - 12 + i, 76 - i * 3, 1, i < 3 ? '#f4f4f0' : '#dcdcd4');
+  R(x, y - 14, 70, 4, '#f4f4f0'); R(x + 6, y - 10, 60, 2, '#d8333a');
+  R(x + 54, y - 20, 2, 6, '#cfd8e0'); R(x + 56, y - 20, 8, 1, '#cfd8e0');
+  R(x + 70, y - 14, 10, 4, '#f4f4f0'); R(x + 78, y - 12, 4, 2, '#f4f4f0');
+  for (let i = 0; i < 6; i++) R(x - 10 - i * 12, y - 2 + (i % 2), 10 - i, 2, '#e8fbff');   // wake
+}
+function policeBoat(x, y) {
+  R(x, y - 12, 60, 8, '#3c4a5a'); R(x + 4, y - 4, 52, 3, '#2a3440'); R(x + 20, y - 22, 20, 10, '#e8e8e8');
+  R(x + 22, y - 20, 16, 4, '#7fb0d6'); R(x + 24, y - 26, 5, 4, '#ff3b3b'); R(x + 30, y - 26, 5, 4, '#3b7bff');
+  text('POLICE', x + 6, y - 10, '#fff');
+  for (let i = 0; i < 4; i++) R(x - 8 - i * 12, y - 2, 9 - i, 2, '#e8fbff');
+}
+function mangroves(y0, density = 1) {
+  for (let i = 0; i < 9 * density; i++) {
+    const x = (i * 41) % (W + 20) - 10, h = 18 + (i * 7) % 14;
+    R(x, y0 - h - 10, 34, 14, i % 2 ? '#1f5a32' : '#2a6e3c'); R(x + 4, y0 - h - 16, 24, 8, '#2f7a44');
+    for (let k = 0; k < 4; k++) { R(x + 4 + k * 8, y0 - h + 2, 2, h - 2, '#5a4632'); R(x + 2 + k * 8, y0 - 2, 6, 2, '#5a4632'); }
+  }
+}
+function kayak(x, y) {
+  sprite(LUCITA_CASUAL.slice(0, 10), x + 16, y - 26); sprite(JASE.slice(0, 10), x + 40, y - 26);
+  for (let i = 0; i < 5; i++) R(x + i * 3, y - 8 + i, 80 - i * 6, 1, '#f08a2a');
+  R(x - 4, y - 9, 88, 2, '#f08a2a'); R(x + 2, y - 10, 76, 1, '#ffb15c'); R(x - 6, y - 8, 4, 1, '#f08a2a'); R(x + 84, y - 8, 4, 1, '#f08a2a');
+  for (let i = 0; i < 12; i++) R(x + 58 + i * 2, y - 24 + i * 2, 2, 2, '#c8c8c0');   // paddle
+  R(x + 80, y - 2, 6, 3, '#c8c8c0');
+}
+function manatee(x, y) {
+  R(x, y - 4, 30, 6, '#8a96a0'); R(x + 4, y - 6, 22, 2, '#9aa6b0'); R(x + 28, y - 3, 6, 4, '#8a96a0');
+  R(x + 31, y - 2, 1, 1, '#222'); R(x - 6, y - 2, 8, 3, '#7a8690');
+}
+function storeExterior() {
+  nightSky();
+  R(0, 200, W, 120, '#2b2b33'); for (let x = 6; x < W; x += 30) R(x, 236, 2, 30, '#c8c8b0');
+  R(0, 266, W, 54, P.road); for (let x = 4; x < W; x += 24) R(x, 292, 12, 2, P.roadL);
+  R(30, 132, 140, 70, '#d9d0bc'); R(30, 128, 140, 6, '#9a3a3a'); R(30, 196, 140, 4, '#8a8478');
+  R(38, 150, 58, 40, '#fff3c2'); R(118, 150, 44, 40, '#fff3c2');
+  for (let x = 42; x < 92; x += 10) { R(x, 162, 6, 4, '#c94e69'); R(x + 2, 174, 6, 4, '#4aa3df'); R(x, 184, 6, 4, '#7dc46a'); }
+  R(100, 154, 14, 42, '#7d8a8f'); R(102, 156, 10, 38, '#bfe6ff');
+  R(36, 104, 104, 20, '#151515'); R(36, 104, 104, 1, '#7dff8a'); R(36, 123, 104, 1, '#7dff8a');
+  text('GAS N GATOR', 88 - textW('GAS N GATOR', 2) / 2, 109, '#7dff8a', 2);
+  R(8, 170, 14, 30, '#c8c8c0'); R(10, 174, 10, 8, '#222'); text('419', 10, 175, '#ff5a4a');   // pump
+  g.fillStyle = 'rgba(255,240,180,.08)'; g.fillRect(30, 200, 140, 40);
+}
+function storeInterior() {
+  R(0, 0, W, 214, '#d9d4c0'); for (let y = 0; y < 214; y += 24) R(0, y, W, 1, '#c8c2ac');
+  for (let y = 214; y < H; y += 10) for (let x = 0; x < W; x += 10) R(x, y, 10, 10, ((x + y) / 10) % 2 ? '#cfcfc8' : '#b8b8b0');
+  R(0, 30, W, 6, '#f6f6ea'); R(0, 36, W, 2, '#9a9a8a');                          // fluorescent strip
+  for (let s = 0; s < 3; s++) {                                                 // shelves (left)
+    const y = 90 + s * 36; R(4, y, 70, 3, '#8a8478');
+    for (let x = 6; x < 72; x += 8) R(x, y - 12, 6, 12, ['#c94e69', '#4aa3df', '#f2c14e', '#7dc46a', '#e8705f'][(x / 8 + s) % 5]);
+  }
+  R(140, 70, 30, 60, '#8a96a0'); R(144, 76, 10, 22, '#ff5a8a'); R(156, 76, 10, 22, '#5ad1ff'); text('SLUSH', 141, 104, '#fff');
+  R(96, 60, 40, 40, '#5a4a3a'); for (let y = 64; y < 98; y += 6) for (let x = 98; x < 134; x += 5) R(x, y, 4, 4, '#e8e0d0');   // rack behind counter
+}
+function counter() { R(90, 200, 90, 40, '#7a5a3a'); R(90, 198, 90, 4, '#a07a52'); R(120, 186, 18, 14, '#3a3a40'); R(122, 188, 14, 6, '#7dff8a'); }
+function pawnRoom() {
+  R(0, 0, W, 230, '#4a433b'); for (let y = 0; y < 230; y += 12) R(0, y, W, 1, '#3e382f');
+  R(0, 230, W, 90, '#2e2a26');
+  R(10, 60, 60, 3, '#6a5a48'); R(10, 120, 60, 3, '#6a5a48');
+  [[14, 30], [30, 26], [46, 32]].forEach(([x, h]) => { R(x, 60 - h, 4, h, '#8a5a2a'); R(x - 3, 60 - 10, 10, 10, '#b5763a'); });  // guitars
+  R(14, 100, 18, 20, '#222'); R(16, 102, 14, 14, '#3a5a6a'); R(38, 104, 24, 16, '#d8c890');       // tv, boxes
+  R(100, 150, 64, 84, '#3e4a52'); R(104, 154, 56, 76, '#4e5a62');                                  // safe
+  for (let dy = -8; dy <= 8; dy += 2) { const hw = Math.floor(Math.sqrt(64 - dy * dy) / 2) * 2; R(132 - hw, 192 + dy, hw * 2, 2, '#aab4bc'); }
+  R(130, 184, 4, 8, '#333'); R(150, 170, 6, 30, '#8a949c');
+  R(8, 132, textW('CASH 4 GOLD') + 8, 11, '#1b1b1f'); text('CASH 4 GOLD', 12, 135, '#f2c14e');
+}
+function sparks(x, y) { [[0, 0], [3, -4], [6, -1], [-3, -5], [5, 3], [-4, 2], [8, -6]].forEach(([dx, dy], i) => R(x + dx, y + dy, i % 2 ? 1 : 2, i % 2 ? 1 : 2, i % 3 ? '#ffe08a' : '#fff')); }
+function alley() {
+  nightSky(12);
+  R(0, 60, W, 200, '#3a3438'); for (let y = 66; y < 260; y += 8) for (let x = (y / 8 % 2) * 8; x < W; x += 16) R(x, y, 14, 6, '#443d42');
+  R(20, 150, 30, 50, '#2a2a2e'); R(22, 152, 26, 48, '#5a3a2a'); R(24, 140, 22, 6, '#ffe08a');   // back door + light
+  g.fillStyle = 'rgba(255,224,138,.12)'; g.fillRect(10, 146, 50, 80);
+  R(130, 170, 30, 30, '#2f5a3a'); R(128, 168, 34, 4, '#244a2f');                              // dumpster
+  R(0, 200, W, 120, '#26252a'); R(0, 266, W, 54, P.road);
+}
+function marina() {
+  ['#2a1b4d', '#46205f', '#6e2a6a', '#9b3a6b', '#c94e69', '#e8705f'].forEach((c, i) => R(0, i * 28, W, 28, c));
+  R(0, 168, W, 30, '#e8705f');
+  [[10, 40], [60, 52], [120, 46]].forEach(([x, w]) => { R(x, 180, w, 10, '#2a2238'); R(x + 8, 172, w - 20, 8, '#2a2238'); R(x + w / 2, 150, 2, 22, '#2a2238'); });
+  R(0, 196, W, 124, '#1d3e66'); for (let i = 0; i < 30; i++) R((i * 37) % W, 200 + (i * 19) % 110, 8, 1, '#3a6a9a');
+  R(0, 220, 120, 8, '#7a5a3a'); for (let x = 4; x < 120; x += 20) R(x, 228, 4, 20, '#5a4030');
+  R(4, 120, 70, 16, '#f4f4f0'); text('YACHT CLUB', 39 - textW('YACHT CLUB') / 2, 126, '#1d3e66');
+}
+function nightWater() {
+  nightSky(24);
+  R(0, 170, W, 6, '#0e1230'); for (let x = 0; x < W; x += 14) R(x, 162 + (x % 5), 12, 8, '#0a0d22');   // far shore
+  R(0, 176, W, 144, '#132a4a'); for (let i = 0; i < 40; i++) R((i * 43) % W, 180 + (i * 17) % 140, 6, 1, '#24466e');
+}
+function blueprintRoom() {
+  R(0, 0, W, 220, '#2e3a34'); R(0, 220, W, 100, '#3a2e26');
+  R(10, 40, 70, 56, '#a87a4a'); R(12, 42, 66, 52, '#c8a070');                                   // corkboard
+  [[16, 46], [36, 50], [56, 46], [24, 70], [50, 72]].forEach(([x, y]) => { R(x, y, 12, 14, '#eee'); R(x + 2, y + 2, 8, 8, '#777'); R(x + 5, y - 1, 2, 2, '#d8333a'); });
+  for (let i = 0; i < 20; i++) { R(22 + i * 1.6, 52 + i * 1.2, 1, 1, '#d8333a'); R(42 + i * 0.6, 56 + i * 1, 1, 1, '#d8333a'); }
+  R(100, 30, 4, 40, '#555'); R(92, 70, 20, 8, '#e8c86a'); g.fillStyle = 'rgba(255,230,160,.12)'; g.fillRect(40, 78, 130, 160);
+  R(30, 170, 130, 40, '#5a4030'); R(34, 160, 122, 14, '#2f5fa8');                              // table + blueprint
+  for (let x = 38; x < 156; x += 8) R(x, 160, 1, 14, '#5f8fd8'); for (let y = 162; y < 174; y += 4) R(34, y, 122, 1, '#5f8fd8');
+  R(70, 162, 40, 10, 'transparent'); R(72, 163, 36, 8, '#e8f0ff'); R(74, 165, 32, 4, '#2f5fa8');
+}
+function bankExterior() {
+  daySky();
+  R(0, 210, W, 110, '#b8b2a4'); R(0, 266, W, 54, P.road); for (let x = 4; x < W; x += 24) R(x, 292, 12, 2, P.roadL);
+  R(20, 100, 140, 110, '#ece6d6'); R(14, 92, 152, 10, '#d8d0bc'); for (let i = 0; i < 12; i++) R(30 + i * 5, 80 + i, 120 - i * 10, 1, '#d8d0bc');
+  for (let x = 30; x < 160; x += 22) { R(x, 104, 10, 96, '#f8f4ea'); R(x + 8, 104, 2, 96, '#d8d0bc'); }
+  R(80, 150, 22, 50, '#3a3a40'); R(10, 200, 160, 4, '#d8d0bc'); R(4, 204, 172, 4, '#cfc8b8');
+  R(40, 94, 100, 8, '#ece6d6'); text('FIRST BANK', 90 - textW('FIRST BANK') / 2, 95, '#6a5a3a');
+}
+function vault(open = true) {
+  R(0, 0, W, 230, '#6a7078'); for (let x = 0; x < W; x += 20) R(x, 0, 1, 230, '#5a6068');
+  R(0, 230, W, 90, '#4a4e54');
+  R(40, 50, 100, 130, '#2a2e34');                                                              // vault interior
+  for (let s = 0; s < 4; s++) { const y = 72 + s * 28; R(44, y + 14, 92, 2, '#8a8f96');
+    for (let x = 46; x < 134; x += 12) R(x, y + 6, 10, 8, s % 2 ? '#f2c14e' : '#6fbf73'); }
+  if (open) {                                                                                  // door swung open
+    for (let dy = -46; dy <= 46; dy += 2) { const hw = Math.floor(Math.sqrt(46 * 46 - dy * dy) / 2) * 2; R(146, 116 + dy, Math.max(4, hw / 3), 2, '#9aa2aa'); }
+    R(150, 110, 8, 12, '#d0d6dc');
+  }
+}
+function citySt() {
+  daySky();
+  [[0, 90, 40], [40, 70, 36], [76, 110, 44], [120, 80, 30], [150, 100, 30]].forEach(([x, top, w], i) => {
+    R(x, top, w, 210 - top, ['#d8a07a', '#c8d0d8', '#e8d0a0', '#a8c0c8', '#e0b0b0'][i]);
+    for (let y = top + 8; y < 200; y += 14) for (let wx = x + 4; wx < x + w - 6; wx += 10) R(wx, y, 6, 8, '#5a7a9a');
+  });
+  R(0, 210, W, 56, '#9a9488'); R(0, 236, W, 84, P.road); for (let x = 4; x < W; x += 24) R(x, 276, 12, 2, P.roadL);
+}
+function stars(n) { return `<div class="ui wanted">${[0, 1, 2, 3, 4].map(i => `<span class="${i < n ? 'on' : ''}">★</span>`).join('')}</div>`; }
+function thread(msgs, choices) {
+  return `<div class="ui thread"><div class="th-h"><span class="dot">L</span>Lucita</div>${
+    msgs.map(m => `<div class="msg ${m[0]}">${m[1]}</div>`).join('')}${
+    choices ? `<div class="choices">${choices.map(c => `<div>${c}</div>`).join('')}</div>` : ''}</div>`;
+}
+function choices(title, opts) {
+  return `<div class="ui choice"><div class="ct">${title}</div>${opts.map((o, i) => `<div class="co${i === 0 ? ' sel' : ''}">${o}</div>`).join('')}</div>`;
+}
+
 // ---------- UI helpers ----------
 function ui(html) { frame.insertAdjacentHTML('beforeend', html); }
 function letterbox() { ui('<div class="ui letterbox" style="top:0"></div><div class="ui letterbox" style="bottom:0"></div>'); }
@@ -442,6 +667,259 @@ const FRAMES = {
     ui('<div class="dim" style="background:rgba(5,5,15,.45)"></div>');
     ui(`<div class="ui passed"><div class="big">MISSION PASSED</div><div class="mn">Coming Home</div>
         <div class="fx" style="color:#ff8fb1">Relationship: Level 1</div><div class="fx2">"Complicated"</div></div>`);
+  },
+
+  // ===== Beat 3: The Store =====
+  'b3-arrive'() {
+    storeExterior();
+    convertible(20, 250);
+    letterbox();
+    ui(`<div class="ui mission"><div class="kicker">Mission 3 &nbsp;·&nbsp; Route 9</div>
+        <div class="title">Late Night<br>Special</div><div class="rule"></div></div>`);
+  },
+  'b3-plan'() {
+    storeExterior();
+    convertible(46, 262, true);
+    ui('<div class="dim" style="background:rgba(5,5,15,.35)"></div>');
+    ui(choices('Choose your approach', ['Loud', 'Quiet', 'Buy something first']));
+    ui(`<div class="ui sub"><b>LUCITA:</b> In and out. Nobody gets hurt.<br><b>JASE:</b> And we get the good jerky.</div>`);
+  },
+  'b3-holdup'() {
+    storeInterior();
+    sprite(CLERK, 128, 166); counter();
+    sprite(LUCITA_MASK, 44, 222); pistol(62, 238);
+    sprite(JASE_MASK, 70, 226); pistol(86, 242);
+    hud(1, '$12', '11:52 PM'); ui(stars(1));
+    ui(`<div class="ui sub"><b>JASE:</b> Hands where I can see them, Benny. Nobody's gotta be a hero tonight.<br><b>BENNY:</b> Jase? From Little League?</div>`);
+  },
+  'b3-recognized'() {
+    storeInterior();
+    sprite(CLERK, 128, 166); counter();
+    sprite(LUCITA_MASK, 44, 222); sprite(JASE_MASK, 70, 226); pistol(86, 242);
+    R(78, 226, 4, 4, '#ff5d8f');   // he's blushing through the mask
+    hud(1, '$12', '11:53 PM'); ui(stars(1));
+    ui(`<div class="ui toast" style="border-color:#f2c14e"><div class="t" style="color:#f2c14e">Witness</div>Benny will tell your mother.</div>`);
+    ui(`<div class="ui sub"><b>BENNY:</b> Man, your mom's gonna hear about this.<br><b>LUCITA:</b> Register. Now. And the teriyaki.</div>`);
+  },
+  'b3-chase'() {
+    nightSky(); R(0, 200, W, 120, '#2b2b33'); R(0, 236, W, 84, P.road); for (let x = 4; x < W; x += 24) R(x, 276, 12, 2, P.roadL);
+    for (let x = 0; x < W; x += 36) { R(x + 10, 120, 3, 80, '#555'); R(x + 6, 118, 12, 3, '#888'); g.fillStyle = 'rgba(255,240,180,.08)'; g.fillRect(x, 121, 26, 80); }
+    convertible(86, 262, true);
+    policeCar(-14, 262, true);
+    sirenGlow();
+    hud(1, '$198', '11:55 PM'); ui(stars(2));
+    ui(`<div class="ui toast" style="border-color:#ff5a4a;top:96px"><div class="t" style="color:#ff5a4a">Wanted level increased</div>Units responding: 1</div>`);
+    ui(`<div class="ui sub" style="left:100px;right:14px;text-align:left"><b>LUCITA:</b> Left! LEFT!<br><b>JASE:</b> I'm going left!</div>`);
+  },
+  'b3-passed'() {
+    storeExterior(); convertible(20, 250);
+    ui('<div class="dim" style="background:rgba(5,5,15,.55)"></div>');
+    ui(`<div class="ui passed"><div class="big">MISSION PASSED</div><div class="mn">Late Night Special</div>
+        <div class="fx">$186 &nbsp;·&nbsp; 1 Beef Jerky (Teriyaki)</div><div class="fx2">Benny has called your mother.</div></div>`);
+  },
+
+  // ===== Beat 4: The Date =====
+  'b4-ask'() {
+    sky(150); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    sprite(JASE, 40, 214);
+    ui('<div class="dim" style="background:rgba(5,5,15,.45)"></div>');
+    ui(thread([['me', 'kayak tomorrow? i found a spot'], ['them', 'who is this'], ['them', 'lol'], ['them', 'ok. 6am. bring coffee']]));
+    ui(`<div class="ui mission" style="bottom:28px"><div class="kicker">Date &nbsp;·&nbsp; Optional</div><div class="title" style="font-size:26px">Low Tide</div><div class="rule"></div></div>`);
+  },
+  'b4-paddle'() {
+    sky(110);
+    R(0, 176, W, 144, '#2f8f8a'); for (let i = 0; i < 40; i++) R((i * 37) % W, 182 + (i * 23) % 130, 6, 1, '#7fd6cc');
+    mangroves(180);
+    kayak(46, 250);
+    hud(1, '$198', '6:12 AM');
+    ui(`<div class="ui radio"><div class="st">WGTR "THE GATOR" 97.3</div><div class="np">Bluetooth speaker · 12% battery</div></div>`);
+    ui(`<div class="ui prompt" style="bottom:auto;top:120px"><span class="btn">L · R</span>Paddle in rhythm</div>`);
+    ui(`<div class="ui sub" style="left:96px;right:14px;text-align:left"><b>LUCITA:</b> Do you ever think about just... not going back? A little place in the Keys. Chickens.<br><b>JASE:</b> You'd hate chickens.</div>`);
+  },
+  'b4-manatee'() {
+    sky(104);
+    R(0, 176, W, 144, '#2f8f8a'); for (let i = 0; i < 40; i++) R((i * 37) % W, 182 + (i * 23) % 130, 6, 1, '#7fd6cc');
+    mangroves(180);
+    kayak(46, 250); manatee(40, 272);
+    pixelHeart(78, 206);
+    hud(2, '$198', '6:19 AM');
+    ui(`<div class="ui toast" style="border-color:#5ad1ff"><div class="t" style="color:#5ad1ff">Wildlife spotted</div>West Indian Manatee (1 of 1)</div>`);
+    ui(`<div class="ui sub"><b>LUCITA:</b> I'd hate them <i>with you.</i></div>`);
+  },
+  'b4-passed'() {
+    sky(100); R(0, 176, W, 144, '#2f8f8a'); mangroves(180); kayak(46, 250);
+    ui('<div class="dim" style="background:rgba(5,5,15,.45)"></div>');
+    ui(`<div class="ui passed"><div class="big" style="font-size:30px">DATE COMPLETE</div><div class="mn">Low Tide</div>
+        <div class="fx">Mangroves paddled: 1 of 1</div><div class="fx" style="margin-top:8px;color:#ff8fb1">Relationship: Level 2</div><div class="fx2">"Seeing Where It Goes"</div></div>`);
+  },
+
+  // ===== Beat 5: The Text =====
+  'b5-drill'() {
+    pawnRoom();
+    sprite(JASE_MASK, 70, 200); R(86, 214, 12, 4, '#e0a020'); R(96, 215, 6, 2, '#aaa'); sparks(104, 214);
+    letterbox();
+    ui(`<div class="ui progress"><div class="lbl"><span>Drilling</span><span>41%</span></div><div class="bar"><div style="width:41%"></div></div></div>`);
+    ui(`<div class="ui toast" style="border-color:#ff5a4a"><div class="t" style="color:#ff5a4a">Silent alarm</div>Patrol arrives in 0:47</div>`);
+    ui(`<div class="ui mission" style="bottom:84px"><div class="kicker">Mission 4 &nbsp;·&nbsp; Lucita is lookout</div><div class="title" style="font-size:26px">Cash for Gold</div><div class="rule"></div></div>`);
+  },
+  'b5-text'() {
+    pawnRoom();
+    sprite(JASE_MASK, 70, 200); R(86, 214, 12, 4, '#e0a020'); sparks(104, 214);
+    ui('<div class="dim" style="background:rgba(5,5,15,.5)"></div>');
+    ui(thread([['them', 'all clear out here'], ['them', 'also did u get the oat milk'], ['them', 'not the vanilla one. the one with the green cap']],
+      ['❤️ "Already in the fridge, babe"', '👍', 'Ignore']));
+    ui(`<div class="ui progress" style="top:24px"><div class="lbl"><span>Drilling</span><span>58%</span></div><div class="bar"><div style="width:58%"></div></div></div>`);
+  },
+  'b5-thumbs'() {
+    pawnRoom();
+    sprite(JASE_MASK, 70, 200); R(86, 214, 12, 4, '#e0a020'); sparks(104, 214);
+    hud(1, '$198', '2:15 AM');
+    ui(`<div class="ui toast" style="border-color:#ff5d8f"><div class="t" style="color:#ff5d8f">Relationship ↓</div>Lucita felt dismissed.</div>`);
+    ui(`<div class="ui progress"><div class="lbl"><span>Drilling</span><span>97%</span></div><div class="bar"><div style="width:97%"></div></div></div>`);
+    ui(`<div class="ui sub"><i>You sent 👍.</i></div>`);
+  },
+  'b5-escape'() {
+    alley();
+    convertible(84, 262); sprite(LUCITA_CASUAL.slice(0, 9), 140, 224);
+    sprite(JASE_MASK, 54, 228); duffel(40, 246);
+    hud(1, '$2,538', '2:16 AM'); ui(stars(1));
+    ui(`<div class="ui sub"><b>LUCITA:</b> Did you get it or not.<br><b>JASE:</b> The safe? Yeah.<br><b>LUCITA:</b> The milk, Jase.</div>`);
+  },
+  'b5-passed'() {
+    alley(); convertible(84, 262);
+    ui('<div class="dim" style="background:rgba(5,5,15,.5)"></div>');
+    ui(`<div class="ui passed"><div class="big">MISSION PASSED</div><div class="mn">Cash for Gold</div>
+        <div class="fx">$2,340</div><div class="fx2">Oat milk: unresolved.</div></div>`);
+  },
+
+  // ===== Beat 6: The Channel =====
+  'b6-marina'() {
+    marina();
+    speedboat(70, 236, true);
+    letterbox();
+    ui(`<div class="ui mission"><div class="kicker">Mission 5 &nbsp;·&nbsp; Bayside Yacht Club</div><div class="title">Wake</div><div class="rule"></div></div>`);
+    ui(`<div class="ui sub" style="top:70px;bottom:auto"><b>JASE:</b> It's not stealing. It's a test drive.<br><b>LUCITA:</b> It has a name, Jase. It's called <i>Reel Estate.</i></div>`);
+  },
+  'b6-chase'() {
+    nightWater();
+    helicopter(70, 60, 150);
+    speedboat(84, 246, true);
+    policeBoat(4, 256);
+    sirenGlow();
+    hud(2, '$2,538', '9:41 PM'); ui(stars(3));
+    ui(`<div class="ui sub" style="top:96px;bottom:auto"><b>LUCITA:</b> They've got a chopper on us!<br><b>JASE:</b> Hard left into the channel. Tide's too low for the cutters.</div>`);
+  },
+  'b6-channel'() {
+    nightSky(20);
+    R(0, 120, W, 200, '#132a4a'); for (let i = 0; i < 30; i++) R((i * 43) % W, 130 + (i * 17) % 180, 6, 1, '#24466e');
+    for (let y = 120; y < 320; y += 20) { const w = 40 - (y - 120) / 10; R(0, y, w, 20, '#163a24'); R(W - w, y, w, 20, '#163a24'); R(w, y + 18, 4, 2, '#4a3a2a'); R(W - w - 4, y + 18, 4, 2, '#4a3a2a'); }
+    speedboat(50, 252, true);
+    hud(2, '$2,538', '9:43 PM'); ui(stars(3));
+    ui(`<div class="ui prompt" style="bottom:auto;top:118px"><span class="btn">TILT</span>Thread the channel</div>`);
+    ui(`<div class="ui sub"><b>LUCITA:</b> Jase, if we die out here—<br><b>JASE:</b> We're not dying out here. We still have that coupon for the escape room.</div>`);
+  },
+  'b6-lost'() {
+    nightWater();
+    for (let i = 0; i < 60; i++) R((i * 31) % W, (i * 13) % 160, 1, 1, '#fff');
+    speedboat(46, 240, true);
+    pixelHeart(80, 196);
+    hud(3, '$2,538', '10:02 PM');
+    ui(`<div class="ui passed" style="top:110px"><div class="big" style="font-size:22px;color:#9be37a;text-shadow:0 2px 0 #1b3a12">WANTED LEVEL LOST</div></div>`);
+    ui(`<div class="ui sub"><b>LUCITA:</b> ...Was that fun? That felt fun.<br><b>JASE:</b> That felt fun.</div>`);
+  },
+
+  // ===== Beat 7: The Job =====
+  'b7-crew'() {
+    blueprintRoom();
+    sprite(RUDY, 24, 190); sprite(TINA, 56, 194); R(70, 212, 12, 8, '#9aa0aa');
+    sprite(LUCITA_CASUAL, 108, 194); sprite(JASE, 134, 190);
+    letterbox();
+    ui(`<div class="ui mission" style="bottom:auto;top:84px;left:auto;right:20px;text-align:right"><div class="kicker">Mission 6 &nbsp;·&nbsp; The Big One</div><div class="title">The Job</div><div class="rule"></div></div>`);
+    ui(`<div class="ui sub"><b>LUCITA:</b> Everybody in this room is gonna be tempted. Be tempted somewhere else.<br><b>RUDY:</b> I'm just here for the snacks.</div>`);
+  },
+  'b7-approach'() {
+    blueprintRoom();
+    sprite(RUDY, 24, 190); sprite(TINA, 56, 194); sprite(LUCITA_CASUAL, 108, 194); sprite(JASE, 134, 190);
+    ui('<div class="dim" style="background:rgba(5,5,15,.4)"></div>');
+    ui(choices('Choose your approach', ['The Smart Way', 'The Loud Way', 'Through the Ceiling Tiles']));
+    ui(`<div class="ui sub" style="font-size:12.5px"><b>TINA:</b> Vault's on a 90-second timer. Cameras loop every 40. The guard's name is Doug and he is going through a divorce.</div>`);
+  },
+  'b7-walkin'() {
+    bankExterior();
+    sprite(RUDY_MASK, 30, 220); sprite(TINA_MASK, 62, 224); sprite(LUCITA_MASK, 96, 224); sprite(JASE_MASK, 128, 220);
+    duffel(146, 240);
+    letterbox();
+    ui(`<div class="ui radio" style="top:76px"><div class="st" style="font-size:13px;letter-spacing:.2em">11:58 AM</div><div class="np">First Bank of Port Mangrove</div></div>`);
+  },
+  'b7-vault'() {
+    vault(true);
+    sprite(TINA_MASK, 20, 214); R(34, 230, 12, 8, '#9aa0aa');
+    sprite(LUCITA_MASK, 70, 218); sprite(JASE_MASK, 100, 214); duffel(118, 236);
+    hud(3, '$2,538', '12:01 PM'); ui(stars(2));
+    ui(`<div class="ui toast" style="border-color:#f2c14e"><div class="t" style="color:#f2c14e">Vault cracked</div>Estimated take: $4,200,000</div>`);
+    ui(`<div class="ui sub"><b>JASE:</b> ...It's bigger than I thought.<br><b>LUCITA:</b> Everything's bigger than you thought.</div>`);
+  },
+  'b7-betrayal'() {
+    vault(true);
+    sprite(RUDY_MASK, 120, 214); duffel(136, 236); pistol(116, 230);
+    sprite(LUCITA_MASK, 40, 218); pistol(58, 234); sprite(JASE_MASK, 70, 214);
+    ui('<div class="dim" style="background:rgba(40,5,5,.35)"></div>');
+    ui(choices('Who do you trust?', ['Lucita', 'Rudy']));
+    ui(`<div class="ui sub"><b>RUDY:</b> Nothing personal. I've got a timeshare.<br><b>LUCITA:</b> Rudy. Put it down.</div>`);
+  },
+  'b7-getaway'() {
+    citySt();
+    helicopter(110, 40, 160);
+    convertible(70, 270, true);
+    policeCar(-34, 270, true);
+    sirenGlow();
+    hud(3, '$4,200,000', '12:04 PM'); ui(stars(5));
+    ui(`<div class="ui sub" style="top:96px;bottom:auto"><b>LUCITA:</b> Drive like you mean it.<br><b>JASE:</b> I always mean it.</div>`);
+  },
+
+  // ===== Beat 8: The Ending =====
+  'b8-high'() {
+    causeway();
+    convertible(84, 250, true);
+    pixelHeart(120, 204);
+    letterbox();
+    ui(`<div class="ui mission" style="bottom:auto;top:84px"><div class="kicker">Ending &nbsp;·&nbsp; Relationship: Level 4</div><div class="title">Ride Home</div><div class="rule"></div></div>`);
+  },
+  'b8-feed'() {
+    causeway(); convertible(46, 258, true);
+    ui('<div class="dim" style="background:rgba(5,5,15,.5)"></div>');
+    ui(`<div class="ui feed"><div class="fh">SwampFeed</div>
+        <div class="post"><div class="who"><span class="dot">7</span>Action 7 Eyewitness Swamp News <span class="ver">✓</span></div>
+        <div class="pic"></div>
+        <div class="hd">LOCAL COUPLE STILL AT LARGE; NEIGHBORS DESCRIBE THEM AS "GENUINELY KIND"</div>
+        <div class="meta">♥ 2.4M &nbsp; 💬 81K &nbsp; ↗ 600K</div>
+        <div class="cm"><b>gatorgirl88</b> honestly goals</div>
+        <div class="cm"><b>benny_littleleague</b> I've known him since he was 9 and he still owes me jerky</div>
+        <div class="cm"><b>porthoa_president</b> that porch color was NOT approved</div></div></div>`);
+  },
+  'b8-low'() {
+    sky(192); ground(); house('fixed'); palm(10, 214); palm(166, 206);
+    convertible(4, 286);
+    sprite(JASE, 52, 214);
+    sprite(LUCITA_CASUAL, 140, 222); sprite(BAG, 156, 238);
+    letterbox();
+    ui(`<div class="ui radio" style="top:76px"><div class="st" style="font-size:12px;letter-spacing:.2em;color:#ccc">ENDING &nbsp;·&nbsp; RELATIONSHIP: LEVEL 1</div></div>`);
+    ui(`<div class="ui sub"><b>LUCITA:</b> I needed you to <i>show up,</i> Jase. Not just for the jobs.</div>`);
+  },
+  'b8-credits'() {
+    R(0, 0, W, H, '#000');
+    ui(`<div class="ui credits">
+        <div class="cr-t">PETIT THEFT AUTO</div>
+        <div class="cr"><span>Lead Rectangle Artist</span>—</div>
+        <div class="cr"><span>Senior Slightly Different Brown</span>—</div>
+        <div class="cr"><span>Seagull</span>Recorded on location</div>
+        <div class="cr"><span>Shader Compilation Consultant</span>—</div>
+        <div class="cr"><span>Hand-Holding Animation Team</span>(14)</div>
+        <div class="cr"><span>Manatee Wrangler</span>—</div>
+        <div class="cr"><span>"Midnight Coastline" (4 sec.)</span>The Velvet Tides</div>
+        <div class="cr"><span>Oat Milk</span>Unresolved</div>
+        <div class="cr-n">...and 400 more names</div>
+        <div class="cr-skip">HOLD to skip</div></div>`);
   },
 };
 

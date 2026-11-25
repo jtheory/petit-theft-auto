@@ -26,3 +26,7 @@ Look and feel echo the outlaw-couple archetype at a glance, drawn our own way. N
 
 - **Ma** (Jase's mother): phone only. Worries about whether he's eating.
 - **DJ Merle** (Smooth Seniors 101.1): dedications to the departed.
+- **Benny**: Gas N Gator night clerk, red uniform. Played Little League with Jase. Tells everyone's mother everything.
+- **Rudy**: the crew's driver. Loud yellow shirt, black hair and mustache. "Just here for the snacks." Owns a timeshare at Eternal Shores, which is the problem.
+- **Tina**: the crew's tech. Purple hair, black hoodie, laptop. Speaks only in precise numbers and personal details about security guards.
+- **Doug**: the bank guard, going through a divorce. Never seen.
