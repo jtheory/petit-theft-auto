@@ -80,6 +80,20 @@ export class UI {
     this.el('progress', 'progress', `<div class="lbl"><span>${esc(label)}</span><span>${Math.round(pct)}%</span></div><div class="bar"><div style="width:${pct}%"></div></div>`);
   }
 
+  // Tappable options (resolve them with input.pick()). opts: [[key, label]]
+  choices(title, opts) {
+    if (!title) return this.hide('choices');
+    this.el('choices', 'choice', `<div class="ct">${esc(title)}</div>` +
+      opts.map(([k, label]) => `<div class="co" data-choice="${esc(k)}">${esc(label)}</div>`).join(''));
+  }
+
+  // Labels pinned to world positions (world px -> 2x UI px). tags: [{ x, y, text, off }]
+  tags(list) {
+    if (!list) return this.hide('tags');
+    this.el('tags', 'tags', list.map(t =>
+      `<div class="tag${t.off ? ' off' : ''}" style="left:${t.x * 2}px;top:${t.y * 2 - 34}px">${esc(t.text)}</div>`).join(''));
+  }
+
   async toast(title, body, color = '#9be37a', ms = 2800) {
     const e = this.el('toast', 'toast', `<div class="t">${esc(title)}</div>${esc(body)}`);
     e.style.setProperty('--c', color);

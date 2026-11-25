@@ -17,7 +17,7 @@ export class Input {
       const d = this.downAt;
       this.downAt = null;
       const dx = e.clientX - d.x, dy = e.clientY - d.y, dt = performance.now() - d.t;
-      this.waiter?.up?.({ dx, dy, dt, tap: Math.hypot(dx, dy) < 14 && dt < 400 });
+      this.waiter?.up?.({ dx, dy, dt, x: e.clientX, y: e.clientY, tap: Math.hypot(dx, dy) < 14 && dt < 400 });
     };
     el.addEventListener('pointerup', up);
     el.addEventListener('pointercancel', up);
@@ -36,6 +36,37 @@ export class Input {
   }
 
   tap() { return this.wait({ up(g) { if (g.tap) this.done(); } }); }
+
+  // Tap or time out: resolves true for a tap, false if `ms` passes first.
+  async tapWithin(ms) {
+    let timer;
+    const r = await Promise.race([this.tap().then(() => true), new Promise(res => { timer = setTimeout(() => res(false), ms); })]);
+    clearTimeout(timer);
+    if (!r) this.waiter = null;
+    return r;
+  }
+
+  // Screen point -> world pixel (the 180x320 canvas).
+  toWorld(x, y) {
+    const r = this.el.querySelector('canvas').getBoundingClientRect();
+    return { x: ((x - r.left) / r.width) * 180, y: ((y - r.top) / r.height) * 320 };
+  }
+
+  // Tap one of several things: UI elements carrying data-choice="key", or world regions
+  // { key, x, y, r } in world pixels. Resolves with the key.
+  pick(regions = []) {
+    const self = this;
+    return this.wait({
+      up(g) {
+        if (!g.tap) return;
+        const hit = document.elementFromPoint(g.x, g.y)?.closest('[data-choice]');
+        if (hit) return this.done(hit.dataset.choice);
+        const w = self.toWorld(g.x, g.y);
+        const reg = regions.find(q => Math.hypot(w.x - q.x, w.y - q.y) <= (q.r ?? 16));
+        if (reg) this.done(reg.key);
+      },
+    });
+  }
 
   // Hold for `ms` in total. Letting go pauses progress; it doesn't reset.
   hold(ms, onProgress = () => {}) {

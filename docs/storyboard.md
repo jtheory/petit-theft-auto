@@ -53,6 +53,24 @@ The radio is reachable from every vehicle, including the kayak.
 - *UI:* Full HUD: 4 empty hearts, money, clock, minimap. `Home Restoration 34% → 67% → 100%`.
 - *Audio:* Rich hammering per tap; chiptune drum roll on completion.
 
+**Choices and outcomes (as built)**
+
+Mission 1 can't be failed, but it can be done badly. Results are saved as flags for later missions.
+
+| Choice | Options | Effect |
+|---|---|---|
+| Ma's call | Ignore (about 8 s of ringing) | Voicemail: "I know you're not eating." Missed-call toast. |
+| | "Yes, Ma." | Ma: "Mm-hm." |
+| | "No, Ma." | Ma sends $10, note "FOR FOOD". Only way to afford everything. |
+| | "Define eating." | Ma: "Don't you get smart with me." |
+| Repairs ($12 budget) | Shingles $8, Grout $3, Paint $9 | Tap a job to buy supplies. Without Ma's $10 you can't do all three: practical (roof) or sentimental (porch). |
+
+- End card shows `Home Restoration N%` (roof 34, grout 33, porch 33).
+- Porch painted: monologue "I hope blue is still her color", Lucita notices in Beat 2 (+1 heart).
+- Porch not painted: "I couldn't afford the blue. I hope she still likes gray."
+- Roof not fixed: "And I hope it doesn't rain." Pays off in Beat 2 (it rains; a pot catches the drip).
+- Ma ignored: she leaves another voicemail at the start of Beat 2.
+
 **Panel 5: Quiet moment** *(frame 4)*
 - *Screen:* The house restored: new roof, windows lit, porch and mailbox painted blue. Jase sits on the steps. The sun has dropped.
 - *Text (italic monologue):* *"She used to say the porch was the only part of this house that was hers. Three years. I hope blue is still her color."*

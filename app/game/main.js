@@ -2,6 +2,7 @@ import { Game } from './engine.js';
 import { audioCore } from '../audio/core.js';
 import { sfx } from '../audio/sfx.js';
 import { Radio } from '../audio/radio.js';
+import { playLoop } from '../audio/music.js';
 import stations from '../audio/stations.js';
 import beat1 from '../missions/beat1.js';
 
@@ -33,6 +34,21 @@ async function gate() {
   await game.wait(400);
 }
 
+// Phones only allow sound after a tap, so the first screen asks for one. It's also very serious.
+async function warning() {
+  const ui = game.ui;
+  game.setScene(a => a.R(0, 0, 180, 320, '#000'));
+  ui.el('warning', 'warning', `<div class="wh">WARNING</div>
+    <div class="wt">This game contains scenes of crime, romance, and home improvement. Player discretion is advised.</div>
+    <div class="wp">Headphones recommended.</div><div class="cont">Tap to continue</div>`);
+  await game.input.tap();
+  await audioCore().start();
+  const pad = await playLoop('pad', { vol: 0.9, fadeIn: 2 });
+  ui.hide('warning');
+  await game.wait(500);
+  return pad;
+}
+
 async function shaders() {
   const ui = game.ui;
   game.setScene(a => a.R(0, 0, 180, 320, '#000'));
@@ -50,8 +66,10 @@ async function shaders() {
   await game.wait(400);
 }
 
-async function title() {
+async function title(pad) {
   const ui = game.ui;
+  pad?.stop(0.3);
+  const theme = await playLoop('theme', { vol: 1 });
   let x = -100;
   game.setScene((a, t, dt) => {
     a.causeway();
@@ -61,10 +79,10 @@ async function title() {
   });
   ui.el('title', 'title', `<div class="logo">Petit<br>Theft<br>Auto</div><div class="press">Tap to start</div>`);
   await game.input.tap();
-  await audioCore().start();
   sfx.play('click');
+  theme.stop(2);
   ui.hide('title');
-  await game.wait(500);
+  await game.wait(1200);
 }
 
 async function comingSoon() {
@@ -82,8 +100,9 @@ async function comingSoon() {
 
 async function run() {
   await gate();
+  const pad = await warning();
   await shaders();
-  await title();
+  await title(pad);
   while (true) {
     const m = MISSIONS[game.state.mission - 1];
     if (m) await m(game, radio);
