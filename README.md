@@ -6,6 +6,8 @@ A tiny, mobile-only parody crime game, playable as a PWA (installable web app).
 
 Status: playable start to finish. Eight missions (one optional), three endings, credits; radio, music and sound effects all generated in code.
 
+**Play it:** https://petittheftauto.netlify.app (on your phone, then Add to Home Screen to install).
+
 **Play locally:** `python3 -m http.server -d app 8000`, then open http://localhost:8000 (phone or desktop). See [docs/tech.md](docs/tech.md).
 
 ## Tone rules

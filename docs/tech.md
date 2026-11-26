@@ -1,7 +1,7 @@
 # Tech
 
 Plain ES modules and a canvas. No build step, no framework, no dependencies at runtime.
-`app/` is the whole deployable site (Netlify publishes it as-is; see `netlify.toml`).
+`app/` is the whole deployable site (Netlify publishes it as-is to https://petittheftauto.netlify.app; see `netlify.toml`).
 
 ## Run it
 
