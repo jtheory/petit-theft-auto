@@ -47,26 +47,50 @@ export const SCORE = {
 const parsed = {};
 
 // Loop a score piece on the music bus until stop(). Schedules a few seconds ahead.
+// setRate(r) fast-forwards it (tempo and a little pitch, like a tape), picking up from the same spot.
 export async function playLoop(id, { vol = 1, fadeIn = 0 } = {}) {
   const core = await audioCore().start();
   const { ctx, synth } = core;
   const song = parsed[id] ??= parseSong(SCORE[id]);
-  const gain = ctx.createGain();
-  gain.connect(core.buses.music);
-  const t0 = ctx.currentTime + 0.05;
-  gain.gain.setValueAtTime(fadeIn ? 0 : vol, t0);
-  if (fadeIn) gain.gain.linearRampToValueAtTime(vol, t0 + fadeIn);
-  let until = t0, timer = 0, stopped = false;
+  const mkGain = (from, to, secs) => {
+    const g = ctx.createGain();
+    g.connect(core.buses.music);
+    const t = ctx.currentTime + 0.03;
+    g.gain.setValueAtTime(from, t);
+    if (secs) g.gain.linearRampToValueAtTime(to, t + secs);
+    return g;
+  };
+  let gain = mkGain(fadeIn ? 0 : vol, vol, fadeIn);
+  // position in the song (seconds at normal speed) = pos0 + (t - t0) * rate
+  let rate = 1, t0 = ctx.currentTime + 0.05, pos0 = 0, until = t0, timer = 0, stopped = false, scaled = song;
+  const posAt = t => pos0 + (t - t0) * rate;
   const fill = () => {
     if (stopped) return;
     while (until < ctx.currentTime + 4) {
-      synth.playSong(gain, song, until, 0, until + song.len);
-      until += song.len;
+      const p = ((posAt(until) % song.len) + song.len) % song.len;   // where in the loop `until` falls
+      const end = until + (song.len - p) / rate;                      // the end of this pass through the loop
+      synth.playSong(gain, scaled, until, p / rate, end);
+      until = end;
     }
-    timer = setTimeout(fill, 1000);
+    timer = setTimeout(fill, 500);
   };
   fill();
   return {
+    setRate(r) {
+      if (stopped || r === rate) return;
+      const now = ctx.currentTime + 0.04;
+      pos0 = posAt(now); t0 = now; rate = r;
+      scaled = r === 1 ? song : { ...song, stepDur: song.stepDur / r, len: song.len / r, pitch: Math.pow(r, 0.25) };
+      const old = gain;
+      old.gain.cancelScheduledValues(ctx.currentTime);
+      old.gain.setValueAtTime(old.gain.value, ctx.currentTime);
+      old.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.04);
+      setTimeout(() => old.disconnect(), 200);
+      gain = mkGain(vol, vol, 0);
+      until = now;
+      clearTimeout(timer);
+      fill();
+    },
     stop(fade = 1) {
       stopped = true;
       clearTimeout(timer);
@@ -74,7 +98,8 @@ export async function playLoop(id, { vol = 1, fadeIn = 0 } = {}) {
       gain.gain.cancelScheduledValues(t);
       gain.gain.setValueAtTime(gain.gain.value, t);
       gain.gain.linearRampToValueAtTime(0, t + fade);
-      setTimeout(() => gain.disconnect(), fade * 1000 + 200);
+      const g = gain;
+      setTimeout(() => g.disconnect(), fade * 1000 + 200);
     },
   };
 }

@@ -1,11 +1,15 @@
 // Mission 7 (Mission 6 in-game): The Job. The bank, with a crew.
 // See docs/storyboard.md, Beat 7.
 //
-//   approach   The Smart Way: TAP only while the camera light is green (red = +1 star)
-//              The Loud Way:  RAPID TAP to yell. 3 stars, no subtlety.
-//              Through the Ceiling Tiles: HOLD to crawl; the creak meter fills while you move. Full = you fall through (+1 star).
-//   betrayal   Who do you trust? Lucita (+1 heart) / Rudy (he leaves with half; -1 heart)
-//   getaway    the chase from Mission 3, in daylight, with your stars (difficulty capped at 3)
+// Stars are the point: how many you walk out with is how hard the getaway is. The choice card says so.
+//   approach   The Smart Way (Tina's): TAP only while the camera light is green. Starts at 1 star; each red, +1.
+//              The Loud Way (Rudy's):  RAPID TAP to yell. Can't go wrong, but starts at 3 stars.
+//              Through the Ceiling Tiles (yours): HOLD to crawl; the creak meter fills while you move.
+//              Quiet all the way: 0 stars. Full creak = you fall through (+2).
+//   vault      Tina's 90-second timer, then RAPID TAP to bag it. A checklist in the corner tracks the job.
+//   betrayal   Rudy (set up early: he owes Eternal Shores) offers Jase half, and a decoy car.
+//              Side with Lucita: four-way split ($1.05M), +1 heart. Take Rudy's deal: $2.1M, an easier getaway, -1 heart.
+//   getaway    the chase from Mission 3, in daylight. +2 stars for the alarm; difficulty capped at 3 (Rudy's decoy: -1).
 
 import { sfx } from '../audio/sfx.js';
 import { playLoop } from '../audio/music.js';
@@ -20,6 +24,9 @@ export default async function theJob(game, radio) {
     s.forEach((sp, i) => a.sprite(sp, Math.round(xs[i]), i === 0 || i === 3 ? 190 : 194));
   };
 
+  const steps = { lobby: false, vault: false, bag: false, away: false };
+  const list = () => ui.checklist('The job', [['Get to the vault', steps.lobby], ['Open the vault', steps.vault], ['Bag the money', steps.bag], ['Get away', steps.away]]);
+
   // ---------------- The crew ----------------
   game.setScene(a => { a.blueprintRoom(); crewSprites(a, false, [24, 56, 108, 134]); a.R(70, 212, 12, 8, '#9aa0aa'); });
   ui.letterbox(true);
@@ -27,10 +34,17 @@ export default async function theJob(game, radio) {
   await ui.card('Mission 6  ·  The Big One', 'The Job', 3200, { top: true });
   await say('LUCITA', 'Everybody in this room is gonna be tempted. Be tempted somewhere else.', 'lucita');
   await say('RUDY', "I'm just here for the snacks.", 'rudy');
+  sfx.play('ring');
+  await say('RUDY', '(on the phone) ...Friday. I said Friday, Randy. Tell Eternal Shores I said Friday.', 'rudy');
+  await say('LUCITA', '...', 'lucita');
   await say('TINA', 'Vault is on a 90-second timer. Cameras loop every 40. The guard is named Doug and he is going through a divorce.', 'tina');
   ui.letterbox(false);
   ui.dim(true, 0.4);
-  ui.choices('Choose your approach', [['smart', 'The Smart Way'], ['loud', 'The Loud Way'], ['ceiling', 'Through the Ceiling Tiles']]);
+  ui.choices('Choose your approach', [
+    ['smart', 'The Smart Way', "Tina's plan. Move only while the camera is green. Starts at ★; every time it sees you, +★."],
+    ['loud', 'The Loud Way', "Rudy's plan. Can't go wrong. Everyone knows: ★★★."],
+    ['ceiling', 'Through the Ceiling Tiles', 'Your plan. Stay quiet and nobody knows you were there. Fall through: ★★.'],
+  ], 'Stars you leave with = how hard the getaway is.');
   f.jobApproach = await input.pick();
   sfx.play('click');
   ui.choices(null);
@@ -75,6 +89,7 @@ export default async function theJob(game, radio) {
   });
   ui.dim(false);
   const hud = (time = '12:00 PM') => ui.hud({ hearts: state.hearts, money: state.money, time, wanted: stars, minimap: false });
+  list();
 
   if (f.jobApproach === 'smart') {
     stars = 1;
@@ -111,7 +126,7 @@ export default async function theJob(game, radio) {
     await say('JASE', 'EVERYBODY DOWN!', 'jase');
     await say('DOUG', '...Okay.', 'doug');
   } else {
-    stars = 1;
+    stars = 0;
     hud();
     ui.prompt('HOLD', 'Crawl  ·  let go if it creaks', 'high');
     let progress = 0, holding = false;
@@ -127,7 +142,7 @@ export default async function theJob(game, radio) {
           if (now - lastCreak > 500 && v.creak > 0.5) { lastCreak = now; sfx.play('drip'); }
           if (v.creak >= 1) {
             v.fell = true;
-            stars = Math.min(5, stars + 1);
+            stars = Math.min(5, stars + 2);
             hud();
             sfx.play('crash');
             ui.toast('You fell through the ceiling', 'Doug looks up.', '#ff5a4a', 2400);
@@ -149,37 +164,61 @@ export default async function theJob(game, radio) {
   }
   ui.prompt(null);
 
+  steps.lobby = true;
+  list();
+  ui.toast('In position', `Wanted: ${stars ? '★'.repeat(stars) : 'nobody knows you are here'}`, '#f2c14e', 2200);
+  await game.wait(1200);
+
   // ---------------- The vault ----------------
-  const vt = { rudyX: 120, rudyGun: false, gone: false };
+  const vt = { rudyX: 120, rudyGun: false, gone: false, open: false, bags: 0 };
   game.setScene(a => {
-    a.vault(true);
+    a.vault(vt.open);
     a.sprite(a.TINA_MASK, 20, 214); a.R(34, 230, 12, 8, '#9aa0aa');
     a.sprite(a.LUCITA_MASK, 46, 218);
     a.sprite(a.JASE_MASK, 74, 214); a.duffel(92, 236);
+    if (vt.bags > 0.5) a.duffel(92, 228);
     if (!vt.gone) { a.sprite(a.RUDY_MASK, Math.round(vt.rudyX), 214); if (vt.rudyGun) { a.duffel(136, 236); a.pistol(116, 230); a.pistol(64, 234); } }
   });
-  sfx.play('register');
   hud('12:01 PM');
-  ui.toast('Vault cracked', 'Estimated take: $4,200,000', '#f2c14e');
+  await say('TINA', "I'm on the panel. Timer's running.", 'tina', { passive: true, hold: 300 });
+  for (let p = 0; p <= 100; p += 4) { ui.progress('Vault timer', p); if (p % 20 === 0) sfx.play('click'); await game.wait(90); }
+  ui.progress(false);
+  sfx.play('gateBuzz');
+  vt.open = true;
+  steps.vault = true;
+  list();
   await say('JASE', "...It's bigger than I thought.", 'jase');
   await say('LUCITA', "Everything's bigger than you thought.", 'lucita');
+  const fillB = ui.prompt('RAPID TAP', 'Bag the money', 'high');
+  await input.taps(12, p => { fillB(p); vt.bags = p; sfx.play('register'); });
+  ui.prompt(null);
+  steps.bag = true;
+  list();
+  ui.toast('Bagged', '$4,200,000. Split four ways: $1,050,000 each.', '#f2c14e');
+  await game.wait(1400);
 
   // ---------------- Betrayal ----------------
   vt.rudyGun = true;
   sfx.play('hammer');
   ui.dim(true, 0.3);
   await say('RUDY', "Nothing personal. I've got a timeshare. Eternal Shores. The maintenance fees are spiritual AND financial.", 'rudy');
-  await say('LUCITA', 'Rudy. Put it down.', 'lucita', { keep: true, hold: 300 });
-  ui.choices('Who do you trust?', [['lucita', 'Lucita'], ['rudy', 'Rudy']]);
+  await say('RUDY', "Jase. You and me, half each. Two point one million. I've got a second car on Fifth. The cops chase the van, not us.", 'rudy');
+  await say('LUCITA', 'Rudy. Put it down.', 'lucita');
+  await say('LUCITA', 'Jase. Four ways, and we walk out together. That was the deal.', 'lucita', { keep: true, hold: 300 });
+  ui.choices('Who do you trust?', [
+    ['lucita', 'Lucita', 'Four-way split: $1,050,000. She sees who you picked.'],
+    ['rudy', "Rudy's deal", '$2,100,000, and his decoy car makes the getaway easier. She sees that too.'],
+  ]);
   f.trusted = await input.pick();
   sfx.play('click');
   ui.choices(null);
   ui.hide('sub');
   ui.dim(false);
-  let take = 4200000;
+  let take;
   if (f.trusted === 'lucita') {
     await say('JASE', 'Put it down, Rudy.', 'jase');
     await say('RUDY', "...Yeah, okay. That's fair.", 'rudy');
+    take = 1050000;
     vt.rudyGun = false;
     state.hearts = Math.min(4, state.hearts + 1);
     sfx.play('heartUp');
@@ -188,7 +227,7 @@ export default async function theJob(game, radio) {
     await game.wait(1800);
   } else {
     await say('JASE', "...Rudy's got a point.", 'jase');
-    await say('RUDY', 'Thanks, man. Half seems fair.', 'rudy');
+    await say('RUDY', 'Thanks, man. Fifth Street. Go.', 'rudy');
     take = 2100000;
     vt.gone = true;
     sfx.play('carDoor');
@@ -203,22 +242,25 @@ export default async function theJob(game, radio) {
   // ---------------- Getaway ----------------
   sfx.play('siren');
   stars = Math.min(5, stars + 2);
+  hud('12:03 PM');
+  ui.toast('Alarm', `+★★ for the alarm. Getaway: ${['easy', 'easy', 'medium', 'hard'][Math.max(0, Math.min(3, stars) - (f.trusted === 'rudy' ? 1 : 0))]}${f.trusted === 'rudy' ? " (Rudy's decoy helps)" : ''}.`, '#ff5a4a', 2600);
   if (f.trusted === 'lucita') await say('LUCITA', 'Drive like you mean it.', 'lucita');
   if (f.trusted === 'lucita') await say('JASE', 'I always mean it.', 'jase');
   ui.dim(true, 1);
   await game.wait(500);
+  ui.checklist(null);
   state.money += take;
   const music = await playLoop('chase', { vol: 0.9 });
   f.jobBusts = 0;
   for (;;) {
-    const r = await chase(game, stars, 0.72 + f.jobBusts * 0.12, f.jobBusts, { day: true, time: '12:04 PM', intro: false, difficulty: Math.min(3, stars) });
+    const r = await chase(game, stars, 0.72 + f.jobBusts * 0.12, f.jobBusts, { day: true, time: '12:04 PM', intro: false, difficulty: Math.max(0, Math.min(3, stars) - (f.trusted === 'rudy' ? 1 : 0)) });
     if (r === 'escaped') break;
     f.jobBusts++;
     music.stop(0.2);
     sfx.play('busted');
     ui.hud(null);
     ui.dim(true, 0.55);
-    ui.el('busted', 'passed busted', `<div class="big">BUSTED</div><div class="mn">The Job</div>
+    ui.el('busted', 'passed busted', `<div class="big">${r === 'wrecked' ? 'WRECKED' : 'BUSTED'}</div><div class="mn">The Job</div>
       <div class="fx">Tina (from the van): "I can loop cameras, not this."</div><div class="cont">Tap to retry the getaway</div>`);
     await game.wait(1200);
     await input.tap();
@@ -227,6 +269,10 @@ export default async function theJob(game, radio) {
     Object.assign(music, await playLoop('chase', { vol: 0.9 }));
   }
   music.stop(1.5);
+  steps.away = true;
+  list();
+  await game.wait(1200);
+  ui.checklist(null);
   ui.hud(null);
   await game.wait(600);
 

@@ -1,16 +1,19 @@
-// Mission 5: Cash for Gold. A pawn-shop safe; Lucita is lookout and texts about oat milk mid-drill.
+// Mission 5: Cash for Gold. A pawn-shop safe; Lucita is lookout, and she spots something in the window.
 // See docs/storyboard.md, Beat 5.
 //
 //   drill   HOLD to drill. The drill heats up while held; let go to cool it. Overheat and it jams.
 //   patrol  a real timer. If the patrol arrives before the safe opens: BUSTED, retry the drill.
-//   text    arrives halfway. You can't drill while you're on your phone, and the timer keeps running.
-//           ❤️ "Already in the fridge, babe" keeps the heart; 👍 or ignoring it costs one.
+//   text    arrives halfway: her sister Marisol's stolen quinceañera ring is in the front window. Can you grab it?
+//           You can't drill while you're on your phone, and the timer keeps running.
+//   ring    only if the safe opens with RING_SECS or more left on the patrol clock. Then it's your call.
+//           Got it: +1 heart. Promised and didn't: -1. Said "no time" and didn't: no change. Ignored her: -1.
 
 import { sfx } from '../audio/sfx.js';
 import { playLoop } from '../audio/music.js';
 
 const PATROL_SECS = 45;
 const DRILL_SECS = 20;
+const RING_SECS = 8;   // time you need left on the patrol clock to get the ring out of the window case
 
 export default async function cashForGold(game, radio) {
   const { ui, say, input, state } = game;
@@ -28,11 +31,11 @@ export default async function cashForGold(game, radio) {
     sfx.play('textPing');
     ui.phone('Ma', 'voicemail');
     await game.wait(400);
-    await say('MA', "Benny's mother called my mother. We'll talk about it.", 'ma');
+    await say('MA', "Benny's mother called me. We'll talk about it.", 'ma');
     ui.phone(null);
     await game.wait(300);
   }
-  await say('LUCITA', "I'll be out here. Text me.", 'lucita');
+  await say('LUCITA', "I'll be out front. I'll text you.", 'lucita');
   await say('JASE', "It's a pawn shop. What could happen.", 'jase');
   sfx.play('card');
   await ui.card('Mission 4  ·  Lucita is lookout', 'Cash for\nGold', 3200, { top: true });
@@ -41,11 +44,11 @@ export default async function cashForGold(game, radio) {
   await game.wait(500);
 
   // ---------------- The safe ----------------
-  let textAnswered = null, busts = 0;
+  let reply = null, ring = null, busts = 0;
   for (;;) {
-    const result = await drill(game, textAnswered === null, busts);
-    if (result.text !== undefined) textAnswered = result.text;
-    if (result.ok) break;
+    const result = await drill(game, reply, busts);
+    if (result.text !== undefined) reply = result.text;
+    if (result.ok) { ring = result.ring; break; }
     busts++;
     sfx.play('busted');
     ui.hud(null);
@@ -57,44 +60,86 @@ export default async function cashForGold(game, radio) {
     ui.hide('busted');
     ui.dim(false);
   }
-  f.text = textAnswered;
-  f.oatMilk = 'unresolved';
+  f.text = reply;
+  f.ring = ring === 'got' ? 'got' : { yes: 'promised', no: 'declined', ignore: 'ignored' }[reply];
   f.safeBusts = busts;
 
   // ---------------- Escape ----------------
+  const es = { ring: false, heartY: null };
   game.setScene(a => {
     a.alley();
     a.convertible(84, 262);
     a.sprite(a.LUCITA_CASUAL.slice(0, 9), 140, 224);
     a.sprite(a.JASE_MASK, 54, 228); a.duffel(40, 246);
+    if (es.ring) { a.R(128, 236, 4, 3, '#f2c14e'); a.R(129, 235, 2, 1, '#3fdc7a'); }
+    if (es.heartY !== null) a.pixelHeart(132, Math.round(es.heartY));
   });
   state.money += 2340;
-  ui.hud({ hearts: state.hearts, money: state.money, time: '2:16 AM', wanted: 1 });
+  const hud = () => ui.hud({ hearts: state.hearts, money: state.money, time: '2:16 AM', wanted: 1 });
+  hud();
   ui.dim(false);
   sfx.play('carDoor');
-  await say('LUCITA', 'Did you get it or not.', 'lucita');
+  await say('LUCITA', 'Did you get it?', 'lucita');
   await say('JASE', 'The safe? Yeah.', 'jase');
-  await say('LUCITA', 'The milk, Jase.', 'lucita');
-  if (textAnswered === 'heart') await say('LUCITA', "You said it was in the fridge.", 'lucita');
+  await say('LUCITA', 'Jase.', 'lucita');
+  if (f.ring === 'got') {
+    await say('JASE', '...And this.', 'jase');
+    es.ring = true;
+    sfx.play('toast');
+    await game.wait(900);
+    await say('LUCITA', "That's hers. That's really hers.", 'lucita');
+    state.hearts = Math.min(4, state.hearts + 1);
+    es.heartY = 222;
+    game.tween(es, 'heartY', 206, 1400, 'out');
+    sfx.play('heartUp');
+    hud();
+    ui.toast('Relationship ↑', "You got Marisol's ring back.", '#ff5d8f');
+    await game.wait(2400);
+  } else if (f.ring === 'promised') {
+    await say('JASE', "There wasn't time.", 'jase');
+    await say('LUCITA', "You said you were on it.", 'lucita');
+    state.hearts = Math.max(0, state.hearts - 1);
+    sfx.play('heartDown');
+    hud();
+    ui.toast('Relationship ↓', 'You promised.', '#ff5d8f');
+    await game.wait(2200);
+  } else if (f.ring === 'declined') {
+    await say('JASE', 'I told you. No time.', 'jase');
+    await say('LUCITA', 'I know. You told me.', 'lucita');
+    sfx.play('toast');
+    ui.toast('Relationship unchanged', 'She understands. Mostly.', '#aaaaaa');
+    await game.wait(2200);
+  } else {
+    await say('LUCITA', "You didn't even answer me.", 'lucita');
+    state.hearts = Math.max(0, state.hearts - 1);
+    sfx.play('heartDown');
+    hud();
+    ui.toast('Relationship ↓', 'Lucita felt ignored.', '#ff5d8f');
+    await game.wait(2200);
+  }
   sfx.play('engine');
   await game.wait(800);
 
   ui.hud(null);
   ui.dim(true, 0.45);
   sfx.play('passed');
-  await ui.passed('MISSION PASSED', 'Cash for Gold', '$2,340', 'Oat milk: unresolved.', () => input.tap());
+  await ui.passed('MISSION PASSED', 'Cash for Gold', '$2,340', f.ring === 'got' ? "Marisol's ring: recovered." : "Marisol's ring: still in the window.", () => input.tap());
   ui.dim(false);
   state.mission = 6;
   game.save();
 }
 
-// One attempt at the safe. Returns { ok, text } (text = the reply, if the text arrived this attempt).
-async function drill(game, withText, busts) {
+// One attempt at the safe. Returns { ok, text, ring } (text = the reply, if the text arrived this attempt;
+// ring = 'got' | 'late' | 'left' once the safe is open and she asked).
+async function drill(game, reply, busts) {
   const { ui, input, state } = game;
-  const d = { progress: 0, heat: 0, jam: 0, left: PATROL_SECS + busts * 6, holding: false, text: undefined, phone: false };
+  const withText = reply === null;
+  const d = { progress: 0, heat: 0, jam: 0, left: PATROL_SECS + busts * 6, holding: false, text: undefined, phone: false, jx: 70, drillOut: true, ringGone: false, glint: false, bob: false };
   game.setScene((a, t) => {
     a.pawnRoom();
-    a.sprite(a.JASE_MASK, 70, 200);
+    a.windowCase(!d.ringGone, d.glint && Math.floor(t * 4) % 2 === 0);
+    a.sprite(a.JASE_MASK, Math.round(d.jx), 200 - (d.bob && Math.floor(t * 8) % 2 ? 1 : 0));
+    if (!d.drillOut) return;
     const hot = Math.min(1, d.heat);
     a.R(86, 214, 12, 4, hot > 0.75 ? '#e0502a' : hot > 0.45 ? '#e08a20' : '#e0a020');
     a.R(96, 215, 6, 2, '#aaa');
@@ -158,33 +203,24 @@ async function drill(game, withText, busts) {
     const msgs = [['them', 'all clear out here']];
     ui.thread('Lucita', msgs);
     await game.wait(900);
-    sfx.play('textPing');
-    msgs.push(['them', 'also did u get the oat milk']);
-    ui.thread('Lucita', msgs);
-    await game.wait(900);
-    sfx.play('textPing');
-    msgs.push(['them', 'not the vanilla one. the one with the green cap']);
-    ui.thread('Lucita', msgs, [['heart', '❤️ "Already in the fridge, babe"'], ['thumbs', '👍'], ['ignore', 'Ignore']]);
-    const reply = await input.pick();
+    d.glint = true;
+    for (const m of ['jase. front window. gold ring w the little green stone', "that's marisol's. her quince ring. somebody stole it in march", 'can u grab it??']) {
+      sfx.play('textPing');
+      msgs.push(['them', m]);
+      ui.thread('Lucita', msgs, m.endsWith('??') ? [['yes', '❤️ "On it"'], ['no', '"No time, babe"'], ['ignore', 'Ignore']] : null);
+      if (!m.endsWith('??')) await game.wait(1100);
+    }
+    const r = await input.pick();
     sfx.play('click');
-    if (reply === 'ignore') { ui.thread(null); }
+    if (r === 'ignore') ui.thread(null);
     else {
-      msgs.push(['me', reply === 'heart' ? '❤️ Already in the fridge, babe' : '👍']);
+      msgs.push(['me', r === 'yes' ? '❤️ On it' : 'No time, babe']);
       ui.thread('Lucita', msgs);
       await game.wait(700);
       ui.thread(null);
     }
-    if (reply === 'heart') {
-      sfx.play('toast');
-      ui.toast('Relationship holds', "She'll check the fridge.", '#ff5d8f');
-    } else {
-      state.hearts = Math.max(0, state.hearts - 1);
-      hud();
-      sfx.play('heartDown');
-      ui.toast('Relationship ↓', reply === 'thumbs' ? 'Lucita felt dismissed.' : 'Lucita felt ignored.', '#ff5d8f');
-      if (reply === 'ignore') setTimeout(() => { if (!d.done) { sfx.play('textPing'); ui.toast('Lucita', 'ok.', '#aaaaaa', 2200); } }, 4000);
-    }
-    return reply;
+    if (r === 'ignore') setTimeout(() => { if (!d.done) { sfx.play('textPing'); ui.toast('Lucita', 'ok.', '#aaaaaa', 2200); } }, 4000);
+    return r;
   }
 
   d.done = true;
@@ -195,15 +231,48 @@ async function drill(game, withText, busts) {
   ui.progress(false);
   ui.hide('timer');
   ui.hide('heat');
+  let ring = null;
   if (outcome) {
     sfx.play('register');
     ui.el('lost', 'passed', '<div class="big" style="font-size:26px;color:#9be37a;text-shadow:0 2px 0 #1b3a12;margin-top:40px">SAFE OPEN</div>');
     await game.wait(1500);
     ui.hide('lost');
+    d.drillOut = false;
+    // The ring: only if she asked, and only if there's time left on the clock.
+    const asked = reply ?? d.text;
+    if (asked) {
+      const secs = Math.max(0, Math.floor(d.left));
+      ui.el('timer', 'timer' + (secs < RING_SECS ? ' urgent' : ''), `<span>Patrol arrives in</span> 0:${String(secs).padStart(2, '0')}`);
+      if (secs < RING_SECS) {
+        sfx.play('heartDown');
+        await ui.toast('No time for the window', `The ring case takes ${RING_SECS} seconds. You have ${secs}.`, '#ff5a4a', 2600);
+        ring = 'late';
+      } else {
+        ui.choices(`The ring  ·  ${secs}s left`, [['grab', 'Grab the ring (front window)'], ['leave', 'Leave it']]);
+        const c = await input.pick();
+        sfx.play('click');
+        ui.choices(null);
+        if (c === 'grab') {
+          d.bob = true;
+          await game.tween(d, 'jx', 34, 700, 'linear');
+          d.bob = false;
+          const fill = ui.prompt('HOLD', 'Pop the case', 'high');
+          await input.hold(1200, p => fill(p));
+          ui.prompt(null);
+          sfx.play('grout');
+          d.ringGone = true;
+          d.glint = false;
+          ui.toast('Got it', "Marisol's ring", '#f2c14e', 1800);
+          await game.wait(900);
+          ring = 'got';
+        } else ring = 'left';
+      }
+      ui.hide('timer');
+    }
   } else {
     sfx.play('siren');
     await game.wait(900);
   }
   ui.hud(null);
-  return { ok: outcome, text: d.text };
+  return { ok: outcome, text: d.text, ring };
 }

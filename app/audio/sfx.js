@@ -141,6 +141,13 @@ export const SOUNDS = {
     o.frequency.exponentialRampToValueAtTime(40, t + 0.25);
     s.drum(out, 'c', t + 0.02, 0.8);
   },
+  screech: (ctx, out, t, s) => {
+    const f = noise(ctx, s, env(ctx, out, t, 0.32, 0.02, 0.35, 0.35), t, 0.8, 'bandpass', 3200, 14);
+    f.frequency.setValueAtTime(3200, t); f.frequency.linearRampToValueAtTime(2500, t + 0.7);
+    const o = osc(ctx, s, env(ctx, out, t, 0.05, 0.02, 0.3, 0.3), 'pulse12', 1900, t, 0.7);
+    o.frequency.linearRampToValueAtTime(1500, t + 0.7);
+  },
+  thud: (ctx, out, t, s) => { noise(ctx, s, env(ctx, out, t, 0.3, 0.002, 0.12), t, 0.15, 'lowpass', 900); },
   whoosh: (ctx, out, t, s) => { const f = noise(ctx, s, env(ctx, out, t, 0.3, 0.03, 0.25), t, 0.3, 'bandpass', 300, 1); f.frequency.exponentialRampToValueAtTime(2500, t + 0.25); },
   busted: (ctx, out, t, s) => {
     melody(ctx, s, out, 'pulse25', t, 0.16, [['E5', 1], ['C5', 1], ['A4', 1], ['F4', 4]], 0.09);

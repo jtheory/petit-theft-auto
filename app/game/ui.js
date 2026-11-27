@@ -88,11 +88,19 @@ export class UI {
       (opts ? `<div class="replies">${opts.map(([k, l]) => `<div data-choice="${esc(k)}">${esc(l)}</div>`).join('')}</div>` : ''));
   }
 
-  // Tappable options (resolve them with input.pick()). opts: [[key, label]]
-  choices(title, opts) {
+  // Tappable options (resolve them with input.pick()). opts: [[key, label, description?]]; foot: a note under them
+  choices(title, opts, foot = '') {
     if (!title) return this.hide('choices');
     this.el('choices', 'choice', `<div class="ct">${esc(title)}</div>` +
-      opts.map(([k, label]) => `<div class="co" data-choice="${esc(k)}">${esc(label)}</div>`).join(''));
+      opts.map(([k, label, desc]) => `<div class="co" data-choice="${esc(k)}">${esc(label)}${desc ? `<small>${esc(desc)}</small>` : ''}</div>`).join('') +
+      (foot ? `<div class="cf">${esc(foot)}</div>` : ''));
+  }
+
+  // A short to-do list in the corner; items: [[label, done]]
+  checklist(title, items) {
+    if (!title) return this.hide('checklist');
+    this.el('checklist', 'checklist', `<div class="ck-t">${esc(title)}</div>` +
+      items.map(([label, done]) => `<div class="${done ? 'done' : ''}">${done ? '✓' : '○'} ${esc(label)}</div>`).join(''));
   }
 
   // Labels pinned to world positions (world px -> 2x UI px). tags: [{ x, y, text, off }]
@@ -109,9 +117,28 @@ export class UI {
     if (this.els.toast === e) this.hide('toast');
   }
 
-  radio(station, nowPlaying) {
+  radio(station, nowPlaying, line = '') {
+    this.radioHtml = null;
     if (!station) return this.hide('radio');
-    this.el('radio', 'radio', `<div class="st">${esc(station)}</div><div class="np">${esc(nowPlaying)}</div>`);
+    this.el('radio', 'radio', `<div class="st">${esc(station)}</div><div class="np">${esc(nowPlaying)}</div>${line ? `<div class="ln">${esc(line)}</div>` : ''}`);
+  }
+
+  // The radio card, live: what's on right now (song, ad, or talk), including the words being said.
+  // Call it every frame; it only touches the DOM when something changes. opts.name overrides the station name.
+  radioLive(status, opts = {}) {
+    if (!status?.on) return this.radio(null);
+    const st = status.station;
+    let np = '...', line = '';
+    if (status.kind === 'song') np = `"${status.song.title}"${status.song.artist ? ' · ' + status.song.artist : ''}`;
+    else if (status.kind === 'ad') np = `AD · ${status.ad.sponsor}`;
+    else if (status.kind === 'talk') np = status.label;
+    if (status.who && status.said) line = `${status.who}: ${status.said}`;
+    const name = opts.name ?? `${st.name} ${st.band === 'AM' ? st.freq + ' AM' : st.freq}`.toUpperCase();
+    const html = `<div class="st">${esc(name)}</div><div class="np">${esc(opts.sub ? opts.sub + ' · ' + np : np)}</div>${line ? `<div class="ln">${esc(line)}</div>` : ''}`;
+    if (html === this.radioHtml && this.els.radio) return;
+    this.radioHtml = html;
+    let e = this.els.radio;
+    if (!e) e = this.el('radio', 'radio', html); else e.innerHTML = html;
   }
 
   phone(name, status) {

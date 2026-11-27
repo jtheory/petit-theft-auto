@@ -113,7 +113,7 @@ export class Synth {
           const t = at - offset + L * song.len + ev.step * song.stepDur;
           if (t < at - 1e-3 || t >= until) continue;
           if (tr.wave === 'drums') { this.drum(bus, ev.tok, t, tr.vol ?? 1); continue; }
-          const f = noteFreq(ev.tok);
+          const f = noteFreq(ev.tok) * (song.pitch ?? 1);
           if (!f) continue;
           const dur = Math.min(ev.len * song.stepDur * (tr.gate ?? 0.9), until - t);
           this.tone(bus, tr.wave, f, t, dur, tr.vol ?? 0.1);

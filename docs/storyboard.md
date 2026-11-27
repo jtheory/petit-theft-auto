@@ -12,8 +12,8 @@ Frames are rendered from [`storyboard/frames.html`](storyboard/frames.html) with
 2. **Coming Home:** Jase picks her up in his father's convertible. She notices the porch.
 3. **The Store** (*Late Night Special*): a convenience store hold-up, done as a couple. The clerk knows Jase from Little League.
 4. **The Date** (*Low Tide*, optional): kayaking at dawn; a manatee.
-5. **The Text** (*Cash for Gold*): Lucita is lookout and texts about oat milk mid-safecrack.
-6. **The Channel** (*Wake*): a stolen speedboat, a helicopter, a mangrove channel.
+5. **The Text** (*Cash for Gold*): Lucita is lookout, and texts mid-safecrack: her sister's stolen ring is in the shop window.
+6. **The Channel** (*Test Drive*): a stolen speedboat, a helicopter, a mangrove channel.
 7. **The Job**: the big bank heist with a crew; a betrayal; a five-star getaway.
 8. **The Ending**: relationship level decides it; epilogue on the in-game social feed; very long credits.
 
@@ -130,7 +130,7 @@ Mission 1 can't be failed, but it can be done badly. Results are saved as flags 
 
 - **Morning:** if the roof wasn't fixed, it's raining; tap the porch to put out a pot ("Pot deployed — Leak contained. Mostly."). The pot stays for the rest of the mission. If Ma was ignored she leaves a second voicemail ("I'm calling your aunt."); if you were honest she texts "did u buy a vegetable". HOLD to start the car.
 - **Release and curb:** as storyboarded; HOLD to open her door (saved as `openedDoor`, unused so far).
-- **The drive:** HOLD to drive (about 24 seconds of holding), SWIPE left/right to change station. Lucita reacts once per station: Gator "...Fine.", Seniors "Are we old now?", WVIRAL "Absolutely not." (switches back), Talk "No news. Not today." (switches back). If you never touch the radio, she changes it herself at about two-thirds of the way.
+- **The drive:** HOLD to drive (about 24 seconds of holding), SWIPE left/right to change station. The radio card shows what's on live, including ads and DJ lines as they're spoken. Lucita reacts once per station: Gator "...Fine.", Seniors "Are we old now?", WVIRAL "Absolutely not." (switches back), Talk "No news. Not today." (switches back). "Still playing this song" only comes up while a song is actually on. If you never touch the radio, she puts on The Gator herself at about two-thirds of the way ("This one. I missed this one."). Change away from her pick and she puts it back ("I was listening to that."); do it twice and she turns the radio off ("Okay. No radio."), saved as `drive.radioOff` and shown in the credits.
 - **The porch:** porch painted → "You remembered." and the first heart. Not painted → "It's still standing." and "Relationship unchanged — She let you. She's thinking about it." Pot present → "Is that a pot?" / "It's load-bearing."
 - **End card:** `Relationship: Level N` with the level name (0 is "It's Been a While").
 
@@ -193,11 +193,11 @@ Hearts go down for: dismissive replies (👍), ignoring texts, trusting Rudy, sk
 
 **As built (Mission 3)**
 
-- **Approach:** Loud (2 stars; "EVERYBODY DOWN!" / "It's just me, man."), Quiet (1 star), Buy something first (1 star; $3 slushie; "Do you still want the slushie?" / "...Yes.").
+- **Approach:** Loud (2 stars; "EVERYBODY DOWN!" / "It's just me, man."), Quiet (1 star), Buy something first (1 star; $3 slushie, or Benny spots you if you're short; "Do you still want the slushie?" / "...Yes."). Benny: "Man, my mom's gonna tell your mom about this."
 - **Hold-up:** HOLD to keep Benny calm while the register empties. Let go for more than about a second: "Silent alarm — Benny pressed it with his knee." (+1 star). Haul: $186.
 - **Jerky:** Teriyaki / Original ("I said teriyaki.") / Leave it ("Jase.").
-- **Chase (first real fail state):** about 30 seconds. SWIPE up/down to change lanes; traffic, cones and the occasional gator come from the right, flagged by a blinking marker. Three called turns ("Left! LEFT!"): swipe the right way in time to gain ground. The cruiser closes in from the left; if it catches you, **BUSTED**, and you retry the chase with a slightly bigger head start. Lucita's busted lines escalate: "We are not doing this again." / "We are doing this again." / "Jase. Left is the one on the left."
-- **Escape:** a car wash, top down. "...Did we just get the car washed?" / "Two birds." / "The top was down, Jase."
+- **Chase (first real fail state):** about 30 seconds. SWIPE up/down to change lanes; traffic, cones and the occasional gator come from the right, flagged by a blinking marker. Traffic never walls off both lanes at once, and you can't merge into a car beside you (a bump, "There's a car there!"). Cones and gators are bumps (a little lead lost, they get knocked off the road). Cars are serious: a big hit, the car rebounds, and the third car hit is **WRECKED** (CAR pips in the corner). Three called turns: the turn lane (left = top, right = bottom) is kept clear for a few seconds before Lucita calls it; get in that lane and swipe that way again. A turn screeches, slants the car, flashes to a different street, and the cruiser has to find you again. Lucita approves ("Yes! Like that."); miss it and "That was the turn!". The cruiser closes in from the left; if it catches you, **BUSTED**, and you retry the chase with a slightly bigger head start. Lucita's busted lines escalate: "We are not doing this again." / "We are doing this again." / "Jase. Left is the one on the left."
+- **Escape:** a car wash, top down, then WANTED: CLEARED. "...Did we just get the car washed?" / "Two birds." / "The top was down, Jase."
 - **Radio:** Talk 1490 covers the porch (HOA) before this mission and the robbery after it.
 - Balance (simulated): 1 star comfortable, 2 stars tight, 3 stars usually needs a retry; doing nothing is busted in about 8 seconds.
 
@@ -233,7 +233,7 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 - **Asking (text thread):** "kayak tomorrow? i found a spot" / "u up" ("it's 7pm jase" / "ask me properly") / "Don't ask". Not asking skips the date: Lucita texts "ok", `skippedDate` is saved (pays off later: "You never take me anywhere.").
 - **Coffee:** she said bring coffee. At 5:48 AM a "Grab the coffee" prompt gives you 3.5 seconds. At the dock: "You brought coffee." or "No coffee."
-- **Paddling:** tap the LEFT and RIGHT halves of the screen in turn (L / R hints light up). Same side twice spins the kayak ("We're going in circles.", then "Other side, Jase."). The Gator plays on a Bluetooth speaker whose battery drains to 0% ("It was a good speaker.").
+- **Paddling:** the kayak waits empty at the dock until you get in. Tap the LEFT and RIGHT halves of the screen in turn (L / R hints light up). Same side twice spins the kayak ("We're going in circles.", then "Other side, Jase."). The Gator plays on a Bluetooth speaker the whole way.
 - **Manatee:** at about 70% it surfaces. HOLD to sit still (within 7 seconds): it stays, "I'd hate them with you.", +1 heart ("A manatee was involved."). Fidget: "It left. You have to be still sometimes, Jase."
 - **End card:** DATE COMPLETE, "Mangroves paddled: 1 of 1", relationship level.
 
@@ -273,11 +273,12 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 **As built (Mission 5)**
 
-- **Drop-off:** if the store was robbed, Ma's voicemail: "Benny's mother called my mother. We'll talk about it." Lucita: "I'll be out here. Text me." / Jase: "It's a pawn shop. What could happen."
+- **Drop-off:** if the store was robbed, Ma's voicemail: "Benny's mother called me. We'll talk about it." Lucita: "I'll be out front. I'll text you." / Jase: "It's a pawn shop. What could happen."
 - **The drill:** HOLD to drill (about 20 seconds of drilling). Heat rises while held and falls when you let go; at full heat the drill jams for 3 seconds and restarts warm. Drilling in rhythm (hold about 3 s, rest about 1 s) works; holding nonstop does not.
 - **Patrol timer:** 45 seconds (plus 6 per retry). Run out: BUSTED ("i said patrol was coming"), retry the drill.
-- **The text** arrives at 50%. While the thread is open you can't drill, and the timer keeps running. ❤️ "Already in the fridge, babe": heart holds (and later "You said it was in the fridge."). 👍: -1 heart, "Lucita felt dismissed." Ignore: -1 heart, "Lucita felt ignored.", then a text: "ok."
-- **Escape:** "Did you get it or not." / "The safe? Yeah." / "The milk, Jase." End card: $2,340, "Oat milk: unresolved."
+- **The text** arrives at 50%: "jase. front window. gold ring w the little green stone" / "that's marisol's. her quince ring. somebody stole it in march" / "can u grab it??". While the thread is open you can't drill, and the timer keeps running. Replies: ❤️ "On it" / "No time, babe" / Ignore (then a text: "ok."). The ring glints in the window case.
+- **The ring:** only if the safe opens with 8+ seconds left on the patrol clock: Grab the ring (walk to the case, HOLD to pop it) or leave it. Otherwise "No time for the window".
+- **Escape:** "Did you get it?" / "The safe? Yeah." / "Jase." Got the ring: "That's hers. That's really hers.", +1 heart. Promised and didn't: "You said you were on it.", -1. Said no time and didn't: no change. Ignored her: -1. End card: $2,340, "Marisol's ring: recovered." or "still in the window."
 - Tested: rhythm opens the safe with about 11 seconds left; holding nonstop gets busted.
 
 ---
@@ -288,7 +289,7 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 **Panel 1: The marina** *(frame 1)*
 - *Screen:* Sunset over the Bayside Yacht Club: silhouetted yachts, a dock, a white speedboat with a red stripe. Letterbox.
-- *UI:* Card **Wake**, kicker `Mission 5 · Bayside Yacht Club`.
+- *UI:* Card **Test Drive**, kicker `Mission 5 · Bayside Yacht Club`.
 - *Text:*
   - Jase: "It's not stealing. It's a test drive."
   - Lucita: "It has a name, Jase. It's called *Reel Estate.*"
@@ -318,10 +319,10 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 **As built (Mission 6)**
 
-- **Marina:** "It's not stealing. It's a test drive." / "It's called Reel Estate." RAPID TAP to hotwire.
-- **Searchlight:** DRAG left/right to keep the boat out of the helicopter's light for 25 seconds. "Spotted" fills while lit and drains when clear; full = BUSTED (Lucita: "They have a helicopter, Jase." / "Stay. Out. Of. The. Light." / "It is a very big light."), retry. The light sweeps in from off-screen, follows with a lag and a sway, and speeds up over time. The trick: move away from it, and when pinned at an edge, cross under it fast.
+- **Marina:** "It's not stealing. It's a test drive." / "Hey. It's called Reel Estate." / "...That's clever. I hate that that's clever." RAPID TAP to hotwire.
+- **Searchlight (top-down):** DRAG anywhere to steer the boat (it follows your finger at a boat's speed). The helicopter's round light roams after you with a lag and a wander, and every few seconds lunges at a spot near you ("Here it comes!"). The police boat chugs along the bottom, drifting under you; its headlight counts too ("Not toward the cops, Jase!"). Survive 25 seconds. "Spotted" fills while lit and drains when clear; full = BUSTED (Lucita: "They have a helicopter, Jase." / "Stay. Out. Of. The. Light." / "It is a very big light."), retry. The light sweeps in from off-screen, follows with a lag and a sway, and speeds up over time. The trick: move away from it, and when pinned at an edge, cross under it fast.
 - **Hard left:** SWIPE ↑ within 3.5 s ("LEFT, Jase. The channel was on the LEFT." if missed; no penalty). The escape-room coupon exchange in the channel.
-- **Lost them:** "That felt fun." +1 heart ("Shared near-death experience."). End card: "Boats returned: 0".
+- **Lost them:** WANTED: CLEARED. "That felt fun." +1 heart ("Shared near-death experience."). End card: "Boats returned: 0".
 
 ---
 
@@ -370,17 +371,18 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 **As built (Mission 7)**
 
-- **Crew:** lines as storyboarded, plus Tina's Doug briefing. Approach reactions: Smart ("Finally."), Loud ("Now we are talking."), Ceiling ("Why is it always the ceiling with you.").
+- **Crew:** lines as storyboarded, plus Tina's Doug briefing, and Rudy on the phone: "Friday. I said Friday, Randy. Tell Eternal Shores I said Friday." Approach reactions: Smart ("Finally."), Loud ("Now we are talking."), Ceiling ("Why is it always the ceiling with you.").
 - **Walk-in:** masked crew crossing to the bank, 11:58 AM card.
-- **Approach mini-games:** Smart: TAP only while the camera light is green (red: +1 star, "Doug is on his phone"). Loud: RAPID TAP to yell, 3 stars ("EVERYBODY DOWN!" / Doug: "...Okay."). Ceiling: HOLD to crawl with a creak meter; full = you fall through, +1 star ("Doug looks up." / "Hi." / "Hey, Doug.").
-- **Betrayal:** Rudy's Eternal Shores timeshare. Trust Lucita: Rudy folds, +1 heart, $4.2M. Trust Rudy: he leaves with half, -1 heart, $2.1M.
-- **Getaway:** the Mission 3 chase in daylight, stars +2 (difficulty capped at 3), BUSTED/retry with Tina's line.
+- **Approach:** the choice card says what each costs, and that stars = how hard the getaway is. Smart (Tina's plan): TAP only while the camera light is green, starts at 1 star, each red +1 ("Doug is on his phone"). Loud (Rudy's): RAPID TAP to yell, can't fail, 3 stars ("EVERYBODY DOWN!" / Doug: "...Okay."). Ceiling (yours): HOLD to crawl with a creak meter, 0 stars if quiet; full = you fall through, +2 ("Doug looks up." / "Hi." / "Hey, Doug.").
+- **Checklist:** a corner list (Get to the vault, Open the vault, Bag the money, Get away) ticks off as you go. The vault: Tina's timer bar, the door swings open, RAPID TAP to bag it ($4.2M, four ways).
+- **Betrayal:** Rudy pulls a gun and offers Jase half ($2.1M) and a decoy car on Fifth. Lucita: "Four ways, and we walk out together. That was the deal." Side with Lucita: Rudy folds, +1 heart, $1.05M. Take Rudy's deal: -1 heart, $2.1M, and the getaway is one notch easier.
+- **Getaway:** the Mission 3 chase in daylight, stars +2 for the alarm (difficulty capped at 3, minus 1 with Rudy's decoy), BUSTED/WRECKED/retry with Tina's line.
 
 ---
 
 ## Beat 8: The Ending (draft 1)
 
-**As built:** all three endings are in (A Ride Home at level 4, B Still Here at level 3, C Walking Away at 0–2), including the SwampFeed comments that depend on your choices and the callbacks ("You never take me anywhere.", "And it was the green cap."). The credits roll for about 45 seconds (HOLD to skip) and end with a "Your story" section: restoration %, Ma, jerky, the date, the text, who you trusted, times busted, final take, oat milk, relationship level and ending. Then "The End" and a restart.
+**As built:** all three endings are in (A Ride Home at level 4, B Still Here at level 3, C Walking Away at 0–2), including the SwampFeed comments that depend on your choices and the callbacks ("You never take me anywhere."; the ring: "And you said you were on it." / "Thank you for Marisol's ring." / "Marisol hasn't taken that ring off." / marisol.g's comment). The credits roll for about 50 seconds with fake names for every role and a Netlify hosting credit; HOLD to fast-forward (the theme speeds up too). They end with a "Your story" section: restoration %, Ma, the radio, jerky, the date, Marisol's ring, who you trusted, times busted, final take, relationship level and ending. Then "The End" and a restart.
 
 Perfect play reaches level 4: porch (+1), manatee (+1), the text ❤️ (keeps it), the channel (+1), trusting Lucita (+1).
 

@@ -35,7 +35,7 @@ export default async function whereTheHeartIs(game, radio) {
     a.ground();
     a.house({ roof: s.roof, porch: s.porch, lit: s.lit, boarded: s.boarded, patched: s.patched });
     a.palm(10, 214); a.palm(166, 206);
-    if (s.sitting) a.sprite(a.JASE_SIT, 82, 194);
+    if (s.sitting) a.sprite(a.JASE_SIT, 82, a.SIT_Y);
     else a.sprite(a.JASE, Math.round(s.jx), s.jy - (s.bob && Math.floor(t * 8) % 2 ? 1 : 0));
     const pulse = 0.55 + 0.45 * Math.sin(t * 6);
     for (const [x, y] of s.spots) { a.g.globalAlpha = pulse; a.hotspot(x, y); a.g.globalAlpha = 1; }
@@ -100,7 +100,7 @@ export default async function whereTheHeartIs(game, radio) {
     if (f.ma === 'smart') await say('MA', "Don't you get smart with me.", 'ma');
     if (f.ma === 'honest') await say('MA', "I knew it. I'm sending you ten dollars. Buy a vegetable.", 'ma');
     await say('JASE', "I'm fixing up the house, Ma. Before she gets out.", 'jase');
-    await say('MA', 'That house has been falling down since your daddy.', 'ma');
+    await say('MA', 'That house has been falling down since your daddy left.', 'ma');
     await say('JASE', "Then it's about time somebody picked it up.", 'jase');
     sfx.play('click');
     ui.phone(null);
@@ -223,7 +223,7 @@ export default async function whereTheHeartIs(game, radio) {
   radio.volume(0.25, 1);
   sfx.play('passed');
   const fx = `Home Restoration ${pct}%`;
-  const fx2 = f.porchPainted ? 'Hidden effect logged. Someone will notice.'
+  const fx2 = f.porchPainted ? 'Hidden effect logged.'
     : f.ma === 'ignored' ? 'Missed calls (Ma): 1'
     : 'The porch is still gray.';
   await ui.passed('MISSION PASSED', 'Where the Heart Is', fx, fx2, () => input.tap());

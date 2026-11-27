@@ -5,7 +5,8 @@
 //   roofFixed = false  -> it's raining; put a pot out (and she sees it later)
 //   ma = 'ignored'     -> another voicemail
 //   porchPainted       -> "You remembered." and the first heart. Without it: "It's still standing." No heart.
-// New: the drive. HOLD to drive, SWIPE to change station. If you never touch the radio, Lucita does.
+// New: the drive. HOLD to drive, SWIPE to change station. If you never touch the radio, Lucita puts on
+// The Gator. Change away from her pick twice and she turns the radio off (f.drive.radioOff).
 
 import { sfx } from '../audio/sfx.js';
 
@@ -138,25 +139,37 @@ export default async function comingHome(game, radio) {
   ui.hud({ hearts: state.hearts, money: state.money, time: '4:18 PM' });
   await radio.turnOn('neon', { segment: 0, quiet: true });
   radio.volume(0.8, 0.5);
-  const showStation = () => {
-    const st = radio.stations[radio.index];
-    ui.radio(st.name.toUpperCase(), st.bed ? `"${radio.songs[st.bed].title}" · ${radio.songs[st.bed].artist}` : st.tagline);
-  };
-  showStation();
   ui.prompt('HOLD', 'Drive   ·   Swipe: radio');
 
-  // Lines during the drive are queued so they never overlap, and never steal the controls.
+  // The radio is a small negotiation. Leave it alone and Lucita puts on The Gator ("I missed this one").
+  // Change away from her pick once and she puts it back; do it again and the radio goes off for good.
+  // Viral and Talk get vetoed on sight.
   let talk = Promise.resolve();
   const lines = list => { talk = talk.then(async () => { for (const [who, text, v] of list) await say(who, text, v, { passive: true, hold: 900 }); }); return talk; };
-  let touchedRadio = false, lucitaChanged = false;
+  let touchedRadio = false, lucitaPicked = false, lucitaWaiting = false, overrides = 0, radioOff = false, swipes = 0;
   const reacted = new Set(['neon']);
-  const onStation = (by) => {
-    showStation();
+  const lucitaTunes = id => { reacted.add(id); radio.tune(id); ui.toast('Lucita changed the station.', '', '#ff8fb1', 2000); };
+  const onStation = () => {
     const id = radio.stations[radio.index].id;
+    if (lucitaPicked && id !== 'gator') {
+      overrides++;
+      if (overrides === 1) {
+        lines([['LUCITA', 'I was listening to that.', 'lucita']]).then(() => { if (!radioOff) lucitaTunes('gator'); });
+      } else {
+        radioOff = true;
+        lines([['LUCITA', 'Okay. No radio.', 'lucita']]).then(() => {
+          radio.volume(0, 0.3);
+          setTimeout(() => radio.turnOff(), 350);
+          ui.toast('Lucita turned off the radio.', '', '#ff8fb1', 2400);
+        });
+      }
+      return;
+    }
+    if (swipes === 6) lines([['LUCITA', 'Pick one, Jase.', 'lucita']]);
     if (!reacted.has(id)) {
       reacted.add(id);
       lines(REACTIONS[id]).then(() => {
-        if (id === 'viral' || id === 'talk') { radio.tune(by === 'lucita' ? 'gator' : 'neon'); showStation(); }
+        if ((id === 'viral' || id === 'talk') && !radioOff && radio.stations[radio.index].id === id) lucitaTunes(lucitaPicked ? 'gator' : 'neon');
       });
     }
   };
@@ -165,10 +178,12 @@ export default async function comingHome(game, radio) {
     down() { d.holding = true; },
     up(g) {
       d.holding = false;
+      if (radioOff) return;
       if (Math.abs(g.dx) > 50 && Math.abs(g.dx) > Math.abs(g.dy)) {
         touchedRadio = true;
+        swipes++;
         g.dx < 0 ? radio.next() : radio.prev();
-        onStation('jase');
+        onStation();
       }
     },
     move() {},
@@ -186,16 +201,20 @@ export default async function comingHome(game, radio) {
       d.dist = Math.min(1, d.dist + (d.speed * dt) / DRIVE_SECS);
       d.scroll += d.speed * dt * 70;
       ui.progress('Home', d.dist * 100, 'left');
-      if (!saidClassic && d.dist > 0.3) {
+      const rs = radio.status();
+      ui.radioLive(rs);
+      // only when a song is actually playing (not an ad, not the DJ)
+      if (!saidClassic && d.dist > 0.3 && d.dist < 0.6 && rs.on && rs.kind === 'song') {
         saidClassic = true;
         lines([['LUCITA', "Three years and they're still playing this song.", 'lucita'], ['JASE', "It's a classic.", 'jase']]);
       }
-      if (!touchedRadio && !lucitaChanged && d.dist > 0.65) {
-        lucitaChanged = true;
+      if (!touchedRadio && !lucitaWaiting && d.dist > 0.62) {
+        lucitaWaiting = true;
         talk = talk.then(() => {
-          radio.next();
-          ui.toast('Lucita changed the station.', '', '#ff8fb1', 2200);
-          onStation('lucita');
+          if (touchedRadio) return;   // you got there first
+          lucitaPicked = true;
+          lucitaTunes('gator');
+          return lines([['LUCITA', 'This one. I missed this one.', 'lucita']]);
         });
       }
       if (d.dist >= 1) return resolve();
@@ -208,7 +227,7 @@ export default async function comingHome(game, radio) {
   await talk;
   ui.progress(false);
   ui.radio(null);
-  f.drive = { touchedRadio, station: radio.stations[radio.index].id };
+  f.drive = { touchedRadio, station: radioOff ? 'off' : radio.stations[radio.index].id, lucitaPicked, radioOff };
 
   // ---------------- The porch ----------------
   ui.hud(null);

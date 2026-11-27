@@ -40,6 +40,7 @@ export default async function ending(game, radio) {
     if (f.robbedStore) comments.push(['benny_littleleague', `I've known him since he was 9 and he still owes me ${f.jerky === 'original' ? 'teriyaki' : 'jerky'}`]);
     if (f.porchPainted) comments.push(['porthoa_president', 'that porch color was NOT approved']);
     if (f.date?.manatee) comments.push(['save_the_manatees', 'they were very respectful of the manatee']);
+    if (f.ring === 'got') comments.push(['marisol.g', "MY RING!!! 😭 i don't want to know how"]);
     ui.el('feed', 'feed', `<div class="fh">SwampFeed</div><div class="post">
       <div class="who"><span class="dot">7</span>Action 7 Eyewitness Swamp News <span class="ver">✓</span></div><div class="pic"></div>
       <div class="hd">LOCAL COUPLE STILL AT LARGE; NEIGHBORS DESCRIBE THEM AS "GENUINELY KIND"</div>
@@ -56,7 +57,7 @@ export default async function ending(game, radio) {
     game.setScene(a => {
       a.nightSky(40); a.ground(); a.house(houseState()); a.palm(10, 214); a.palm(166, 206);
       a.g.fillStyle = 'rgba(10,12,40,.35)'; a.g.fillRect(0, 0, 180, 320);
-      a.sprite(a.JASE_SIT, 70, 194); a.sprite(LUCITA_SIT, 96, 196); a.duffel(86, 210);
+      a.sprite(a.JASE_SIT, 70, a.SIT_Y); a.sprite(LUCITA_SIT, 96, a.SIT_Y); a.duffel(86, a.SIT_Y + 16);
     });
     await radio.turnOn('seniors', { segment: 0, quiet: true });
     radio.volume(0);
@@ -66,6 +67,7 @@ export default async function ending(game, radio) {
     await say('LUCITA', "We can't stay.", 'lucita');
     await say('JASE', 'I know.', 'jase');
     if (f.skippedDate) await say('LUCITA', 'You never take me anywhere.', 'lucita');
+    if (f.ring === 'got') await say('LUCITA', "Marisol hasn't taken that ring off.", 'lucita');
     await game.wait(5000);
     sfx.play('card');
     await ui.card('Ending  ·  Relationship: Level 3', 'Still Here', 5000, { top: true });
@@ -88,10 +90,11 @@ export default async function ending(game, radio) {
     await game.wait(2000);
     if (f.skippedDate) await say('LUCITA', 'You never take me anywhere.', 'lucita');
     await say('LUCITA', 'I needed you to show up, Jase. Not just for the jobs.', 'lucita');
-    if (f.oatMilk === 'unresolved') {
+    if (f.ring === 'promised' || f.ring === 'got') {   // said without turning around
       game.tween(w, 'lx', 150, 2000, 'linear');
       await game.wait(1200);
-      await say('LUCITA', 'And it was the green cap.', 'lucita');
+      if (f.ring === 'promised') await say('LUCITA', 'And you said you were on it. The ring.', 'lucita');
+      else await say('LUCITA', "Thank you for Marisol's ring. I mean it.", 'lucita');
     }
     await game.tween(w, 'lx', 200, 3500, 'linear');
     sfx.play('card');
@@ -107,35 +110,57 @@ export default async function ending(game, radio) {
   await credits(game, ending);
 }
 
+// Very long, very sincere, obviously fake. HOLD to fast-forward (the music speeds up too).
+const STAFF = [
+  ['Director', 'Dale Pixelton'], ['Lead Rectangle Artist', 'Squarrah Blockwell'], ['Senior Slightly Different Brown', 'Umber Tanaka-Sienna'],
+  ['Stubble Technician', 'Russ Fivoclock'], ['Seagull', 'Recorded on location'], ['Shader Compilation Consultant', 'Kompi Lingsworth'],
+  ['Grout Consultant', 'Grant Sealington (Professional Grade)'], ['Hand-Holding Animation Team', 'Palmer Clasp & 13 others'],
+  ['Porch Color Approval Committee', 'Not consulted'], ['Lead Pot Placement', 'Drip Waterson'], ['Slushie Flavor Lead', 'Blue Razzberry Jones'],
+  ['Jerky Continuity', 'Teri Yaki'], ['Traffic Cone Wrangler', 'Connie Orange'], ['Alligator Liaison', 'Gary Reptilio'],
+  ['Manatee Wrangler', 'Manny Seacow'], ['Kayak Directionality', 'Lefty Rightman'], ['Ring Recovery Specialist', 'Goldie Pawnsworth'],
+  ['Helicopter Light Operator', 'Sterling Beam'], ['Boat Name Pun Consultant', 'Reel E. State'], ['Vault Timer', 'Ninety Seconds'],
+  ['Doug', 'Doug'], ['Doug’s Divorce Attorney', 'Chuck Brannigan, Attorney at Law'],
+  ['Radio Programming', 'Merle Smoothington, Nova Synthwell, Boone Mudflap, Brayden Vibez'],
+  ['Babble Voice Synthesis', 'Phoneme McBlip'], ['Lead Tester', 'Q. A. Bugsby'], ['Catering', 'Benny (Little League)'],
+];
+const MUSIC = [
+  ['"Midnight Coastline" (4 sec.)', 'The Velvet Tides'], ['"Mud Flap Heart"', 'Cypress Knee'],
+  ['"Gloria\'s Song (For Gloria)"', 'The Sunset Isles Quartet'], ['"Lowkey Highkey"', 'Brayden Vibez (link in bio)'],
+  ['"Petit Theft Auto (Main Theme)"', 'The Port Mangrove Philharmonic (3 members)'],
+];
+const FAST = 5;   // fast-forward speed while held
+
 async function credits(game, ending) {
   const { ui, input, state } = game;
   const f = state.flags;
   const theme = await playLoop('theme', { vol: 0.7, fadeIn: 2 });
   const row = (k, v) => `<div class="cr"><span>${k}</span>${v}</div>`;
+  const rows = list => list.map(([k, v]) => row(k, v)).join('');
   const ma = { honest: 'Told the truth', lie: 'Lied ("Yes, Ma.")', smart: 'Got smart', ignored: 'Let it ring' }[f.ma] ?? '—';
-  const text = { heart: '❤️ (it was not in the fridge)', thumbs: '👍', ignore: 'Ignored' }[f.text] ?? '—';
+  const ring = { got: 'Recovered', promised: 'Promised (still in the window)', declined: 'Still in the window', ignored: 'Never answered her' }[f.ring] ?? '—';
+  const radioRow = f.drive?.radioOff ? 'Lucita turned it off' : f.drive?.lucitaPicked ? 'Lucita’s pick' : f.drive?.touchedRadio ? 'Yours' : '—';
   const busts = (f.busts ?? 0) + (f.safeBusts ?? 0) + (f.boatBusts ?? 0) + (f.jobBusts ?? 0);
-  ui.el('credits', 'credits', `<div class="roll" style="--dur:46s">
+  const e = ui.el('credits', 'credits', `<div class="roll" style="--dur:52s">
     <div class="cr-t">Petit Theft Auto</div><div class="cr-s">A VERY SMALL CRIME EPIC</div>
-    ${row('Lead Rectangle Artist', '—')}${row('Senior Slightly Different Brown', '—')}${row('Seagull', 'Recorded on location')}
-    ${row('Shader Compilation Consultant', '—')}${row('Grout Consultant', 'Professional Grade')}${row('Hand-Holding Animation Team', '(14)')}
-    ${row('Manatee Wrangler', '—')}${row('Doug', 'Doug')}
-    <div class="cr-h">Music</div>
-    ${row('"Midnight Coastline" (4 sec.)', 'The Velvet Tides')}${row('"Mud Flap Heart"', 'Cypress Knee')}
-    ${row('"Gloria\'s Song (For Gloria)"', 'The Sunset Isles Quartet')}${row('"Lowkey Highkey"', 'Brayden Vibez (link in bio)')}
+    ${rows(STAFF)}
+    <div class="cr-h">Music</div>${rows(MUSIC)}
     <div class="cr-h">Legal</div>
     ${row('Ad copy reviewed by', 'Chuck Brannigan, Attorney at Law')}${row('Alligators served', '0')}
     ${row('Vacation ownership', 'Cannot be exited in this life or the next')}
+    <div class="cr-h">Hosting</div>
+    ${row('Hosted by', '<a href="https://www.netlify.com" target="_blank" rel="noopener">Netlify</a>')}${row('Thank you', 'Netlify, for the free swamp')}
     <div class="cr-h">Your story</div>
-    ${row('Home restoration', `${f.restoration ?? 0}%`)}${row('Ma', ma)}${row('Jerky', f.jerky ? f.jerky[0].toUpperCase() + f.jerky.slice(1) : '—')}
+    ${row('Home restoration', `${f.restoration ?? 0}%`)}${row('Ma', ma)}${row('The radio', radioRow)}${row('Jerky', f.jerky ? f.jerky[0].toUpperCase() + f.jerky.slice(1) : '—')}
     ${row('The date', f.skippedDate ? 'Skipped' : f.date?.manatee ? 'Manatee (1 of 1)' : 'Mangroves, no manatee')}
-    ${row('The text', text)}${row('Trusted', f.trusted === 'lucita' ? 'Lucita' : f.trusted === 'rudy' ? 'Rudy' : '—')}
+    ${row('Marisol’s ring', ring)}${row('Trusted', f.trusted === 'lucita' ? 'Lucita' : f.trusted === 'rudy' ? 'Rudy' : '—')}
     ${row('Times busted', String(busts))}${row('Final take', `$${(f.take ?? 0).toLocaleString('en-US')}`)}
-    ${row('Oat milk', f.oatMilk === 'unresolved' ? 'Unresolved' : 'Resolved')}
     ${row('Relationship', `Level ${state.hearts}, "${LEVEL_NAMES[state.hearts]}"`)}${row('Ending', ending)}
     <div class="cr-n">...and 400 more names</div>
-    <div class="cr-end">Thanks for playing.</div></div><div class="skip">HOLD to skip</div>`);
-  await Promise.race([game.wait(46000), input.hold(1200)]);
+    <div class="cr-end">Thanks for playing.</div></div><div class="skip">HOLD to fast-forward</div>`);
+  const roll = e.querySelector('.roll');
+  const speed = r => { roll.getAnimations().forEach(a => { a.playbackRate = r; }); theme.setRate(r === 1 ? 1 : 2); e.classList.toggle('ff', r !== 1); };
+  input.waiter = { down() { speed(FAST); }, up() { speed(1); }, move() {}, done() {} };
+  await new Promise(r => { roll.addEventListener('animationend', r, { once: true }); setTimeout(r, 60000); });
   input.waiter = null;
   ui.hide('credits');
   theme.stop(3);

@@ -83,7 +83,7 @@ export default async function lowTide(game, radio) {
       a.dock(6, 238);
       a.sprite(a.LUCITA_CASUAL, 24, 206);
       a.sprite(a.JASE, 48, 206);
-      a.kayak(80, 266);
+      a.kayak(80, 266, false);
     } else {
       const bob = Math.round(Math.sin(t * 2) * 1.5);
       if (k.manY !== null) a.manatee(40, Math.round(k.manY));
@@ -106,9 +106,7 @@ export default async function lowTide(game, radio) {
 
   await radio.turnOn('gator', { quiet: true });
   radio.volume(0.3, 1);
-  let battery = 12;
-  const speaker = () => ui.radio('WGTR "THE GATOR" 97.3', `Bluetooth speaker · ${battery}% battery`);
-  speaker();
+  const speaker = () => ui.radioLive(radio.status(), { name: 'Bluetooth speaker', sub: 'The Gator' });
 
   // ---------------- Paddling ----------------
   const STROKES = 26;
@@ -161,19 +159,7 @@ export default async function lowTide(game, radio) {
         line('LUCITA', "Do you ever think about just... not going back? A little place in the Keys. Chickens.", 'lucita');
         line('JASE', "You'd hate chickens.", 'jase');
       }
-      const b = Math.max(0, Math.round(12 - progress * 18));
-      if (b !== battery && radio.on) {
-        battery = b;
-        speaker();
-        if (battery === 0) {
-          radio.volume(0, 0.3);
-          setTimeout(() => radio.turnOff(), 400);
-          ui.radio(null);
-          ui.toast('Speaker disconnected', 'Battery: 0%', '#aaaaaa', 2200);
-          line('JASE', 'It was a good speaker.', 'jase');
-        }
-      }
-      if (running) tick(now);
+      if (running) { speaker(); tick(now); }
     });
   })();
 

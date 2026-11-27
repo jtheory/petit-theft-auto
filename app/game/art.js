@@ -22,7 +22,7 @@ export function makeArt(g) {
 
   // ---------- sprites (each char = one game pixel, drawn at scale) ----------
   const PAL = {
-    h: '#3a2416', s: '#d9a066', e: '#1a1010', B: '#4a2e1c',            // Jase: hair, skin, eyes, beard
+    h: '#3a2416', s: '#d9a066', e: '#1a1010', B: '#4a2e1c', t: '#9a6844', // Jase: hair, skin, eyes, beard, stubble
     g: '#9a9a96', G: '#7c7c78', x: '#34506a',                          // gray tank, shade, tattoo ink
     j: '#3a5a9a', J: '#2a4478', b: '#222',                             // jeans, shoes
     c: '#1e1412', k: '#b97a4e', o: '#ffd23f',                          // Lucita: curls, skin, gold hoops
@@ -36,8 +36,8 @@ export function makeArt(g) {
     '.hhhhhh.',
     '.hsesse.',
     '.hssssh.',
-    '.sBBBBs.',
-    '..BBBB..',
+    '.tsssst.',
+    '..tttt..',
     '...ss...',
     '.gggggg.',
     'xggggGgs',
@@ -54,8 +54,8 @@ export function makeArt(g) {
     '.hhhhhh.',
     '.hsesse.',
     '.hssssh.',
-    '.sBBBBs.',
-    '..BBBB..',
+    '.tsssst.',
+    '..tttt..',
     '...ss...',
     '.gggggg.',
     'xggggGgs',
@@ -300,9 +300,9 @@ export function makeArt(g) {
     K: '#1b1b1f',                        // duffel bag
   });
   const recolor = (rows, map) => rows.map(r => [...r].map(c => map[c] ?? c).join(''));
-  const masked = rows => rows.map((r, i) => i < 7 ? [...r].map(c => 'hsBckov'.includes(c) ? 'm' : c).join('') : r);
-  const CLERK = recolor(JASE, { B: 's', g: 'a', G: 'A', x: 's' });
-  const RUDY = recolor(JASE, { h: 'c', B: 'c', s: 'k', g: 'y', G: 'Y', x: 'k' });
+  const masked = rows => rows.map((r, i) => i < 7 ? [...r].map(c => 'hsBtckov'.includes(c) ? 'm' : c).join('') : r);
+  const CLERK = recolor(JASE, { B: 's', t: 's', g: 'a', G: 'A', x: 's' });
+  const RUDY = recolor(JASE, { h: 'c', B: 'c', t: 'c', s: 'k', g: 'y', G: 'Y', x: 'k' });
   const TINA = recolor(LUCITA_CASUAL, { c: 'v', w: 'n', W: 'N', d: 'j', D: 'J', o: 'k' });
   const LUCITA_MASK = masked(LUCITA_CASUAL), JASE_MASK = masked(JASE);
   const RUDY_MASK = masked(RUDY), TINA_MASK = masked(TINA);
@@ -366,12 +366,13 @@ export function makeArt(g) {
       for (let k = 0; k < 4; k++) { R(x + 4 + k * 8, y0 - h + 2, 2, h - 2, '#5a4632'); R(x + 2 + k * 8, y0 - 2, 6, 2, '#5a4632'); }
     }
   }
-  function kayak(x, y) {
-    sprite(LUCITA_CASUAL.slice(0, 10), x + 16, y - 26); sprite(JASE.slice(0, 10), x + 40, y - 26);
+  function kayak(x, y, riders = true) {
+    if (riders) { sprite(LUCITA_CASUAL.slice(0, 10), x + 16, y - 26); sprite(JASE.slice(0, 10), x + 40, y - 26); }
+    else { R(x + 18, y - 11, 14, 3, '#6a3a12'); R(x + 42, y - 11, 14, 3, '#6a3a12'); }   // empty seats
     for (let i = 0; i < 5; i++) R(x + i * 3, y - 8 + i, 80 - i * 6, 1, '#f08a2a');
     R(x - 4, y - 9, 88, 2, '#f08a2a'); R(x + 2, y - 10, 76, 1, '#ffb15c'); R(x - 6, y - 8, 4, 1, '#f08a2a'); R(x + 84, y - 8, 4, 1, '#f08a2a');
-    for (let i = 0; i < 12; i++) R(x + 58 + i * 2, y - 24 + i * 2, 2, 2, '#c8c8c0');   // paddle
-    R(x + 80, y - 2, 6, 3, '#c8c8c0');
+    if (riders) { for (let i = 0; i < 12; i++) R(x + 58 + i * 2, y - 24 + i * 2, 2, 2, '#c8c8c0'); R(x + 80, y - 2, 6, 3, '#c8c8c0'); }   // paddle
+    else R(x + 10, y - 12, 60, 2, '#c8c8c0');   // paddle lying across
   }
   function manatee(x, y) {
     R(x, y - 4, 30, 6, '#8a96a0'); R(x + 4, y - 6, 22, 2, '#9aa6b0'); R(x + 28, y - 3, 6, 4, '#8a96a0');
@@ -412,6 +413,14 @@ export function makeArt(g) {
     for (let dy = -8; dy <= 8; dy += 2) { const hw = Math.floor(Math.sqrt(64 - dy * dy) / 2) * 2; R(132 - hw, 192 + dy, hw * 2, 2, '#aab4bc'); }
     R(130, 184, 4, 8, '#333'); R(150, 170, 6, 30, '#8a949c');
     R(8, 132, textW('CASH 4 GOLD') + 8, 11, '#1b1b1f'); text('CASH 4 GOLD', 12, 135, '#f2c14e');
+  }
+  // the front-window display case in the pawn shop, with Marisol's ring (gold, little green stone)
+  function windowCase(ring = true, glint = false) {
+    R(6, 186, 52, 26, '#5a4a38'); R(6, 186, 52, 2, '#7a6a52');
+    R(8, 176, 48, 10, 'rgba(180,220,230,.28)'); R(8, 176, 48, 1, 'rgba(220,240,245,.6)');
+    R(14, 182, 6, 4, '#c8c0b0'); R(42, 181, 8, 5, '#8a8a90');                 // a watch, a lighter
+    if (ring) { R(28, 182, 5, 4, '#f2c14e'); R(29, 183, 3, 2, '#5a4a38'); R(30, 181, 2, 1, '#3fdc7a'); }
+    if (ring && glint) { R(33, 178, 1, 3, '#fff'); R(32, 179, 3, 1, '#fff'); }
   }
   function sparks(x, y) { [[0, 0], [3, -4], [6, -1], [-3, -5], [5, 3], [-4, 2], [8, -6]].forEach(([dx, dy], i) => R(x + dx, y + dy, i % 2 ? 1 : 2, i % 2 ? 1 : 2, i % 3 ? '#ffe08a' : '#fff')); }
   function alley() {
@@ -488,13 +497,16 @@ export function makeArt(g) {
     for (let i = 0; i < 5; i++) R(x + 4 + i * 5, y - 9, 2, 1, '#2f5a2a');
     R(x + 30, y - 6, 2, 1, '#ffe08a'); R(x + 4, y - 1, 3, 2, '#2f5a2a'); R(x + 20, y - 1, 3, 2, '#2f5a2a'); R(x - 8, y - 4, 8, 2, '#3f6a3a');
   }
-  function chaseStreet(scroll, day = false) {
+  // variant: a different street after each turn (other buildings, other colors)
+  const STREETS_DAY = [['#d8c8a8', '#c8d0d8'], ['#e0b0a0', '#a8c0c8'], ['#c8d8b0', '#e8d0a0'], ['#d0b8d8', '#b8c8b0']];
+  const STREETS_NIGHT = [['#1e2236', '#252a40'], ['#2a1e30', '#3a2438'], ['#1a2a2a', '#223636'], ['#2a2a1e', '#36321f']];
+  function chaseStreet(scroll, day = false, variant = 0) {
     const m = (v, n) => ((v % n) + n) % n;
     if (day) daySky(); else nightSky(18);
-    const bs = scroll * 0.35, first = Math.floor(bs / 40);
+    const bs = scroll * 0.35, first = Math.floor(bs / 40), pal = (day ? STREETS_DAY : STREETS_NIGHT)[variant % 4];
     for (let i = -1; i < 6; i++) {
-      const idx = first + i, bx = i * 40 - m(bs, 40), h = 50 + ((idx * 7919) % 5 + 5) % 5 * 16;
-      R(bx, 200 - h, 38, h, day ? (idx % 2 ? '#d8c8a8' : '#c8d0d8') : (idx % 2 ? '#1e2236' : '#252a40'));
+      const idx = first + i, bx = i * 40 - m(bs, 40), h = 50 + ((idx * 7919 + variant * 3) % 5 + 5) % 5 * 16;
+      R(bx, 200 - h, 38, h, pal[idx % 2 ? 0 : 1]);
       for (let wy = 200 - h + 6; wy < 194; wy += 12) for (let wx = 4; wx < 34; wx += 10)
         if (day ? (wx + wy) % 3 === 0 : ((idx * 31 + wx * 7 + wy * 3) % 5) === 0) R(bx + wx, wy, 5, 6, day ? '#7a9ab8' : '#ffd97a');
     }
@@ -506,6 +518,11 @@ export function makeArt(g) {
     }
     R(0, 236, W, 84, P.road);
     for (let x = -24; x < W + 24; x += 24) R(x - m(scroll, 24) + 4, 276, 12, 2, P.roadL);
+  }
+  // a painted lane arrow (chevron), pointing up (left turn) or down (right turn)
+  function arrow(x, y, dir, bright) {
+    const c = bright ? '#fff6c0' : 'rgba(255,240,180,.55)';
+    for (let i = 0; i < 6; i++) { const yy = dir === 'up' ? y + 3 - i : y - 3 + i; R(x + i, yy, 2, 2, c); R(x + 10 - i, yy, 2, 2, c); }
   }
   function carWash(t, foam = 0) {
     nightSky(10);
@@ -548,6 +565,52 @@ export function makeArt(g) {
     }
     g.fillStyle = 'rgba(255,245,190,.38)'; g.fillRect(Math.round(x) - half - 2, bottomY, (half + 2) * 2, 5);
   }
+  // ---- Mission 6, top-down: open water, the boat, the police boat, the helicopter's light ----
+  function waterTop(scroll) {
+    const m = (v, n) => ((v % n) + n) % n;
+    R(0, 0, W, H, '#10284a');
+    for (let i = 0; i < 46; i++) R((i * 41) % W, m((i * 67) + scroll, H + 10) - 10, 6 + (i % 3) * 2, 1, i % 4 ? '#1d3c66' : '#2a5080');
+    for (let y = -20; y < H + 20; y += 20) {   // mangrove banks on both sides
+      const yy = m(y + scroll * 0.9, H + 40) - 20, w1 = 8 + ((Math.floor((y + 200) / 20) * 7) % 5) * 2, w2 = 6 + ((Math.floor((y + 200) / 20) * 11) % 5) * 2;
+      R(0, yy, w1, 20, '#163a24'); R(w1, yy + 4, 3, 12, '#1f5a32');
+      R(W - w2, yy, w2, 20, '#163a24'); R(W - w2 - 3, yy + 6, 3, 10, '#1f5a32');
+    }
+  }
+  // speedboat from above, pointing up; (x, y) = center
+  function speedboatTop(x, y, t = 0) {
+    const hull = [[0, 2], [2, 4], [4, 6], [6, 7], [8, 8], [10, 8], [12, 8], [14, 8], [16, 8], [18, 8], [20, 8], [22, 8], [24, 8], [26, 7], [28, 7]];
+    for (let k = 0; k < 5; k++) R(x - 3 - k * 2 + (Math.floor(t * 10 + k) % 2), y + 16 + k * 4, 6 + k * 4, 2, k < 2 ? '#e8fbff' : 'rgba(232,251,255,.45)');   // wake
+    hull.forEach(([dy, hw]) => R(x - hw, y - 15 + dy, hw * 2, 2, '#f4f4f0'));
+    R(x - 7, y - 3, 14, 1, '#d8333a'); R(x - 6, y - 7, 12, 3, 'rgba(160,210,240,.8)');   // stripe, windshield
+    R(x - 5, y - 1, 4, 4, PAL.c); R(x + 1, y - 1, 4, 4, PAL.h);                          // two heads: Lucita, Jase
+    R(x - 6, y + 1, 1, 1, PAL.o);
+    R(x - 4, y + 9, 8, 4, '#3a3a40');                                                    // motor
+  }
+  function policeBoatTop(x, y, t = 0) {
+    for (let k = 0; k < 3; k++) R(x - 4 - k * 3, y + 16 + k * 4, 8 + k * 6, 2, 'rgba(232,251,255,.4)');
+    R(x - 9, y - 12, 18, 28, '#3c4a5a'); R(x - 7, y - 16, 14, 4, '#3c4a5a'); R(x - 4, y - 18, 8, 2, '#3c4a5a');
+    R(x - 6, y - 4, 12, 10, '#e8e8e8'); text('PD', x - 3, y - 2, '#1b2a5a');
+    const on = Math.floor(t * 6) % 2;
+    R(x - 6, y - 7, 5, 3, on ? '#ff3b3b' : '#6a1a1a'); R(x + 1, y - 7, 5, 3, on ? '#3b4b8a' : '#3b7bff');
+  }
+  function searchCircle(x, y, r) {
+    for (let k = 3; k >= 0; k--) {
+      const rr = r + k * 3;
+      g.fillStyle = `rgba(255,245,190,${k ? 0.05 : 0.22})`;
+      g.beginPath(); g.arc(Math.round(x), Math.round(y), rr, 0, Math.PI * 2); g.fill();
+    }
+  }
+  function headlightCone(x, y, len, half) {
+    for (let i = 0; i < len; i += 2) { const hw = Math.round(3 + (i / len) * half); g.fillStyle = 'rgba(255,245,190,.12)'; g.fillRect(Math.round(x) - hw, Math.round(y) - i, hw * 2, 2); }
+  }
+  function heliTop(x, y, t = 0) {
+    g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(Math.round(x) - 5, Math.round(y) + 8, 12, 6);   // shadow-ish
+    R(x - 4, y - 6, 8, 14, '#2a2d35'); R(x - 3, y - 5, 6, 4, '#7fb0d6'); R(x - 1, y + 8, 2, 12, '#2a2d35'); R(x - 3, y + 18, 6, 2, '#2a2d35');
+    const a = t * 18;
+    g.strokeStyle = 'rgba(200,205,215,.7)'; g.lineWidth = 1.5; g.beginPath();
+    for (const o of [0, Math.PI / 2]) { g.moveTo(x + Math.cos(a + o) * 16, y + Math.sin(a + o) * 16); g.lineTo(x - Math.cos(a + o) * 16, y - Math.sin(a + o) * 16); }
+    g.stroke();
+  }
   function channel(scroll) {
     const m = (v, n) => ((v % n) + n) % n;
     nightSky(20);
@@ -560,5 +623,6 @@ export function makeArt(g) {
     }
   }
 
-  return { g, R, spotlight, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  const SIT_Y = 176;   // a JASE_SIT / LUCITA_SIT drawn at this y sits on the porch's top step
+  return { g, R, SIT_Y, spotlight, waterTop, speedboatTop, policeBoatTop, searchCircle, headlightCone, heliTop, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, arrow, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, windowCase, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

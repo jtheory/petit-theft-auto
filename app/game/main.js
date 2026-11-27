@@ -25,7 +25,7 @@ const TIPS = [
 ];
 
 const MISSIONS = [beat1, beat2, beat3, beat4, beat5, beat6, beat7, beat8];
-const NEXT_UP = { 6: ['Mission 5', 'Wake', 'In development. A yacht named Reel Estate.'] };
+const NEXT_UP = { 6: ['Mission 5', 'Test Drive', 'In development. A yacht named Reel Estate.'] };
 
 // Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.
 const params = new URLSearchParams(location.search);
@@ -92,7 +92,7 @@ async function title(pad) {
     if (x > 190) x = -100;
     a.convertible(Math.round(x), 258, true);
   });
-  ui.el('title', 'title', `<div class="logo">Petit<br>Theft<br>Auto</div><div class="press">Tap to start</div>`);
+  ui.el('title', 'title', `<div class="logo">Petit<br>Theft<br>Auto</div><div class="press">Tap to start</div><a class="host" href="https://www.netlify.com" target="_blank" rel="noopener">Powered by Netlify</a>`);
   await game.input.tap();
   sfx.play('click');
   theme.stop(2);
@@ -103,7 +103,7 @@ async function title(pad) {
 async function comingSoon() {
   const ui = game.ui;
   const [k, t, d] = NEXT_UP[game.state.mission] ?? [`Mission ${game.state.mission}`, 'Coming soon', 'In development.'];
-  game.setScene(a => { a.sky(182); a.ground(); a.house('fixed'); a.palm(10, 214); a.palm(166, 206); a.sprite(a.JASE_SIT, 82, 194); });
+  game.setScene(a => { a.sky(182); a.ground(); a.house('fixed'); a.palm(10, 214); a.palm(166, 206); a.sprite(a.JASE_SIT, 82, a.SIT_Y); });
   ui.dim(true, 0.55);
   ui.el('soon', 'soon', `<div class="k">${k}</div><div class="t">${t}</div><div class="d">${d}</div>
     <div class="b">Tap to start over from Mission 1</div>`);

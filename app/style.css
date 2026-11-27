@@ -86,6 +86,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .radio { top: 74px; left: 50%; transform: translateX(-50%); text-align: center; width: 320px; }
 .radio .st { font: 800 16px var(--font-ui); letter-spacing: .06em; color: #f8d9a0; text-shadow: 0 2px 8px #000; }
 .radio .np { font: 500 10.5px var(--font-ui); opacity: .85; margin-top: 2px; text-shadow: 0 1px 3px #000; }
+.radio .ln { font: italic 500 11px/1.35 var(--font-ui); margin: 6px auto 0; max-width: 290px; padding: 5px 9px; border-radius: 6px; background: rgba(0,0,0,.45); color: #f4ead8; }
 
 .phone { left: 34px; top: 150px; transform: rotate(-4deg) translateY(30px); width: 150px; height: 276px; border-radius: 30px; background: #0c0c0f; padding: 10px; box-sizing: border-box; box-shadow: 0 18px 40px rgba(0,0,0,.6), inset 0 0 0 2px #2a2a30; }
 .phone.show { transform: rotate(-4deg); }
@@ -117,6 +118,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .shaders .tip { font: 400 12px/1.5 var(--font-ui); color: #888; margin-top: 60px; }
 
 .title { left: 0; right: 0; top: 70px; text-align: center; }
+.title .host { display: inline-block; margin-top: 18px; font: 500 9.5px var(--font-ui); letter-spacing: .08em; color: rgba(255,255,255,.55); text-decoration: none; pointer-events: auto; text-shadow: 0 1px 3px #000; }
 .title .press { margin-top: 330px; opacity: .95; text-shadow: 0 1px 4px #000; font-size: 11px; }
 .title .logo { font: italic 400 58px/.92 var(--font-title); letter-spacing: -.01em; color: #fff; text-shadow: 0 3px 0 #a8365a, 0 0 30px rgba(0,0,0,.45); }
 
@@ -133,6 +135,11 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .choice .ct { font: 700 10px var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
 .choice .co { font: 600 15px var(--font-ui); padding: 11px 12px; border-radius: 6px; margin-top: 5px; background: rgba(255,255,255,.07); cursor: pointer; }
 .choice .co:active { background: var(--gold); color: #111; }
+.choice .co small { display: block; font: 500 11px/1.35 var(--font-ui); opacity: .72; margin-top: 3px; }
+.choice .cf { font: 500 10.5px/1.35 var(--font-ui); color: #aaa; margin-top: 9px; text-align: center; }
+.checklist { left: 12px; bottom: 84px; font: 600 11px/1.6 var(--font-ui); text-shadow: 0 1px 2px #000; background: rgba(0,0,0,.35); padding: 6px 9px; border-radius: 6px; }
+.checklist .ck-t { font: 800 9px var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.checklist .done { color: #9be37a; }
 .tags { inset: 0; }
 .tag { position: absolute; transform: translateX(-50%); white-space: nowrap; font: 700 11px var(--font-ui); padding: 4px 8px; border-radius: 5px; background: rgba(10,10,14,.85); border: 1px solid var(--gold); color: var(--gold); }
 .tag::after { content: ""; position: absolute; left: 50%; bottom: -5px; margin-left: -4px; border: 4px solid transparent; border-top-color: var(--gold); border-bottom: 0; }
@@ -161,6 +168,10 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .timer { right: 14px; top: 86px; text-align: right; font: 800 18px var(--font-ui); font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 1px 3px #000; }
 .timer span { display: block; font: 700 9px var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: #ff8a7a; }
 .timer.urgent { color: #ff5a4a; animation: pulse .5s ease-in-out infinite; }
+.dmg { left: 16px; top: 80px; display: flex; align-items: center; gap: 4px; font: 700 10px var(--font-ui); letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 1px 2px #000; }
+.dmg span { margin-right: 4px; }
+.dmg i { width: 16px; height: 6px; border-radius: 2px; background: rgba(0,0,0,.55); }
+.dmg i.on { background: #9be37a; }
 .heat { left: 16px; top: 82px; width: 120px; font: 700 10px var(--font-ui); letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 1px 2px #000; }
 .heat div { height: 5px; background: rgba(0,0,0,.55); border-radius: 3px; margin-top: 4px; overflow: hidden; }
 .heat i { display: block; height: 100%; background: linear-gradient(90deg, #f2c14e, #ff5a4a); }
@@ -187,6 +198,8 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .credits .cr-h { font: 700 10px var(--font-ui); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin: 56px 0 18px; }
 .credits .cr-n { margin-top: 40px; font: italic 400 13px var(--font-ui); color: #777; }
 .credits .cr-end { margin-top: 90px; font: italic 400 26px var(--font-title); }
+.credits a { color: var(--gold); pointer-events: auto; }
+.credits.ff .skip { color: var(--gold); }
 .credits .skip { position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; font: 600 10px var(--font-ui); letter-spacing: .24em; color: #555; }
 .theend { inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 .theend .t { font: italic 400 44px var(--font-title); }
