@@ -9,8 +9,8 @@ const R = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
 ['#2a1b4d', '#6e2a6a', '#c94e69', '#e8705f', '#f59a5a', '#f9c66b'].forEach((c, i) => R(0, i * 4, 32, 4, c));
 R(0, 24, 32, 8, '#3f8a3a');
 for (let dy = -5; dy <= 5; dy++) { const hw = Math.round(Math.sqrt(25 - dy * dy)); R(23 - hw, 13 + dy, hw * 2, 1, '#ffe08a'); }
-const PAL = { h: '#3a2416', s: '#d9a066', e: '#1a1010', B: '#4a2e1c', g: '#9a9a96', G: '#7c7c78' };
-const HEAD = ['..hhhh..', '.hhhhhh.', '.hsesse.', '.hssssh.', '.sBBBBs.', '..BBBB..', '...ss...', '.gggggg.', 'ggggggGg', 'ggggggGg'];
+const PAL = { h: '#3a2416', s: '#d9a066', e: '#1a1010', B: '#4a2e1c', t: '#9a6844', g: '#9a9a96', G: '#7c7c78' };
+const HEAD = ['..hhhh..', '.hhhhhh.', '.hsesse.', '.hssssh.', '.tsssst.', '..tttt..', '...ss...', '.gggggg.', 'ggggggGg', 'ggggggGg'];
 HEAD.forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) R(4 + x * 2, 10 + y * 2, 2, 2, PAL[ch]); }));
 </script>`;
 
