@@ -148,7 +148,22 @@ export default async function comingHome(game, radio) {
   const lines = list => { talk = talk.then(async () => { for (const [who, text, v] of list) await say(who, text, v, { passive: true, hold: 900 }); }); return talk; };
   let touchedRadio = false, lucitaPicked = false, lucitaWaiting = false, overrides = 0, radioOff = false, swipes = 0;
   const reacted = new Set(['neon']);
-  const lucitaTunes = id => { reacted.add(id); radio.tune(id); ui.toast('Lucita changed the station.', '', '#ff8fb1', 2000); };
+  // She's patient with ads, up to a point: she lets one play most of the way through, then changes it.
+  let driving = true;
+  const patience = () => new Promise(resolve => {
+    const t0 = performance.now();
+    const check = () => {
+      const st = radio.status();
+      if (!driving || st.kind !== 'ad' || st.elapsed / st.dur > 0.8 || performance.now() - t0 > 14000) return resolve();
+      requestAnimationFrame(check);
+    };
+    check();
+  });
+  const lucitaTunes = async id => {
+    await patience();
+    if (radioOff || !radio.on) return;
+    reacted.add(id); radio.tune(id); ui.toast('Lucita changed the station.', '', '#ff8fb1', 2000);
+  };
   const onStation = () => {
     const id = radio.stations[radio.index].id;
     if (lucitaPicked && id !== 'gator') {
@@ -169,7 +184,7 @@ export default async function comingHome(game, radio) {
     if (!reacted.has(id)) {
       reacted.add(id);
       lines(REACTIONS[id]).then(() => {
-        if ((id === 'viral' || id === 'talk') && !radioOff && radio.stations[radio.index].id === id) lucitaTunes(lucitaPicked ? 'gator' : 'neon');
+        if ((id === 'viral' || id === 'talk') && !radioOff && radio.stations[radio.index].id === id) return lucitaTunes(lucitaPicked ? 'gator' : 'neon');
       });
     }
   };
@@ -213,8 +228,7 @@ export default async function comingHome(game, radio) {
         talk = talk.then(() => {
           if (touchedRadio) return;   // you got there first
           lucitaPicked = true;
-          lucitaTunes('gator');
-          return lines([['LUCITA', 'This one. I missed this one.', 'lucita']]);
+          return lucitaTunes('gator').then(() => lines([['LUCITA', 'This one. I missed this one.', 'lucita']]));
         });
       }
       if (d.dist >= 1) return resolve();
@@ -223,6 +237,7 @@ export default async function comingHome(game, radio) {
     requestAnimationFrame(step);
   });
   input.waiter = null;
+  driving = false;
   ui.prompt(null);
   await talk;
   ui.progress(false);

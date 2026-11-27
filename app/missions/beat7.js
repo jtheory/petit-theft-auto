@@ -48,10 +48,10 @@ export default async function theJob(game, radio) {
   ui.letterbox(false);
   ui.dim(true, 0.4);
   ui.choices('Choose your approach', [
-    ['smart', 'The Smart Way', "Tina's plan. Move only while the camera is green. Starts at ★; every time it sees you, +★."],
-    ['loud', 'The Loud Way', "Rudy's plan. Can't go wrong. Everyone knows: ★★★."],
-    ['ceiling', 'Through the Ceiling Tiles', 'Your plan. Stay quiet and nobody knows you were there. Fall through: ★★.'],
-  ], 'Stars you leave with = how hard the getaway is.');
+    ['smart', 'The Smart Way', "Tina's plan. Move only while the camera is green. Police heat starts at 🚨; every time it sees you, +🚨."],
+    ['loud', 'The Loud Way', "Rudy's plan. Can't go wrong. Everyone knows: 🚨🚨🚨."],
+    ['ceiling', 'Through the Ceiling Tiles', 'Your plan. Stay quiet and nobody knows you were there. No heat at all, unless you fall through: 🚨🚨.'],
+  ], 'More 🚨 = police arrive faster, harder getaway.');
   f.jobApproach = await input.pick();
   sfx.play('click');
   ui.choices(null);
@@ -173,7 +173,7 @@ export default async function theJob(game, radio) {
 
   steps.lobby = true;
   list();
-  ui.toast('In position', `Wanted: ${stars ? '★'.repeat(stars) : 'nobody knows you are here'}`, '#f2c14e', 2200);
+  ui.toast('In position', `Police heat: ${stars ? '🚨'.repeat(stars) : 'none. Nobody knows you are here.'}`, '#f2c14e', 2200);
   await game.wait(1200);
 
   // ---------------- The vault ----------------
@@ -253,7 +253,7 @@ export default async function theJob(game, radio) {
     ui.dim(false);
     stars = Math.min(5, stars + 1);
     hud('12:02 PM');
-    ui.toast('Shot fired (ceiling)', '+★. Everyone in the building heard that.', '#ff5a4a', 2400);
+    ui.toast('Shot fired (ceiling)', '+🚨. Everyone in the building heard that.', '#ff5a4a', 2400);
     await say('DOUG', '...Guys?', 'doug');
     await say('RUDY', 'Look what you did! I’m taking a bag!', 'rudy');
     take = 950000;
@@ -271,7 +271,7 @@ export default async function theJob(game, radio) {
   sfx.play('siren');
   stars = Math.min(5, stars + 2);
   hud('12:03 PM');
-  ui.toast('Alarm', `+★★ for the alarm. Getaway: ${['easy', 'easy', 'medium', 'hard'][Math.min(3, stars)]}.`, '#ff5a4a', 2600);
+  ui.toast('Alarm', `+🚨🚨 for the alarm. Getaway: ${['easy', 'easy', 'medium', 'hard'][Math.min(3, stars)]}.`, '#ff5a4a', 2600);
   if (f.trusted === 'lucita') await say('LUCITA', 'Drive like you mean it.', 'lucita');
   if (f.trusted === 'lucita') await say('JASE', 'I always mean it.', 'jase');
   ui.dim(true, 1);

@@ -53,7 +53,8 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .hud .money { position: absolute; top: 14px; right: 16px; font: 800 20px var(--font-ui); color: var(--green); text-shadow: 0 2px 0 #1b3a12, 0 0 6px rgba(0,0,0,.6); font-variant-numeric: tabular-nums; }
 .hud .time { position: absolute; top: 40px; right: 16px; font: 600 11px var(--font-ui); opacity: .85; text-shadow: 0 1px 2px #000; }
 .hud .wanted { position: absolute; top: 58px; right: 12px; display: flex; gap: 1px; padding: 1px 6px; border-radius: 9px; background: rgba(0,0,0,.45); font-size: 15px; color: rgba(255,255,255,.22); }
-.hud .wanted .on { color: #fff; }
+.hud .wanted span { filter: grayscale(1); opacity: .3; font-size: 13px; }
+.hud .wanted .on { filter: none; opacity: 1; }
 .minimap { position: absolute; left: 14px; bottom: 14px; width: 74px; height: 74px; border-radius: 50%; background: #1d2b22; border: 3px solid rgba(255,255,255,.85); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
 .minimap i { position: absolute; display: block; }
 .minimap .road.h { left: 0; right: 0; top: 44px; height: 6px; background: #4a4a52; }

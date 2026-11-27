@@ -67,7 +67,8 @@ export async function playLoop(id, { vol = 1, fadeIn = 0 } = {}) {
   const fill = () => {
     if (stopped) return;
     while (until < ctx.currentTime + 4) {
-      const p = ((posAt(until) % song.len) + song.len) % song.len;   // where in the loop `until` falls
+      let p = ((posAt(until) % song.len) + song.len) % song.len;     // where in the loop `until` falls
+      if (song.len - p < 1e-3) p = 0;                                 // (float dust at a loop boundary: start the next pass)
       const end = until + (song.len - p) / rate;                      // the end of this pass through the loop
       synth.playSong(gain, scaled, until, p / rate, end);
       until = end;

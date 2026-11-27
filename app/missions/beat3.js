@@ -96,8 +96,8 @@ export default async function lateNightSpecial(game, radio) {
   await say('BENNY', 'Jase? From Little League?', 'benny');
   st.blush = true;
   sfx.play('toast');
-  ui.toast('Witness', "Benny's mom knows your mom.", '#f2c14e');
-  await say('BENNY', "Man, my mom's gonna tell your mom about this.", 'benny');
+  await say('BENNY', '...You know I gotta tell my mom.', 'benny');
+  ui.toast('Witness', 'Benny is telling his mom.', '#f2c14e');
   await say('LUCITA', 'Register. Now. And the teriyaki.', 'lucita');
 
   // HOLD to keep him calm while he empties the register. Let go for too long and he hits the alarm.
@@ -190,7 +190,7 @@ export default async function lateNightSpecial(game, radio) {
   sfx.play('siren');
   await game.tween(w, 'px', -90, 2400, 'linear');
   ui.hud({ hearts: state.hearts, money: state.money, time: '11:58 PM', minimap: false });
-  ui.el('lost', 'passed', '<div class="big" style="margin-top:110px;font-size:24px;color:#9be37a;text-shadow:0 2px 0 #1b3a12">WANTED: CLEARED</div>');
+  ui.el('lost', 'passed', '<div class="big" style="margin-top:110px;font-size:24px;color:#9be37a;text-shadow:0 2px 0 #1b3a12">WANTED: you're clear</div>');
   await game.wait(1800);
   ui.hide('lost');
   await say('LUCITA', '...Did we just get the car washed?', 'lucita');
@@ -203,7 +203,7 @@ export default async function lateNightSpecial(game, radio) {
   ui.dim(true, 0.45);
   sfx.play('passed');
   const jerky = { teriyaki: '1 Beef Jerky (Teriyaki)', original: '1 Beef Jerky (Original)', none: 'No jerky' }[f.jerky];
-  await ui.passed('MISSION PASSED', 'Late Night Special', `$${haul}  ·  ${jerky}`, "Benny's mother has called your mother.", () => input.tap());
+  await ui.passed('MISSION PASSED', 'Late Night Special', `$${haul}  ·  ${jerky}`, 'Benny is telling his mom.', () => input.tap());
   ui.dim(false);
   state.mission = 4;
   game.save();

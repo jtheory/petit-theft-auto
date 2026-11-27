@@ -63,7 +63,7 @@ export class UI {
   hud(state) {
     if (!state) return this.hide('hud');
     const hearts = [0, 1, 2, 3].map(i => `<span class="heart${i < state.hearts ? ' on' : ''}"></span>`).join('');
-    const stars = state.wanted ? `<div class="wanted">${[0, 1, 2, 3, 4].map(i => `<span class="${i < state.wanted ? 'on' : ''}">★</span>`).join('')}</div>` : '';
+    const stars = state.wanted ? `<div class="wanted">${[0, 1, 2, 3, 4].map(i => `<span class="${i < state.wanted ? 'on' : ''}">🚨</span>`).join('')}</div>` : '';
     this.el('hud', 'hud', `<div class="hearts">${hearts}</div><div class="money">$${state.money.toLocaleString('en-US')}</div><div class="time">${esc(state.time)}</div>${stars}
       ${state.minimap === false ? '' : `<div class="minimap"><i class="road h"></i><i class="road v"></i><i class="blk a"></i><i class="blk b"></i><i class="blk c"></i><i class="you"></i><i class="goal"></i></div>`}`);
   }

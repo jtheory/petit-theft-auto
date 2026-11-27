@@ -32,6 +32,10 @@ export class Radio {
 
   build(st) {
     const items = st.program.filter(it => (!it.after || this.flags[it.after]) && (!it.before || !this.flags[it.before]));
+    // Any ad can turn up in any ad break, so over a few plays you hear them all.
+    const pool = Object.keys(this.data.ads).sort(() => Math.random() - 0.5);
+    let nextAd = 0;
+    items.forEach((it, i) => { if (it.ad) items[i] = { ...it, ad: pool[nextAd++ % pool.length] }; });
     const segs = items.map(item => {
       if (item.song) {
         const song = this.songs[item.song];
