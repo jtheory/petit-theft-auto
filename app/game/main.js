@@ -25,7 +25,7 @@ const TIPS = [
 ];
 
 const MISSIONS = [beat1, beat2, beat3, beat4, beat5, beat6, beat7, beat8];
-const NEXT_UP = { 6: ['Mission 5', 'Test Drive', 'In development. A yacht named Reel Estate.'] };
+const NEXT_UP = { 6: ['Mission 5', 'In Deep Water', 'In development. A yacht named Reel Estate.'] };
 
 // Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.
 const params = new URLSearchParams(location.search);

@@ -519,10 +519,21 @@ export function makeArt(g) {
     R(0, 236, W, 84, P.road);
     for (let x = -24; x < W + 24; x += 24) R(x - m(scroll, 24) + 4, 276, 12, 2, P.roadL);
   }
-  // a painted lane arrow (chevron), pointing up (left turn) or down (right turn)
-  function arrow(x, y, dir, bright) {
-    const c = bright ? '#fff6c0' : 'rgba(255,240,180,.55)';
-    for (let i = 0; i < 6; i++) { const yy = dir === 'up' ? y + 3 - i : y - 3 + i; R(x + i, yy, 2, 2, c); R(x + 10 - i, yy, 2, 2, c); }
+  // A painted road marking, seen from above: a straight-ahead arrow (pointing right, the way you drive)
+  // with a turn branch curving off it, up for a left turn, down for a right. (x, y) = tail of the shaft.
+  function roadArrow(x, y, dir) {
+    const c = 'rgba(236,236,226,.82)', wear = 'rgba(58,58,66,.7)', s = dir === 'up' ? -1 : 1;
+    x = Math.round(x);
+    const P = (px, py, w = 1, h = 1) => R(x + px, y + py, w, h, c);
+    P(0, -1, 30, 3);                                                   // shaft
+    for (let i = 0; i < 7; i++) P(30 + i, -6 + i, 1, 13 - i * 2);      // head, pointing ahead
+    for (let k = 0; k <= 8; k++) {                                     // the branch: a quarter curve...
+      const a = (k / 8) * Math.PI / 2, bx = 10 + Math.round(Math.sin(a) * 9), by = Math.round((1 - Math.cos(a)) * 9);
+      R(x + bx, y + s * by - 1, 3, 3, c);
+    }
+    P(19, s > 0 ? 9 : -12, 3, 4);                                      // ...then straight out
+    for (let i = 0; i < 6; i++) R(x + 15 + i, s > 0 ? y + 13 + i : y - 14 - i, 11 - i * 2, 1, c);   // and its head
+    R(x + 6, y, 2, 1, wear); R(x + 22, y - 1, 1, 1, wear); R(x + 33, y + 2, 1, 1, wear);             // worn paint
   }
   function carWash(t, foam = 0) {
     nightSky(10);
@@ -624,5 +635,5 @@ export function makeArt(g) {
   }
 
   const SIT_Y = 176;   // a JASE_SIT / LUCITA_SIT drawn at this y sits on the porch's top step
-  return { g, R, SIT_Y, spotlight, waterTop, speedboatTop, policeBoatTop, searchCircle, headlightCone, heliTop, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, arrow, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, windowCase, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  return { g, R, SIT_Y, spotlight, waterTop, speedboatTop, policeBoatTop, searchCircle, headlightCone, heliTop, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, roadArrow, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, windowCase, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

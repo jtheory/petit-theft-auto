@@ -13,7 +13,7 @@ Frames are rendered from [`storyboard/frames.html`](storyboard/frames.html) with
 3. **The Store** (*Late Night Special*): a convenience store hold-up, done as a couple. The clerk knows Jase from Little League.
 4. **The Date** (*Low Tide*, optional): kayaking at dawn; a manatee.
 5. **The Text** (*Cash for Gold*): Lucita is lookout, and texts mid-safecrack: her sister's stolen ring is in the shop window.
-6. **The Channel** (*Test Drive*): a stolen speedboat, a helicopter, a mangrove channel.
+6. **The Channel** (*In Deep Water*): a stolen speedboat, a helicopter, a mangrove channel.
 7. **The Job**: the big bank heist with a crew; a betrayal; a five-star getaway.
 8. **The Ending**: relationship level decides it; epilogue on the in-game social feed; very long credits.
 
@@ -289,7 +289,7 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 **Panel 1: The marina** *(frame 1)*
 - *Screen:* Sunset over the Bayside Yacht Club: silhouetted yachts, a dock, a white speedboat with a red stripe. Letterbox.
-- *UI:* Card **Test Drive**, kicker `Mission 5 · Bayside Yacht Club`.
+- *UI:* Card **In Deep Water**, kicker `Mission 5 · Bayside Yacht Club`.
 - *Text:*
   - Jase: "It's not stealing. It's a test drive."
   - Lucita: "It has a name, Jase. It's called *Reel Estate.*"
@@ -375,14 +375,14 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 - **Walk-in:** masked crew crossing to the bank, 11:58 AM card.
 - **Approach:** the choice card says what each costs, and that stars = how hard the getaway is. Smart (Tina's plan): TAP only while the camera light is green, starts at 1 star, each red +1 ("Doug is on his phone"). Loud (Rudy's): RAPID TAP to yell, can't fail, 3 stars ("EVERYBODY DOWN!" / Doug: "...Okay."). Ceiling (yours): HOLD to crawl with a creak meter, 0 stars if quiet; full = you fall through, +2 ("Doug looks up." / "Hi." / "Hey, Doug.").
 - **Checklist:** a corner list (Get to the vault, Open the vault, Bag the money, Get away) ticks off as you go. The vault: Tina's timer bar, the door swings open, RAPID TAP to bag it ($4.2M, four ways).
-- **Betrayal:** Rudy pulls a gun and offers Jase half ($2.1M) and a decoy car on Fifth. Lucita: "Four ways, and we walk out together. That was the deal." Side with Lucita: Rudy folds, +1 heart, $1.05M. Take Rudy's deal: -1 heart, $2.1M, and the getaway is one notch easier.
-- **Getaway:** the Mission 3 chase in daylight, stars +2 for the alarm (difficulty capped at 3, minus 1 with Rudy's decoy), BUSTED/WRECKED/retry with Tina's line.
+- **Betrayal:** set up in the crew scene (Rudy owes Eternal Shores; Lucita got his brother Manny clean). In the vault Rudy breaks the deal: $300,000 off the top for his timeshare. Lucita whispers: "I can talk him down. Leave it to me." Let Lucita handle it: she reminds him who drove Manny to Saint Anne's, and asks if he wants to show up to forever owing her; Rudy folds, +1 heart, $1,050,000. Pay Rudy: $975,000, no heart change ("I had it, Jase."). Jump him: the gun goes off into the ceiling (+1 star), Rudy runs with a bag, $950,000, -1 heart.
+- **Getaway:** the Mission 3 chase in daylight, stars +2 for the alarm (difficulty capped at 3), BUSTED/WRECKED/retry with Tina's line.
 
 ---
 
 ## Beat 8: The Ending (draft 1)
 
-**As built:** all three endings are in (A Ride Home at level 4, B Still Here at level 3, C Walking Away at 0–2), including the SwampFeed comments that depend on your choices and the callbacks ("You never take me anywhere."; the ring: "And you said you were on it." / "Thank you for Marisol's ring." / "Marisol hasn't taken that ring off." / marisol.g's comment). The credits roll for about 50 seconds with fake names for every role and a Netlify hosting credit; HOLD to fast-forward (the theme speeds up too). They end with a "Your story" section: restoration %, Ma, the radio, jerky, the date, Marisol's ring, who you trusted, times busted, final take, relationship level and ending. Then "The End" and a restart.
+**As built:** all three endings are in (A Ride Home at level 4, B Still Here at level 3, C Walking Away at 0–2), including the SwampFeed comments that depend on your choices and the callbacks ("You never take me anywhere."; the ring: "And you said you were on it." / "Thank you for Marisol's ring." / "Marisol hasn't taken that ring off." / marisol.g's comment). The credits roll for about 50 seconds with fake names for every role and a Netlify hosting credit; HOLD to fast-forward (the theme speeds up too). They end with a "Your story" section: restoration %, Ma, the radio, jerky, the date, Marisol's ring, how Rudy was handled, times busted, final take, relationship level and ending. Then "The End" and a restart.
 
 Perfect play reaches level 4: porch (+1), manatee (+1), the text ❤️ (keeps it), the channel (+1), trusting Lucita (+1).
 

@@ -1,4 +1,4 @@
-// Mission 6 (Mission 5 in-game): Test Drive. A borrowed speedboat, a helicopter, a mangrove channel.
+// Mission 6 (Mission 5 in-game): In Deep Water. A borrowed speedboat, a helicopter, a mangrove channel.
 // See docs/storyboard.md, Beat 6.
 //
 //   hotwire     RAPID TAP
@@ -13,7 +13,7 @@ import { playLoop } from '../audio/music.js';
 
 const SURVIVE = 25;
 
-export default async function testDrive(game, radio) {
+export default async function inDeepWater(game, radio) {
   const { ui, say, input, state } = game;
   const f = state.flags;
 
@@ -22,7 +22,7 @@ export default async function testDrive(game, radio) {
   game.setScene(a => { a.marina(); a.speedboat(Math.round(mk.bx), 236, true); });
   ui.letterbox(true);
   sfx.play('card');
-  await ui.card('Mission 5  ·  Bayside Yacht Club', 'Test Drive', 3000);
+  await ui.card('Mission 5  ·  Bayside Yacht Club', 'In Deep Water', 3000);
   ui.letterbox(false);
   await say('JASE', "It's not stealing. It's a test drive.", 'jase');
   await say('LUCITA', "Hey. It's called Reel Estate.", 'lucita');
@@ -47,7 +47,7 @@ export default async function testDrive(game, radio) {
     ui.hud(null);
     ui.dim(true, 0.55);
     const lines = ['They have a helicopter, Jase.', 'Stay. Out. Of. The. Light.', 'It is a very big light.'];
-    ui.el('busted', 'passed busted', `<div class="big">BUSTED</div><div class="mn">Test Drive</div>
+    ui.el('busted', 'passed busted', `<div class="big">BUSTED</div><div class="mn">In Deep Water</div>
       <div class="fx">Lucita: "${lines[Math.min(f.boatBusts - 1, 2)]}"</div><div class="cont">Tap to retry</div>`);
     await game.wait(1200);
     await input.tap();
@@ -105,7 +105,7 @@ export default async function testDrive(game, radio) {
   ui.hud(null);
   ui.dim(true, 0.45);
   sfx.play('passed');
-  await ui.passed('MISSION PASSED', 'Test Drive', 'Boats returned: 0', f.boatBusts ? `Helicopter encounters: ${f.boatBusts + 1}` : 'Reel Estate is in a better place.', () => input.tap());
+  await ui.passed('MISSION PASSED', 'In Deep Water', 'Boats returned: 0', f.boatBusts ? `Helicopter encounters: ${f.boatBusts + 1}` : 'Reel Estate is in a better place.', () => input.tap());
   ui.dim(false);
   state.mission = 7;
   game.save();

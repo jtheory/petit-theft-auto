@@ -245,9 +245,9 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
     const sx = c.shake > 0 ? Math.round((Math.random() - 0.5) * 4 * c.shake) : 0;
     a.g.save(); a.g.translate(sx, 0);
     a.chaseStreet(c.scroll, opts.day, c.street);
-    if (turn) {   // chevrons painted in the turn lane, rolling toward you
-      const p = (c.t - turn.start) / WINDOW, ax = Math.round(176 - p * 130), ay = LANES[turn.lane] - 8;
-      for (let k = 0; k < 3; k++) a.arrow(ax + k * 14, ay, turn.dir, Math.floor(t * 6 + k) % 3 === 0);
+    if (turn) {   // turn arrows painted in the turn lane; they're on the road, so they scroll with it
+      const ay = turn.lane === 0 ? 260 : 294;
+      for (let k = 0; k < 3; k++) a.roadArrow(196 + k * 80 - (c.scroll - turn.scroll0), ay, turn.dir);
     }
     for (const o of c.obs) {
       const y = LANES[o.lane];
@@ -404,7 +404,7 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
       // called turns
       if (!turn && !turning && turnIdx < turns.length && c.t >= turns[turnIdx].at) {
         const tn = turns[turnIdx++];
-        turn = { dir: tn.dir, lane: laneOf(tn.dir), start: c.t, until: c.t + WINDOW };
+        turn = { dir: tn.dir, lane: laneOf(tn.dir), start: c.t, until: c.t + WINDOW, scroll0: c.scroll };
         sfx.play('prompt');
         turnPrompt();
         line('LUCITA', tn.dir === 'up' ? (turnIdx === 1 ? 'Left up here! Get over!' : 'Left! Left at the light!') : 'Right! Take the right!', 'lucita');
