@@ -89,7 +89,7 @@ export default async function inDeepWater(game, radio) {
     if (lo.heartY !== null) a.pixelHeart(80, Math.round(lo.heartY));
   });
   ui.hud({ hearts: state.hearts, money: state.money, time: '10:02 PM', minimap: false });
-  ui.el('lost', 'passed', '<div class="big" style="font-size:22px;color:#9be37a;text-shadow:0 2px 0 #1b3a12;margin-top:-100px">WANTED: you're clear</div>');
+  ui.el('lost', 'passed', '<div class="big" style="font-size:22px;color:#9be37a;text-shadow:0 2px 0 #1b3a12;margin-top:-100px">WANTED: you&rsquo;re clear</div>');
   await game.wait(2200);
   ui.hide('lost');
   await say('LUCITA', '...Was that fun? That felt fun.', 'lucita');

@@ -190,7 +190,7 @@ export default async function lateNightSpecial(game, radio) {
   sfx.play('siren');
   await game.tween(w, 'px', -90, 2400, 'linear');
   ui.hud({ hearts: state.hearts, money: state.money, time: '11:58 PM', minimap: false });
-  ui.el('lost', 'passed', '<div class="big" style="margin-top:110px;font-size:24px;color:#9be37a;text-shadow:0 2px 0 #1b3a12">WANTED: you're clear</div>');
+  ui.el('lost', 'passed', '<div class="big" style="margin-top:110px;font-size:24px;color:#9be37a;text-shadow:0 2px 0 #1b3a12">WANTED: you&rsquo;re clear</div>');
   await game.wait(1800);
   ui.hide('lost');
   await say('LUCITA', '...Did we just get the car washed?', 'lucita');

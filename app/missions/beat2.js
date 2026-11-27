@@ -228,7 +228,8 @@ export default async function comingHome(game, radio) {
         talk = talk.then(() => {
           if (touchedRadio) return;   // you got there first
           lucitaPicked = true;
-          return lucitaTunes('gator').then(() => lines([['LUCITA', 'This one. I missed this one.', 'lucita']]));
+          // (already inside the talk queue, so say it directly; queueing it here would wait on itself)
+          return lucitaTunes('gator').then(() => say('LUCITA', 'This one. I missed this one.', 'lucita', { passive: true, hold: 900 }));
         });
       }
       if (d.dist >= 1) return resolve();
