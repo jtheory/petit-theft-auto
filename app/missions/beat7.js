@@ -7,13 +7,14 @@
 //              Through the Ceiling Tiles (yours): HOLD to crawl; the creak meter fills while you move.
 //              Quiet all the way: 0 stars. Full creak = you fall through (+2).
 //   vault      Tina's 90-second timer, then RAPID TAP to bag it. A checklist in the corner tracks the job.
-//   betrayal   Rudy (set up early: he owes Eternal Shores; Lucita got his brother Manny clean) breaks the deal and
-//              wants $300,000 off the top for his condo. Lucita whispers: "I can talk him down. Leave it to me."
-//              Let Lucita handle it: she reminds him about Manny, and what fair means to a man buying eternity.
-//                four-way split ($1,050,000), +1 heart.
-//              Pay Rudy: $300K off the top, $975,000 each, no heart change ("I had it, Jase.").
-//              Jump him: goes badly. The gun goes off into the ceiling (+1 star), Rudy runs with a bag.
-//                three-way split of what's left ($950,000), -1 heart.
+//   betrayal   Rudy (set up early: he owes Eternal Shores) breaks the deal: he needs half the haul, and he has the gun.
+//              Lucita whispers: "I can talk him down. Leave it to me."
+//              Let Lucita handle it (fingers crossed): she reminds him what she did for his brother, and what fair
+//                means to a man buying eternity. He folds. Four-way split ($1,050,000), +1 heart.
+//              Let Rudy change the deal (nobody gets hurt): he takes half, the rest splits three ways ($700,000),
+//                no heart change ("I had it, Jase.").
+//              Jump him: RAPID TAP fast enough and you get the gun (four-way split, no heart change, "Don't do that
+//                again."). Too slow: it goes off into the ceiling (+1 siren), Rudy runs with half ($700,000), -1 heart.
 //   getaway    the chase from Mission 3, in daylight. +2 stars for the alarm; difficulty capped at 3.
 
 import { sfx } from '../audio/sfx.js';
@@ -41,17 +42,14 @@ export default async function theJob(game, radio) {
   await say('RUDY', "I'm just here for the snacks.", 'rudy');
   sfx.play('ring');
   await say('RUDY', '(on the phone) ...Friday. I said Friday, Randy. Tell Eternal Shores I said Friday.', 'rudy');
-  await say('TINA', "How's Manny doing?", 'tina');
-  await say('RUDY', 'Eight months clean. Thanks to her.', 'rudy');
-  await say('LUCITA', "Thanks to Manny.", 'lucita');
   await say('TINA', 'Vault is on a 90-second timer. Cameras loop every 40. The guard is named Doug and he is going through a divorce.', 'tina');
   ui.letterbox(false);
   ui.dim(true, 0.4);
   ui.choices('Choose your approach', [
-    ['smart', 'The Smart Way', "Tina's plan. Move only while the camera is green. Police heat starts at 🚨; every time it sees you, +🚨."],
-    ['loud', 'The Loud Way', "Rudy's plan. Can't go wrong. Everyone knows: 🚨🚨🚨."],
-    ['ceiling', 'Through the Ceiling Tiles', 'Your plan. Stay quiet and nobody knows you were there. No heat at all, unless you fall through: 🚨🚨.'],
-  ], 'More 🚨 = police arrive faster, harder getaway.');
+    ['smart', 'The Smart Way', "Tina's plan. Patient. Careful. Cameras."],
+    ['loud', 'The Loud Way', "Rudy's plan. Fast, and nobody misses it."],
+    ['ceiling', 'Through the Ceiling Tiles', 'Your plan. Quiet, if the ceiling holds.'],
+  ], 'The more 🚨 heat you bring, the harder the getaway.');
   f.jobApproach = await input.pick();
   sfx.play('click');
   ui.choices(null);
@@ -208,62 +206,78 @@ export default async function theJob(game, radio) {
   vt.rudyGun = true;
   sfx.play('hammer');
   ui.dim(true, 0.3);
-  await say('RUDY', "Change of plans. Eternal Shores wants three hundred grand by Friday, and it's coming off the top.", 'rudy');
+  await say('RUDY', "Change of plans. Eternal Shores wants two million by Friday. I'm taking half.", 'rudy');
   await say('RUDY', "Nothing personal. The maintenance fees are spiritual AND financial.", 'rudy');
   await say('LUCITA', '(whispering) Jase. I can talk him down. Leave it to me.', 'lucita', { italic: true, keep: true, hold: 300 });
   ui.choices('Rudy has a gun', [
-    ['lucita', 'Let Lucita handle it', 'She says she can talk him down. The deal stays: $1,050,000 each.'],
-    ['pay', 'Pay Rudy', '$300,000 off the top for his condo. $975,000 each. Nobody gets hurt.'],
-    ['jump', 'Jump him', 'Get the gun away from him. Probably.'],
+    ['lucita', 'Let Lucita handle it', 'Fingers crossed.'],
+    ['pay', 'Let Rudy change the deal', 'Nobody gets hurt.'],
+    ['jump', 'Jump him', "You can get the gun away if you're fast."],
   ]);
   f.trusted = await input.pick();
   sfx.play('click');
   ui.choices(null);
   ui.hide('sub');
   let take;
+  const heart = (d, title, body) => {
+    state.hearts = Math.max(0, Math.min(4, state.hearts + d));
+    sfx.play(d > 0 ? 'heartUp' : d < 0 ? 'heartDown' : 'toast');
+    hud('12:02 PM');
+    ui.toast(title, body, d ? '#ff5d8f' : '#aaaaaa');
+  };
   if (f.trusted === 'lucita') {
     await say('JASE', '...Okay.', 'jase');
-    await say('LUCITA', 'Rudy. Who drove Manny to Saint Anne’s at four in the morning? Three times?', 'lucita');
+    await say('LUCITA', 'Rudy. Who drove your brother to the hospital at four in the morning? Three times?', 'lucita');
     await say('RUDY', '...You did.', 'rudy');
     await say('LUCITA', "And you're buying a week a year of forever. You want to show up to forever owing me?", 'lucita');
     await say('RUDY', "...Yeah, okay. That's fair. That's fair.", 'rudy');
     ui.dim(false);
     take = 1050000;
     vt.rudyGun = false;
-    state.hearts = Math.min(4, state.hearts + 1);
-    sfx.play('heartUp');
-    hud('12:02 PM');
-    ui.toast('Relationship ↑', 'You let her handle it. She handled it.', '#ff5d8f');
+    heart(1, 'Relationship ↑', 'You let her handle it. She handled it.');
     await game.wait(1800);
   } else if (f.trusted === 'pay') {
-    await say('JASE', 'Fine. Take it. Nobody needs to get shot over a condo.', 'jase');
+    await say('JASE', "Fine. Take it. Nobody's getting shot over a condo.", 'jase');
     await say('RUDY', "It's a timeshare. Thank you.", 'rudy');
     await say('LUCITA', 'I had it, Jase.', 'lucita');
     ui.dim(false);
-    take = 975000;
+    take = 700000;
     vt.rudyGun = false;
     sfx.play('register');
-    sfx.play('toast');
-    ui.toast('Relationship unchanged', "She had it handled. You didn't let her.", '#aaaaaa');
+    heart(0, 'Relationship unchanged', "She had it handled. You didn't let her.");
     await game.wait(2000);
   } else {
-    await say('JASE', 'RUDY—', 'jase', { passive: true, hold: 100 });
-    sfx.play('crash');
-    sfx.play('hammer');
+    // Get to him before he gets his finger on the trigger
     ui.dim(false);
-    stars = Math.min(5, stars + 1);
-    hud('12:02 PM');
-    ui.toast('Shot fired (ceiling)', '+🚨. Everyone in the building heard that.', '#ff5a4a', 2400);
-    await say('DOUG', '...Guys?', 'doug');
-    await say('RUDY', 'Look what you did! I’m taking a bag!', 'rudy');
-    take = 950000;
-    vt.gone = true;
-    sfx.play('carDoor');
-    state.hearts = Math.max(0, state.hearts - 1);
-    sfx.play('heartDown');
-    hud('12:02 PM');
-    ui.toast('Relationship ↓', 'She told you she had it.', '#ff5d8f');
-    await game.wait(2200);
+    const fillJ = ui.prompt('RAPID TAP', 'Grab the gun!', 'high');
+    const got = await Promise.race([input.taps(9, p => { fillJ(p); sfx.play('hammer'); }).then(() => true), game.wait(2200).then(() => false)]);
+    input.waiter = null;
+    ui.prompt(null);
+    if (got) {
+      f.trusted = 'jumped';
+      vt.rudyGun = false;
+      sfx.play('crash');
+      await say('JASE', 'Mine now.', 'jase');
+      await say('RUDY', "...Okay. Okay! It wasn't even loaded. Probably.", 'rudy');
+      await say('LUCITA', "Don't ever do that again.", 'lucita');
+      take = 1050000;
+      heart(0, 'Relationship unchanged', 'She told you she had it.');
+      await game.wait(2000);
+    } else {
+      f.trusted = 'jumpFailed';
+      sfx.play('crash');
+      sfx.play('hammer');
+      stars = Math.min(5, stars + 1);
+      hud('12:02 PM');
+      ui.toast('Shot fired (ceiling)', '+🚨. Everyone in the building heard that.', '#ff5a4a', 2400);
+      await say('DOUG', '...Guys?', 'doug');
+      await say('RUDY', "Look what you did! I'm taking my half!", 'rudy');
+      take = 700000;
+      vt.gone = true;
+      sfx.play('carDoor');
+      heart(-1, 'Relationship ↓', 'She told you she had it.');
+      await game.wait(2200);
+    }
   }
   f.take = take;
 
@@ -307,7 +321,7 @@ export default async function theJob(game, radio) {
   ui.dim(true, 0.6);
   sfx.play('passed');
   await ui.passed('MISSION PASSED', 'The Job', `$${take.toLocaleString('en-US')}`,
-    { lucita: 'Rudy is fine. Rudy has snacks.', pay: 'Rudy is at Eternal Shores.', jump: 'Rudy is somewhere with a duffel bag.' }[f.trusted], () => input.tap());
+    { lucita: 'Rudy is fine. Rudy has snacks.', pay: 'Rudy is at Eternal Shores.', jumped: 'Rudy is fine. Rudy is unarmed.', jumpFailed: 'Rudy is somewhere with a duffel bag.' }[f.trusted], () => input.tap());
   ui.dim(false);
   state.mission = 8;
   game.save();

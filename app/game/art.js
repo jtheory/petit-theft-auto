@@ -622,7 +622,7 @@ export function makeArt(g) {
     for (const o of [0, Math.PI / 2]) { g.moveTo(x + Math.cos(a + o) * 16, y + Math.sin(a + o) * 16); g.lineTo(x - Math.cos(a + o) * 16, y - Math.sin(a + o) * 16); }
     g.stroke();
   }
-  function channel(scroll) {
+  function channel(scroll, gapY = null, gapH = 60) {
     const m = (v, n) => ((v % n) + n) % n;
     nightSky(20);
     R(0, 120, W, 200, '#132a4a');
@@ -631,6 +631,13 @@ export function makeArt(g) {
       const w = 40 - (y - 120) / 10, j = m(scroll * 0.6 + y, 40) < 20 ? 2 : 0;
       R(0, y, w + j, 20, '#163a24'); R(W - w - j, y, w + j, 20, '#163a24');
       R(w, y + 18, 4, 2, '#4a3a2a'); R(W - w - 4, y + 18, 4, 2, '#4a3a2a');
+    }
+    if (gapY !== null) {   // a side channel opening off to the left
+      const gy = Math.round(gapY);
+      R(0, gy, 50, gapH, '#132a4a');
+      for (let i = 0; i < 6; i++) R((i * 13) % 44, gy + 6 + (i * 17) % (gapH - 12), 6, 1, '#24466e');
+      R(0, gy - 4, 46, 4, '#1f5a32'); R(0, gy + gapH, 46, 4, '#1f5a32');
+      for (let k = 0; k < 4; k++) { R(6 + k * 11, gy - 2, 2, 3, '#4a3a2a'); R(4 + k * 11, gy + gapH + 1, 2, 3, '#4a3a2a'); }
     }
   }
 

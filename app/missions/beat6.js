@@ -25,8 +25,10 @@ export default async function inDeepWater(game, radio) {
   await ui.card('Mission 5  ·  Bayside Yacht Club', 'In Deep Water', 3000);
   ui.letterbox(false);
   await say('JASE', "It's not stealing. It's a test drive.", 'jase');
-  await say('LUCITA', "Hey. It's called Reel Estate.", 'lucita');
+  ui.tags([{ x: 108, y: 222, text: '"REEL ESTATE"' }]);
+  await say('LUCITA', 'Read the name on the boat. They named the boat Reel Estate.', 'lucita');
   await say('LUCITA', "...That's clever. I hate that that's clever.", 'lucita');
+  ui.tags(null);
   let fill = ui.prompt('RAPID TAP', 'Hotwire it');
   await input.taps(8, p => { fill(p); sfx.play('grout'); });
   ui.prompt(null);
@@ -57,24 +59,40 @@ export default async function inDeepWater(game, radio) {
   }
 
   // ---------------- Hard left ----------------
-  const ch = { scroll: 0, boatX: 90 };
+  // The side channel opens in the left bank and slides down toward you. Swipe left while it's beside the boat.
+  const BOAT_Y = 230, GAP_H = 60, SPEED = 55;
+  const ch = { scroll: 0, boatX: 96, gapY: null, gone: false };
+  window.__chan = ch;   // for tests and the console
   game.setScene((a, t, dt) => {
-    ch.scroll += dt * 80;
-    a.channel(ch.scroll);
-    a.speedboatTop(Math.round(ch.boatX), 230, t);
+    ch.scroll += dt * SPEED;
+    if (ch.gapY !== null && !ch.gone) ch.gapY += dt * SPEED;
+    a.channel(ch.scroll, ch.gapY, GAP_H);
+    a.speedboatTop(Math.round(ch.boatX), BOAT_Y, t);
   });
   ui.hud({ hearts: state.hearts, money: state.money, time: '9:43 PM', wanted: 3, minimap: false });
-  await say('JASE', 'Hard left into the channel. Tide is too low for the cutters.', 'jase', { passive: true, hold: 200 });
+  await say('JASE', "There's a channel coming up on the left. Tide's too low for the cutters.", 'jase', { passive: true, hold: 200 });
+  ch.gapY = 100;
   sfx.play('prompt');
-  ui.prompt('SWIPE ↑', 'Hard left', 'high');
-  const turned = await Promise.race([
-    new Promise(r => { input.waiter = { up(g) { if (g.dy < -35) { input.waiter = null; r(true); } }, down() {}, move() {}, done() {} }; }),
-    game.wait(3500).then(() => false),
-  ]);
+  ui.prompt('SWIPE ←', 'Hard left, when the channel is beside you', 'high');
+  const beside = () => ch.gapY !== null && ch.gapY < BOAT_Y - 4 && ch.gapY + GAP_H > BOAT_Y + 4;
+  let saidWait = false;
+  const turned = await new Promise(r => {
+    input.waiter = { up(g) {
+      if (g.dx > -35 || Math.abs(g.dx) < Math.abs(g.dy)) return;
+      if (beside()) { input.waiter = null; r(true); }
+      else if (ch.gapY + GAP_H <= BOAT_Y + 4 && !saidWait) { saidWait = true; say('LUCITA', 'Not yet!', 'lucita', { passive: true, hold: 300 }); }
+    }, down() {}, move() {}, done() {} };
+    const watch = setInterval(() => { if (ch.gapY > BOAT_Y + 4) { clearInterval(watch); r(false); } if (!input.waiter) clearInterval(watch); }, 50);
+  });
   input.waiter = null;
   ui.prompt(null);
   f.hardLeft = turned;
-  if (turned) { sfx.play('screech'); await game.tween(ch, 'boatX', 40, 500, 'out'); }
+  if (turned) {
+    ch.gone = true;   // the channel stops where it is; the boat pulls into it
+    sfx.play('screech');
+    await game.tween(ch, 'boatX', -30, 900, 'inOut');
+    ch.boatX = 96; ch.gapY = null; ch.gone = false;
+  }
   else await say('LUCITA', 'LEFT, Jase. The channel was on the LEFT.', 'lucita');
   await say('LUCITA', 'Jase, if we die out here—', 'lucita');
   await say('JASE', "We're not dying out here. We still have that coupon for the escape room.", 'jase');
@@ -114,9 +132,9 @@ export default async function inDeepWater(game, radio) {
 // Keep the boat out of the light. Resolves true if you last SURVIVE seconds. Top-down.
 async function searchlight(game, busts) {
   const { ui, say, input, state } = game;
-  const s = { bx: 90, by: 190, tx: 90, ty: 190, sx: 90, sy: -40, det: 0, t: 0, scroll: 0, px: 90, dash: null, nextDash: 6, x0: 0, y0: 0 };
+  const s = { bx: 90, by: 190, tx: 90, ty: 190, sx: 90, sy: -40, det: 0, t: 0, scroll: 0, px: 90, dash: null, nextDash: 4.5, x0: 0, y0: 0 };
   window.__boat = s;   // for tests and the console
-  const R = 24, COP_Y = 296, BOAT_SPEED = 120;
+  const R = 26, COP_Y = 296, BOAT_SPEED = 104;
   const AREA = { x0: 22, x1: 158, y0: 60, y1: 262 };
   game.setScene((a, t) => {
     a.waterTop(s.scroll);
@@ -153,12 +171,14 @@ async function searchlight(game, busts) {
       s.scroll += dt * 70;
       // the boat goes where your finger points, at a boat's speed
       const dx = s.tx - s.bx, dy = s.ty - s.by, dist = Math.hypot(dx, dy), mv = Math.min(dist, BOAT_SPEED * dt);
+      const ox = s.bx, oy = s.by;
       if (dist > 0.01) { s.bx += dx / dist * mv; s.by += dy / dist * mv; }
+      s.vx = (s.vx ?? 0) * 0.9 + (s.bx - ox) / dt * 0.1; s.vy = (s.vy ?? 0) * 0.9 + (s.by - oy) / dt * 0.1;   // smoothed velocity
       // the light hunts you with a lag and a wander; every few seconds it lunges at a spot near you
-      const hunt = 26 + s.t * 1.3 - busts * 3;
+      const hunt = 32 + s.t * 1.6 - busts * 4;
       let gx = s.bx + Math.sin(s.t * 1.1) * 26, gy = s.by + Math.cos(s.t * 0.8) * 20, sp = hunt;
-      if (s.t > s.nextDash && !s.dash) { s.dash = { x: s.bx + (rnd() - 0.5) * 50, y: s.by + (rnd() - 0.5) * 50, until: s.t + 1 }; if (!said.has('dash')) { said.add('dash'); line('LUCITA', 'Here it comes!', 'lucita'); } }
-      if (s.dash) { gx = s.dash.x; gy = s.dash.y; sp = 100; if (s.t > s.dash.until) { s.dash = null; s.nextDash = s.t + 5 + rnd() * 3; } }
+      if (s.t > s.nextDash && !s.dash) { s.dash = { x: s.bx + s.vx * 0.7 + (rnd() - 0.5) * 24, y: s.by + s.vy * 0.7 + (rnd() - 0.5) * 24, until: s.t + 1 };   /* aimed where you're heading */ if (!said.has('dash')) { said.add('dash'); line('LUCITA', 'Here it comes!', 'lucita'); } }
+      if (s.dash) { gx = s.dash.x; gy = s.dash.y; sp = 120; if (s.t > s.dash.until) { s.dash = null; s.nextDash = s.t + 3.5 + rnd() * 2.5; } }
       const lx = gx - s.sx, ly = gy - s.sy, ld = Math.hypot(lx, ly), lm = Math.min(ld, sp * dt);
       if (ld > 0.01) { s.sx += lx / ld * lm; s.sy += ly / ld * lm; }
       // the police boat chugs along the bottom, drifting under you
@@ -166,7 +186,7 @@ async function searchlight(game, busts) {
       const inLight = s.t > 2.5 && Math.hypot(s.sx - s.bx, s.sy - s.by) < R + 4;
       const inHeadlight = s.by > COP_Y - 90 && Math.abs(s.bx - s.px) < 8 + (COP_Y - 20 - s.by) / 70 * 20;
       const lit = inLight || inHeadlight;
-      s.det = clamp(s.det + (lit ? (inLight ? 0.3 : 0.45) : -0.25) * dt, 0, 1);
+      s.det = clamp(s.det + (lit ? (inLight ? 0.36 : 0.5) : -0.22) * dt, 0, 1);
       if (inHeadlight && !said.has('cop')) { said.add('cop'); line('LUCITA', 'Not toward the cops, Jase!', 'lucita'); }
       if (lit && s.det > 0.5 && !said.has('half')) { said.add('half'); line('LUCITA', 'Get out of the light!', 'lucita'); }
       ui.progress('Spotted', s.det * 100, 'left');

@@ -152,7 +152,7 @@ async function credits(game, ending) {
     <div class="cr-h">Your story</div>
     ${row('Home restoration', `${f.restoration ?? 0}%`)}${row('Ma', ma)}${row('The radio', radioRow)}${row('Jerky', f.jerky ? f.jerky[0].toUpperCase() + f.jerky.slice(1) : '—')}
     ${row('The date', f.skippedDate ? 'Skipped' : f.date?.manatee ? 'Manatee (1 of 1)' : 'Mangroves, no manatee')}
-    ${row('Marisol’s ring', ring)}${row('Rudy', { lucita: 'Lucita talked him down', pay: 'Paid for his timeshare', jump: 'Jumped him (it went poorly)' }[f.trusted] ?? '—')}
+    ${row('Marisol’s ring', ring)}${row('Rudy', { lucita: 'Lucita talked him down', pay: 'Let him take half', jumped: 'Took his gun', jumpFailed: 'Jumped him (it went poorly)' }[f.trusted] ?? '—')}
     ${row('Times busted', String(busts))}${row('Final take', `$${(f.take ?? 0).toLocaleString('en-US')}`)}
     ${row('Relationship', `Level ${state.hearts}, "${LEVEL_NAMES[state.hearts]}"`)}${row('Ending', ending)}
     <div class="cr-n">...and 400 more names</div>
