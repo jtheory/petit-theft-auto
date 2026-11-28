@@ -588,7 +588,8 @@ export function makeArt(g) {
     }
   }
   // speedboat from above, pointing up; (x, y) = center
-  function speedboatTop(x, y, t = 0) {
+  function speedboatTop(x, y, t = 0, angle = 0) {
+    if (angle) { g.save(); g.translate(x, y); g.rotate(angle); g.translate(-x, -y); speedboatTop(x, y, t); g.restore(); return; }
     const hull = [[0, 2], [2, 4], [4, 6], [6, 7], [8, 8], [10, 8], [12, 8], [14, 8], [16, 8], [18, 8], [20, 8], [22, 8], [24, 8], [26, 7], [28, 7]];
     for (let k = 0; k < 5; k++) R(x - 3 - k * 2 + (Math.floor(t * 10 + k) % 2), y + 16 + k * 4, 6 + k * 4, 2, k < 2 ? '#e8fbff' : 'rgba(232,251,255,.45)');   // wake
     hull.forEach(([dy, hw]) => R(x - hw, y - 15 + dy, hw * 2, 2, '#f4f4f0'));
@@ -622,13 +623,14 @@ export function makeArt(g) {
     for (const o of [0, Math.PI / 2]) { g.moveTo(x + Math.cos(a + o) * 16, y + Math.sin(a + o) * 16); g.lineTo(x - Math.cos(a + o) * 16, y - Math.sin(a + o) * 16); }
     g.stroke();
   }
-  function channel(scroll, gapY = null, gapH = 60) {
+  // narrow: the side channel, mangroves close on both sides
+  function channel(scroll, gapY = null, gapH = 60, narrow = false) {
     const m = (v, n) => ((v % n) + n) % n;
     nightSky(20);
     R(0, 120, W, 200, '#132a4a');
     for (let i = 0; i < 30; i++) R((i * 43) % W, m(130 + (i * 17) % 180 + scroll * 0.6, 190) + 120, 6, 1, '#24466e');
     for (let y = 120; y < 320; y += 20) {
-      const w = 40 - (y - 120) / 10, j = m(scroll * 0.6 + y, 40) < 20 ? 2 : 0;
+      const w = (narrow ? 64 : 40) - (y - 120) / (narrow ? 40 : 10), j = m(scroll * 0.6 + y, 40) < 20 ? 2 : 0;
       R(0, y, w + j, 20, '#163a24'); R(W - w - j, y, w + j, 20, '#163a24');
       R(w, y + 18, 4, 2, '#4a3a2a'); R(W - w - 4, y + 18, 4, 2, '#4a3a2a');
     }

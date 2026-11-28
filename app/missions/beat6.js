@@ -4,7 +4,10 @@
 //   hotwire     RAPID TAP
 //   searchlight top-down. DRAG anywhere to steer the boat (it follows your finger, at a boat's speed).
 //               Keep out of the helicopter's roving light, and out of the police boat's headlight at the
-//               bottom. "Spotted" fills while lit; full = BUSTED, retry. Survive about 25 seconds.
+//               bottom. "Spotted" fills while lit and never drains (they're getting a better look each time);
+//               full = BUSTED, retry. Survive about 25 seconds.
+//   channel     an opening in the left bank slides toward you; SWIPE ← while it's beside you. The boat turns
+//               into it and the view cuts to the narrow side channel.
 //   channel     SWIPE ↑ for "hard left" into the channel (miss it and you get yelled at, nothing worse)
 //   lost them   +1 heart ("That felt fun.")
 
@@ -59,13 +62,13 @@ export default async function inDeepWater(game, radio) {
   // ---------------- Hard left ----------------
   // The side channel opens in the left bank and slides down toward you. Swipe left while it's beside the boat.
   const BOAT_Y = 230, GAP_H = 60, SPEED = 55;
-  const ch = { scroll: 0, boatX: 96, gapY: null, gone: false };
+  const ch = { scroll: 0, boatX: 96, boatY: BOAT_Y, angle: 0, gapY: null, gone: false, narrow: false };
   window.__chan = ch;   // for tests and the console
   game.setScene((a, t, dt) => {
     ch.scroll += dt * SPEED;
     if (ch.gapY !== null && !ch.gone) ch.gapY += dt * SPEED;
-    a.channel(ch.scroll, ch.gapY, GAP_H);
-    a.speedboatTop(Math.round(ch.boatX), BOAT_Y, t);
+    a.channel(ch.scroll, ch.narrow ? null : ch.gapY, GAP_H, ch.narrow);
+    a.speedboatTop(Math.round(ch.boatX), Math.round(ch.boatY), t, ch.angle);
   });
   ui.hud({ hearts: state.hearts, money: state.money, time: '9:43 PM', wanted: 3, minimap: false });
   await say('JASE', "There's a channel coming up on the left. Tide's too low for the cutters.", 'jase', { passive: true, hold: 200 });
@@ -86,10 +89,19 @@ export default async function inDeepWater(game, radio) {
   ui.prompt(null);
   f.hardLeft = turned;
   if (turned) {
-    ch.gone = true;   // the channel stops where it is; the boat pulls into it
+    ch.gone = true;   // the opening stops where it is; the boat swings left into it
     sfx.play('screech');
-    await game.tween(ch, 'boatX', -30, 900, 'inOut');
-    ch.boatX = 96; ch.gapY = null; ch.gone = false;
+    ch.boatY = BOAT_Y;
+    game.tween(ch, 'angle', -Math.PI / 2, 450, 'out');
+    game.tween(ch, 'boatY', ch.gapY + GAP_H / 2, 450, 'out');
+    await game.wait(250);
+    await game.tween(ch, 'boatX', -30, 650, 'linear');
+    // cut to the side channel: narrow, mangroves close on both sides, heading up again
+    ui.dim(true, 1);
+    await game.wait(250);
+    Object.assign(ch, { narrow: true, gapY: null, boatX: 90, boatY: BOAT_Y, angle: 0 });
+    ui.dim(false);
+    await game.wait(400);
   }
   else await say('LUCITA', 'LEFT, Jase. The channel was on the LEFT.', 'lucita');
   await say('LUCITA', 'Jase, if we die out here—', 'lucita');
@@ -132,7 +144,7 @@ async function searchlight(game, busts) {
   const { ui, say, input, state } = game;
   const s = { bx: 90, by: 190, tx: 90, ty: 190, sx: 90, sy: -40, det: 0, t: 0, scroll: 0, px: 90, dash: null, nextDash: 4.5, x0: 0, y0: 0 };
   window.__boat = s;   // for tests and the console
-  const R = 26, COP_Y = 296, BOAT_SPEED = 104;
+  const R = 26, COP_Y = 296, BOAT_SPEED = 104, DET_LIGHT = 0.2, DET_HEADLIGHT = 0.3;
   const AREA = { x0: 22, x1: 158, y0: 60, y1: 262 };
   game.setScene((a, t) => {
     a.waterTop(s.scroll);
@@ -184,7 +196,8 @@ async function searchlight(game, busts) {
       const inLight = s.t > 2.5 && Math.hypot(s.sx - s.bx, s.sy - s.by) < R + 4;
       const inHeadlight = s.by > COP_Y - 90 && Math.abs(s.bx - s.px) < 8 + (COP_Y - 20 - s.by) / 70 * 20;
       const lit = inLight || inHeadlight;
-      s.det = clamp(s.det + (lit ? (inLight ? 0.36 : 0.5) : -0.22) * dt, 0, 1);
+      // every second in a light gets them closer to identifying you; it never goes back down
+      if (lit) s.det = clamp(s.det + (inLight ? DET_LIGHT : DET_HEADLIGHT) * dt, 0, 1);
       if (inHeadlight && !said.has('cop')) { said.add('cop'); line('LUCITA', 'Not toward the cops, Jase!', 'lucita'); }
       if (lit && s.det > 0.5 && !said.has('half')) { said.add('half'); line('LUCITA', 'Get out of the light!', 'lucita'); }
       ui.progress('Spotted', s.det * 100, 'left');

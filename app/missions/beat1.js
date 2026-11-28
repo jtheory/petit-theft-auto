@@ -208,8 +208,7 @@ export default async function whereTheHeartIs(game, radio) {
   await radio.turnOn('seniors', { segment: 1, quiet: true });
   radio.volume(0);
   radio.volume(0.55, 2.5);
-  ui.radio('SMOOTH SENIORS 101.1', 'DJ Merle');
-  await game.wait(9000);
+  for (const t0 = performance.now(); performance.now() - t0 < 9000;) { ui.radioLive(radio.status()); await game.wait(50); }
   ui.radio(null);
   await say('', 'She used to say the porch was the only part of this house that was hers.', 'jaseInner', { italic: true });
   if (f.porchPainted) await say('', 'Three years. I hope blue is still her color.', 'jaseInner', { italic: true });
