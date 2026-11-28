@@ -57,6 +57,7 @@ export class Input {
   pick(regions = []) {
     const self = this;
     return this.wait({
+      regions,   // (readable by the test autoplayer)
       up(g) {
         if (!g.tap) return;
         const hit = document.elementFromPoint(g.x, g.y)?.closest('[data-choice]');

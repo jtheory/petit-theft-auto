@@ -12,6 +12,7 @@
 //   lost them   +1 heart ("That felt fun.")
 
 import { sfx } from '../audio/sfx.js';
+import { makeChatter } from '../game/say.js';
 import { playLoop } from '../audio/music.js';
 
 const SURVIVE = 25;
@@ -160,8 +161,7 @@ async function searchlight(game, busts) {
   ui.hud({ hearts: state.hearts, money: state.money, time: '9:41 PM', wanted: 3, minimap: false });
   ui.prompt('DRAG', 'Steer · stay out of the light', 'high');
   setTimeout(() => ui.prompt(null), 3000);
-  let talk = Promise.resolve();
-  const line = (who, t, v) => { talk = talk.then(() => say(who, t, v, { passive: true, hold: 500 })); };
+  const chat = makeChatter(say, { hold: 500 }), line = chat.line;
   if (busts === 0) line('LUCITA', "They've got a chopper on us!", 'lucita');
   const k = () => game.canvas.getBoundingClientRect().width / 180;
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -208,11 +208,12 @@ async function searchlight(game, busts) {
     };
     requestAnimationFrame(step);
   });
+  s.over = true;   // (for tests)
   input.waiter = null;
   ui.prompt(null);
   ui.progress(false);
   ui.hide('timer');
-  if (ok) await talk;
+  if (ok) await chat.idle();
   else await game.wait(400);
   return ok;
 }

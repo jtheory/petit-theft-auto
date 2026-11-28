@@ -9,6 +9,7 @@
 // The Gator. Change away from her pick twice and she turns the radio off (f.drive.radioOff).
 
 import { sfx } from '../audio/sfx.js';
+import { makeChatter } from '../game/say.js';
 
 export const LEVEL_NAMES = ["It's Been a While", 'Complicated', 'Seeing Where It Goes', 'Something Real', 'All In'];
 
@@ -144,8 +145,7 @@ export default async function comingHome(game, radio) {
   // The radio is a small negotiation. Leave it alone and Lucita puts on The Gator ("I missed this one").
   // Change away from her pick once and she puts it back; do it again and the radio goes off for good.
   // Viral and Talk get vetoed on sight.
-  let talk = Promise.resolve();
-  const lines = list => { talk = talk.then(async () => { for (const [who, text, v] of list) await say(who, text, v, { passive: true, hold: 900 }); }); return talk; };
+  const chat = makeChatter(say), lines = chat.lines;
   let touchedRadio = false, lucitaPicked = false, lucitaWaiting = false, overrides = 0, radioOff = false, swipes = 0;
   const reacted = new Set(['neon']);
   // She's patient with ads, up to a point: she lets one play most of the way through, then changes it.
@@ -225,11 +225,10 @@ export default async function comingHome(game, radio) {
       }
       if (!touchedRadio && !lucitaWaiting && d.dist > 0.62) {
         lucitaWaiting = true;
-        talk = talk.then(() => {
+        chat.after(speak => {
           if (touchedRadio) return;   // you got there first
           lucitaPicked = true;
-          // (already inside the talk queue, so say it directly; queueing it here would wait on itself)
-          return lucitaTunes('gator').then(() => say('LUCITA', 'This one. I missed this one.', 'lucita', { passive: true, hold: 900 }));
+          return lucitaTunes('gator').then(() => speak('LUCITA', 'This one. I missed this one.', 'lucita'));
         });
       }
       if (d.dist >= 1) return resolve();
@@ -240,7 +239,7 @@ export default async function comingHome(game, radio) {
   input.waiter = null;
   driving = false;
   ui.prompt(null);
-  await talk;
+  await chat.idle();
   ui.progress(false);
   ui.radio(null);
   f.drive = { touchedRadio, station: radioOff ? 'off' : radio.stations[radio.index].id, lucitaPicked, radioOff };

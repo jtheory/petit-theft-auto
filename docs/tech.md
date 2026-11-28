@@ -25,9 +25,10 @@ Other pages: `/radio.html` (radio prototype), `/sfx.html` (sound board).
 | `app/game/art.js` | All pixel art (extracted from the storyboard renderer) |
 | `app/game/ui.js` | AAA-fidelity UI layer: cards, subtitles, HUD, prompts, toasts, phone, radio card |
 | `app/game/input.js` | Gestures as promises: `tap`, `hold`, `taps`, `swipe` |
-| `app/game/say.js` | Dialogue: subtitles revealed in step with babble voices; character voices |
+| `app/game/say.js` | Dialogue: subtitles revealed in step with babble voices; character voices; `makeChatter` for lines said while the player is busy |
 | `app/game/main.js` | Boot: phone gate, fake shader compile, title, mission runner |
-| `app/missions/beat1.js` | Mission 1 as a readable async script |
+| `app/missions/beat1.js` … `beat8.js` | One mission each, as a readable async script (the car chase in `beat3.js` is reused by The Job) |
+| `tools/test/` | Autoplay tests (see below) |
 | `app/audio/core.js` | One AudioContext; music / voice / sfx buses |
 | `app/audio/synth.js`, `babble.js`, `radio.js`, `stations.js` | Radio (see docs/radio/README.md) |
 | `app/audio/sfx.js` | Procedural sound effects |
@@ -44,6 +45,32 @@ const fill = ui.prompt('HOLD', 'Re-shingle the roof');
 await input.hold(2200, p => { fill(p); s.roof = p; });
 await say('JASE', "Then it's about time somebody picked it up.", 'jase');
 ```
+
+While the player is driving, paddling or steering, lines go through a chatter queue instead, so they don't block
+the game loop and don't overlap:
+
+```js
+const chat = makeChatter(say);               // from game/say.js
+chat.line('LUCITA', 'Pick one, Jase.', 'lucita');
+chat.after(speak => speak('LUCITA', 'This one.', 'lucita'));   // decide what to say when its turn comes
+await chat.idle();                           // before the scene ends
+```
+
+Inside `chat.after`, talk with `speak`, never `chat.line`: the queue is busy running that step, so a queued line
+would wait on itself (this froze Mission 2 once).
+
+## Tests
+
+```bash
+node tools/test/run.js          # everything, ~5 minutes
+node tools/test/run.js m7 chase # just these
+```
+
+Each test autoplays a mission (or the chase, or the title's Continue / New game) in headless Chromium and checks
+where it ends up: the next mission, and flags like who Jase trusted in The Job. The autoplayer taps through
+dialogue, takes the choices the test lists, taps hotspots, dodges cars, and keeps the boat out of the light.
+It needs Playwright (`npm i -g playwright && npx playwright install chromium`). Failures get a screenshot in
+`tools/test/out/`. Missions expose their live state for it as `window.__chase`, `__boat`, `__chan`, `__job`.
 
 ## Screen
 

@@ -1,0 +1,17 @@
+<!doctype html>
+<!-- Test page: the game's engine with no intro screens. run.js loads it as /__test/page.html?s=<scenario>&o=<json> -->
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../style.css">
+<div id="stage"><canvas></canvas><div class="layer"></div></div>
+<script type="module">
+  import { Game } from '../game/engine.js';
+  import { Radio } from '../audio/radio.js';
+  import stations from '../audio/stations.js';
+  import { scenarios } from './scenarios.js';
+  const q = new URLSearchParams(location.search);
+  const game = new Game(document.getElementById('stage'));
+  const radio = new Radio(stations);
+  window.game = game; window.radio = radio;
+  try { window.result = await scenarios[q.get('s')](game, radio, JSON.parse(q.get('o') || '{}')); }
+  catch (e) { window.result = { ok: false, summary: 'threw: ' + (e.stack || e) }; }
+</script>

@@ -340,14 +340,6 @@ export function makeArt(g) {
     R(flip ? x + 72 : x, y - 16, 3, 3, flip ? '#ffe9a8' : '#ff4a3a');
   }
   function sirenGlow() { g.fillStyle = 'rgba(255,40,60,.10)'; g.fillRect(0, 0, W / 2, H); g.fillStyle = 'rgba(40,90,255,.10)'; g.fillRect(W / 2, 0, W / 2, H); }
-  function helicopter(x, y, beamTo = null) {
-    if (beamTo) for (let i = 0; i < beamTo; i += 2) { const hw = 3 + i * 0.35; g.fillStyle = 'rgba(255,245,190,.18)'; g.fillRect(Math.round(x + 14 - hw), y + 8 + i, Math.round(hw * 2), 2); }
-    R(x - 10, y - 4, 50, 1, '#9aa0aa');                      // rotor
-    R(x + 13, y - 3, 2, 3, '#2a2d35');
-    R(x + 4, y, 22, 8, '#2a2d35'); R(x + 18, y + 1, 6, 4, '#7fb0d6'); // body + canopy
-    R(x - 14, y + 2, 18, 2, '#2a2d35'); R(x - 16, y - 1, 2, 6, '#2a2d35'); // tail
-    R(x + 6, y + 9, 18, 1, '#2a2d35');                         // skids
-  }
   function speedboat(x, y, riders = true) {
     // y = waterline
     if (riders) { sprite(LUCITA_CASUAL.slice(0, 8), x + 30, y - 26); sprite(JASE.slice(0, 8), x + 46, y - 26); }
@@ -356,19 +348,6 @@ export function makeArt(g) {
     R(x + 54, y - 20, 2, 6, '#cfd8e0'); R(x + 56, y - 20, 8, 1, '#cfd8e0');
     R(x + 70, y - 14, 10, 4, '#f4f4f0'); R(x + 78, y - 12, 4, 2, '#f4f4f0');
     for (let i = 0; i < 6; i++) R(x - 10 - i * 12, y - 2 + (i % 2), 10 - i, 2, '#e8fbff');   // wake
-  }
-  function policeBoat(x, y) {
-    R(x, y - 12, 60, 8, '#3c4a5a'); R(x + 4, y - 4, 52, 3, '#2a3440'); R(x + 20, y - 22, 20, 10, '#e8e8e8');
-    R(x + 22, y - 20, 16, 4, '#7fb0d6'); R(x + 24, y - 26, 5, 4, '#ff3b3b'); R(x + 30, y - 26, 5, 4, '#3b7bff');
-    text('POLICE', x + 6, y - 10, '#fff');
-    for (let i = 0; i < 4; i++) R(x - 8 - i * 12, y - 2, 9 - i, 2, '#e8fbff');
-  }
-  function mangroves(y0, density = 1) {
-    for (let i = 0; i < 9 * density; i++) {
-      const x = (i * 41) % (W + 20) - 10, h = 18 + (i * 7) % 14;
-      R(x, y0 - h - 10, 34, 14, i % 2 ? '#1f5a32' : '#2a6e3c'); R(x + 4, y0 - h - 16, 24, 8, '#2f7a44');
-      for (let k = 0; k < 4; k++) { R(x + 4 + k * 8, y0 - h + 2, 2, h - 2, '#5a4632'); R(x + 2 + k * 8, y0 - 2, 6, 2, '#5a4632'); }
-    }
   }
   function kayak(x, y, riders = true) {
     if (riders) { sprite(LUCITA_CASUAL.slice(0, 10), x + 16, y - 26); sprite(JASE.slice(0, 10), x + 40, y - 26); }
@@ -477,14 +456,6 @@ export function makeArt(g) {
       R(150, 110, 8, 12, '#d0d6dc');
     }
   }
-  function citySt() {
-    daySky();
-    [[0, 90, 40], [40, 70, 36], [76, 110, 44], [120, 80, 30], [150, 100, 30]].forEach(([x, top, w], i) => {
-      R(x, top, w, 210 - top, ['#d8a07a', '#c8d0d8', '#e8d0a0', '#a8c0c8', '#e0b0b0'][i]);
-      for (let y = top + 8; y < 200; y += 14) for (let wx = x + 4; wx < x + w - 6; wx += 10) R(wx, y, 6, 8, '#5a7a9a');
-    });
-    R(0, 210, W, 56, '#9a9488'); R(0, 236, W, 84, P.road); for (let x = 4; x < W; x += 24) R(x, 276, 12, 2, P.roadL);
-  }
 
 
   // ---- Mission 3: traffic, a street that scrolls, a car wash ----
@@ -572,14 +543,6 @@ export function makeArt(g) {
     for (let k = 0; k < 4; k++) R(x + 4 + k * 20, y + 6, 4, 22, '#5a4632');
   }
 
-  // ---- Mission 6: a searchlight, and the channel ----
-  function spotlight(x, topY, bottomY, half) {
-    for (let y = topY; y < bottomY; y += 2) {
-      const k = (y - topY) / (bottomY - topY), hw = Math.round(2 + k * half);
-      g.fillStyle = 'rgba(255,245,190,.2)'; g.fillRect(Math.round(x) - hw, y, hw * 2, 2);
-    }
-    g.fillStyle = 'rgba(255,245,190,.38)'; g.fillRect(Math.round(x) - half - 2, bottomY, (half + 2) * 2, 5);
-  }
   // ---- Mission 6, top-down: open water, the boat, the police boat, the helicopter's light ----
   function waterTop(scroll) {
     const m = (v, n) => ((v % n) + n) % n;
@@ -648,5 +611,5 @@ export function makeArt(g) {
   }
 
   const SIT_Y = 176;   // a JASE_SIT / LUCITA_SIT drawn at this y sits on the porch's top step
-  return { g, R, SIT_Y, spotlight, waterTop, speedboatTop, policeBoatTop, searchCircle, headlightCone, heliTop, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, roadArrow, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, citySt, convertible, counter, daySky, duffel, ground, helicopter, hotspot, house, kayak, manatee, mangroves, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, windowCase, pistol, pixelHeart, policeBoat, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
+  return { g, R, SIT_Y, waterTop, speedboatTop, policeBoatTop, searchCircle, headlightCone, heliTop, channel, lagoon, dock, rain, pot, sedan, cone, gator, chaseStreet, roadArrow, carWash, JASE_MASK, TINA_MASK, BAG, CLERK, FONT, JASE, JASE_SIT, LUCITA_CASUAL, LUCITA_HEAD, LUCITA_JUMP, LUCITA_MASK, P, PAL, RUDY, RUDY_MASK, TINA, alley, bankExterior, blueprintRoom, causeway, convertible, counter, daySky, duffel, ground, hotspot, house, kayak, manatee, marina, masked, nightSky, nightWater, palm, palmSmall, pawnRoom, windowCase, pistol, pixelHeart, policeCar, prison, recolor, sirenGlow, sky, sparks, speedboat, sprite, storeExterior, storeInterior, text, textW, vault };
 }

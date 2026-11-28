@@ -28,7 +28,6 @@ const MISSIONS = [beat1, beat2, beat3, beat4, beat5, beat6, beat7, beat8];
 // How each one is labelled in the game (the date is unnumbered, so the in-game numbers lag behind after it)
 const MISSION_NAMES = [['Mission 1', 'Where the Heart Is'], ['Mission 2', 'Coming Home'], ['Mission 3', 'Late Night Special'],
   ['Date', 'Low Tide'], ['Mission 4', 'Cash for Gold'], ['Mission 5', 'In Deep Water'], ['Mission 6', 'The Job'], ['Finale', 'The Ending']];
-const NEXT_UP = { 6: ['Mission 5', 'In Deep Water', 'In development. A yacht named Reel Estate.'] };
 
 // Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.
 const params = new URLSearchParams(location.search);
@@ -117,20 +116,6 @@ async function title(pad) {
   await game.wait(1200);
 }
 
-async function comingSoon() {
-  const ui = game.ui;
-  const [k, t, d] = NEXT_UP[game.state.mission] ?? [`Mission ${game.state.mission}`, 'Coming soon', 'In development.'];
-  game.setScene(a => { a.sky(182); a.ground(); a.house('fixed'); a.palm(10, 214); a.palm(166, 206); a.sprite(a.JASE_SIT, 82, a.SIT_Y); });
-  ui.dim(true, 0.55);
-  ui.el('soon', 'soon', `<div class="k">${k}</div><div class="t">${t}</div><div class="d">${d}</div>
-    <div class="b">Tap to start over from Mission 1</div>`);
-  await game.input.tap();
-  ui.hide('soon');
-  ui.dim(false);
-  await game.wait(400);
-  game.reset();
-}
-
 async function run() {
   await gate();
   if (params.has('skip')) await audioCore().start().catch(() => {});
@@ -143,7 +128,7 @@ async function run() {
     const m = MISSIONS[game.state.mission - 1];
     radio.setContext(game.state.flags);
     if (m) await m(game, radio);
-    else await comingSoon();
+    else game.reset();   // a save from a mission that no longer exists: start over
   }
 }
 

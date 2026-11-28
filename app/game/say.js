@@ -57,3 +57,19 @@ export function makeSay(ui, input) {
     if (!opts.keep) ui.hide('sub');
   };
 }
+
+// Chatter: lines said while the player's hands are busy (driving, paddling, steering), one after another,
+// without blocking the game loop. Each call queues behind whatever is already being said.
+//   chat.line(who, text, voice)   queue one line; resolves when it has been said
+//   chat.lines([[who, text, voice], ...])
+//   chat.after(speak => ...)      queue a step that decides what to say when its turn comes. Inside it, talk
+//                                 with speak(who, text, voice), never chat.line: the queue is busy running
+//                                 this step, so a queued line would wait on itself forever.
+//   await chat.idle()             wait until everything queued has been said
+export function makeChatter(say, { hold = 900 } = {}) {
+  let q = Promise.resolve();
+  const speak = (who, text, v) => say(who, text, v, { passive: true, hold });
+  const after = fn => (q = q.then(() => fn(speak)));
+  const lines = list => after(async () => { for (const [who, text, v] of list) await speak(who, text, v); });
+  return { after, lines, line: (who, text, v) => lines([[who, text, v]]), idle: () => q };
+}

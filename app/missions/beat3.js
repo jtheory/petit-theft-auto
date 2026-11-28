@@ -9,6 +9,7 @@
 //             to turn. If the cruiser closes the gap: BUSTED. Hit two cars: WRECKED. Either way, retry the chase.
 
 import { sfx } from '../audio/sfx.js';
+import { makeChatter } from '../game/say.js';
 import { playLoop } from '../audio/music.js';
 
 const LANES = [262, 296];
@@ -237,8 +238,8 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
   const END = 30;
   let seed = 7 + busts * 13;
   const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-  let nextSpawn = 1.2, turn = null, turnIdx = 0, turning = false, talk = Promise.resolve(), saidGator = false;
-  const line = (who, text, v) => { talk = talk.then(() => say(who, text, v, { passive: true, hold: 500 })); };
+  let nextSpawn = 1.2, turn = null, turnIdx = 0, turning = false, saidGator = false;
+  const chat = makeChatter(say, { hold: 500 }), line = chat.line;
   const laneOf = dir => dir === 'up' ? 0 : 1;
 
   game.setScene((a, t, dt) => {
@@ -424,11 +425,12 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
     };
     requestAnimationFrame(step);
   });
+  c.over = true;   // (for tests)
   input.waiter = null;
   ui.prompt(null);
   ui.progress(false);
   ui.hide('dmg');
   if (result !== 'escaped') { c.gap = Math.max(0, c.gap); await game.wait(400); }
-  else { await talk; ui.dim(true, 1); await game.wait(500); }
+  else { await chat.idle(); ui.dim(true, 1); await game.wait(500); }
   return result;
 }

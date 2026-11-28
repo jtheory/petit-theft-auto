@@ -7,6 +7,7 @@
 //   manatee   HOLD to sit still and it stays (+1 heart). Fidget and it leaves.
 
 import { sfx } from '../audio/sfx.js';
+import { makeChatter } from '../game/say.js';
 import { LEVEL_NAMES } from './beat2.js';
 
 export default async function lowTide(game, radio) {
@@ -110,8 +111,8 @@ export default async function lowTide(game, radio) {
 
   // ---------------- Paddling ----------------
   const STROKES = 26;
-  let progress = 0, last = null, talk = Promise.resolve();
-  const line = (who, t, v) => { talk = talk.then(() => say(who, t, v, { passive: true, hold: 900 })); };
+  let progress = 0, last = null;
+  const chat = makeChatter(say), line = chat.line;
   const hint = next => ui.el('side', 'side-hint', `<div class="${next !== 'R' ? 'go' : ''}">L</div><div class="${next !== 'L' ? 'go' : ''}">R</div>`);
   hint(null);
   ui.prompt('TAP', 'Left, right, left, right');
@@ -165,7 +166,7 @@ export default async function lowTide(game, radio) {
 
   await paddleTo(0.72);
   ui.hide('side');
-  await talk;
+  await chat.idle();
 
   // ---------------- The manatee ----------------
   k.manY = 282;
@@ -204,7 +205,7 @@ export default async function lowTide(game, radio) {
   ui.progress(false);
   ui.radio(null);
   if (radio.on) { radio.volume(0, 1); setTimeout(() => radio.turnOff(), 1100); }
-  await talk;
+  await chat.idle();
   await game.wait(600);
 
   // ---------------- Date complete ----------------

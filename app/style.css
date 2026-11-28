@@ -108,7 +108,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .passed .mn { font: italic 400 20px var(--font-title); margin-top: 6px; }
 .passed .fx { font: 600 11px var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: #9fd4ff; margin-top: 22px; }
 .passed .fx2 { font: 500 11px var(--font-ui); opacity: .6; margin-top: 6px; }
-.passed .cont, .theend .cont, .warning .cont, .title .press, .soon .b, .gate .gb { font: 600 10px var(--font-ui); letter-spacing: .24em; text-transform: uppercase; opacity: .7; margin-top: 40px; animation: pulse 1.6s ease-in-out infinite; }
+.passed .cont, .theend .cont, .warning .cont, .title .press, .gate .gb { font: 600 10px var(--font-ui); letter-spacing: .24em; text-transform: uppercase; opacity: .7; margin-top: 40px; animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .3; } }
 
 .shaders { left: 40px; right: 40px; top: 260px; font-variant-numeric: tabular-nums; }
@@ -123,10 +123,6 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 .title .press { margin-top: 330px; opacity: .95; text-shadow: 0 1px 4px #000; font-size: 11px; }
 .title .logo { font: italic 400 58px/.92 var(--font-title); letter-spacing: -.01em; color: #fff; text-shadow: 0 3px 0 #a8365a, 0 0 30px rgba(0,0,0,.45); }
 
-.soon { left: 30px; right: 30px; top: 220px; text-align: center; }
-.soon .k { font: 600 10px var(--font-ui); letter-spacing: .32em; text-transform: uppercase; color: var(--gold); }
-.soon .t { font: italic 400 34px var(--font-title); margin-top: 6px; }
-.soon .d { font: 400 13px var(--font-ui); opacity: .75; margin-top: 12px; }
 
 .gate { inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 36px; }
 .gate .gt { font: italic 400 28px/1.15 var(--font-title); }
