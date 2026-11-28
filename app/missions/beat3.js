@@ -6,7 +6,7 @@
 //   hold-up   HOLD to keep Benny calm while he empties the register. Let go too long: silent alarm, +1 star.
 //   jerky     Teriyaki (as requested) / Original / Leave it
 //   chase     the first real fail state. Swipe up/down to change lanes; get in the called lane and swipe again
-//             to turn. If the cruiser closes the gap: BUSTED. Hit three cars: WRECKED. Either way, retry the chase.
+//             to turn. If the cruiser closes the gap: BUSTED. Hit two cars: WRECKED. Either way, retry the chase.
 
 import { sfx } from '../audio/sfx.js';
 import { playLoop } from '../audio/music.js';
@@ -159,7 +159,7 @@ export default async function lateNightSpecial(game, radio) {
     ui.prompt(null);
     ui.progress(false);
     ui.dim(true, 0.55);
-    const lines = result === 'wrecked' ? ['You hit three cars, Jase.', 'Cars are not cones.', 'We are not insured.']
+    const lines = result === 'wrecked' ? ['You hit two cars, Jase.', 'Cars are not cones.', 'We are not insured.']
       : ['We are not doing this again.', 'We are doing this again.', "Jase. Left is the one on the left."];
     ui.el('busted', 'passed busted', `<div class="big">${result === 'wrecked' ? 'WRECKED' : 'BUSTED'}</div><div class="mn">Late Night Special</div>
       <div class="fx">Lucita: "${lines[Math.min(f.busts - 1, 2)]}"</div><div class="cont">Tap to retry the chase</div>`);
@@ -212,7 +212,7 @@ export default async function lateNightSpecial(game, radio) {
 // The chase: returns 'escaped', 'busted' (the cruiser caught up) or 'wrecked' (too many cars hit).
 // gap 1 = far ahead, 0 = caught.
 //   traffic   cones and gators are bumps (a little lead lost). Cars are serious: a big hit, a rebound,
-//             and the third one ends the chase. Traffic never walls off both lanes at once.
+//             and the second one ends the chase. Traffic never walls off both lanes at once.
 //   turns     Lucita calls them. Be in that lane (left = top, right = bottom) and swipe that way again
 //             to take it. The turn lane is kept clear for a few seconds before she calls it.
 // opts: { day, time, intro, difficulty } so other missions can reuse the chase
@@ -221,7 +221,7 @@ const KINDS = {
   cone:  { w: 10, slow: 0,  lead: 0.03 },
   gator: { w: 38, slow: 0,  lead: 0.06 },
 };
-const CAR_HITS = 3;
+const CAR_HITS = 2;
 const APPROVE = [['LUCITA', 'Yes! Like that.'], ['LUCITA', 'Okay. Okay, that was good.'], ['LUCITA', 'Who taught you to drive like that?']];
 
 export async function chase(game, stars, startGap, busts, opts = {}) {
@@ -230,8 +230,8 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
     knock: 0, tilt: 0, street: 0, copBack: 0, hits: 0 };
   window.__chase = c;   // for tests and the console
   const diff = opts.difficulty ?? stars;   // the HUD shows `stars`; the traffic follows `diff`
-  const speed = 80 + diff * 8, spawnEvery = Math.max(0.9, 1.5 - diff * 0.15);
-  const drift = 0.006 + diff * 0.003;   // how fast the cruiser closes in on its own (per second)
+  const speed = 84 + diff * 8, spawnEvery = Math.max(0.8, 1.35 - diff * 0.15);
+  const drift = 0.009 + diff * 0.004;   // how fast the cruiser closes in on its own (per second)
   const turns = [{ at: 7, dir: 'up' }, { at: 15, dir: 'down' }, { at: 23, dir: 'up' }];
   const CLEAR = 3.2, WINDOW = 3.4;      // turn lane kept clear this long before the call; time to make it
   const END = 30;
@@ -272,14 +272,15 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
     a.convertible(px, py, true);
     if (c.tilt) for (let k = 0; k < 4; k++) a.R(px - 6 - k * 10, py - 4 + (k % 2), 8, 2, 'rgba(40,40,44,.8)');   // skid marks
     a.g.restore();
-    a.policeCar(Math.round(PX - 76 - c.gap * 120 - c.copBack * 170), Math.round(c.copY), true);
+    // the cruiser is always in your mirror: a full lead still leaves its nose on screen
+    a.policeCar(Math.round(PX - 78 - c.gap * 26 - c.copBack * 100), Math.round(c.copY), true);
     a.sirenGlow();
     a.g.restore();
     if (c.flash > 0) { a.g.fillStyle = `rgba(255,255,255,${c.flash * 0.6})`; a.g.fillRect(0, 0, 180, 320); }
   });
   ui.dim(false);
   const hud = () => ui.hud({ hearts: state.hearts, money: state.money, time: opts.time ?? '11:55 PM', wanted: stars, minimap: false });
-  const damage = () => ui.el('dmg', 'dmg', `<span>Car</span>${[0, 1, 2].map(i => `<i class="${i < CAR_HITS - c.hits ? 'on' : ''}"></i>`).join('')}`);
+  const damage = () => ui.el('dmg', 'dmg', `<span>Car</span>${[...Array(CAR_HITS).keys()].map(i => `<i class="${i < CAR_HITS - c.hits ? 'on' : ''}"></i>`).join('')}`);
   hud();
   damage();
   ui.prompt('SWIPE ↑↓', 'Change lanes', 'high');
@@ -391,8 +392,7 @@ export async function chase(game, stars, startGap, busts, opts = {}) {
             c.flash = 0.5;
             sfx.play('crash');
             damage();
-            if (c.hits === 1) line('LUCITA', 'Jase! Not the cars!', 'lucita');
-            else if (c.hits === 2) line('LUCITA', 'She can NOT take another one of those.', 'lucita');
+            if (c.hits === 1) line('LUCITA', 'Jase! She can NOT take another one of those.', 'lucita');
           } else {
             c.shake = 0.4;
             sfx.play('thud');
