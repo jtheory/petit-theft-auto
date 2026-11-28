@@ -215,8 +215,12 @@ export function makeArt(g) {
     R(x + 6, y - 24, 22, 4, red); R(x + 60, y - 24, 22, 4, red);   // rear deck + hood
     R(x + 36, y - 20, 20, 10, '#8a8f94');           // mismatched primer door
     R(x + 37, y - 15, 4, 1, '#666');                // door handle
-    R(x + 66, y - 34, 2, 10, chrome); R(x + 68, y - 34, 2, 2, chrome);  // windshield frame
-    R(x + 68, y - 32, 2, 8, 'rgba(190,225,245,.55)');
+    for (let k = 0; k < 12; k++) {                  // windshield, raked back toward the driver
+      const wx = x + 70 - Math.floor(k / 2);
+      R(wx - 3, y - 25 - k, 3, 1, 'rgba(190,225,245,.55)');   // glass
+      R(wx, y - 25 - k, 2, 1, chrome);                         // front pillar
+    }
+    R(x + 61, y - 37, 7, 1, chrome);                // top of the frame
     R(x, y - 12, 4, 4, chrome); R(x + 84, y - 12, 6, 4, chrome);       // bumpers
     R(x + 86, y - 18, 3, 3, '#ffe9a8'); R(x, y - 18, 3, 3, '#ff4a3a'); // lights
     R(x + 2, y - 8, 84, 2, redD);

@@ -1,6 +1,6 @@
 // Offline support: cache the app shell on install, serve cache-first, refresh in the background.
 // Bump VERSION when shipping so old caches are dropped.
-const VERSION = 'pta-v13';
+const VERSION = 'pta-v14';
 const SHELL = [
   './', 'index.html', 'style.css', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
