@@ -319,7 +319,7 @@ Optional. Skipping it costs a heart later ("You never take me anywhere.").
 
 **As built (Mission 6)**
 
-- **Marina:** "It's not stealing. It's a test drive." A "REEL ESTATE" tag points at the boat: "Read the name on the boat. They named the boat Reel Estate." / "...That's clever. I hate that that's clever." RAPID TAP to hotwire.
+- **Marina:** "It's not stealing. It's a test drive." "They named a fishing boat Reel Estate?" / "...I hate that that's clever." RAPID TAP to hotwire.
 - **Searchlight (top-down):** DRAG anywhere to steer the boat (it follows your finger at a boat's speed). The helicopter's round light roams after you with a lag and a wander, and every few seconds lunges at a spot near you ("Here it comes!"). The police boat chugs along the bottom, drifting under you; its headlight counts too ("Not toward the cops, Jase!"). Survive 25 seconds. The boat is a bit slower than the light's lunges, and the lunges aim where you're heading, so you have to keep changing direction. "Spotted" fills while lit and drains when clear; full = BUSTED (Lucita: "They have a helicopter, Jase." / "Stay. Out. Of. The. Light." / "It is a very big light."), retry. The light sweeps in from off-screen, follows with a lag and a sway, and speeds up over time. The trick: move away from it, and when pinned at an edge, cross under it fast.
 - **Hard left:** top-down. An opening in the left bank (a side channel) slides down toward the boat; SWIPE ← while it's beside you and the boat screeches into it. Too early: "Not yet!". Miss it: "LEFT, Jase. The channel was on the LEFT." (no penalty). Then the escape-room coupon exchange.
 - **Lost them:** WANTED: you're clear. "That felt fun." +1 heart ("Shared near-death experience."). End card: "Boats returned: 0".

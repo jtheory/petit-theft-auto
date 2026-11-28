@@ -25,10 +25,8 @@ export default async function inDeepWater(game, radio) {
   await ui.card('Mission 5  ·  Bayside Yacht Club', 'In Deep Water', 3000);
   ui.letterbox(false);
   await say('JASE', "It's not stealing. It's a test drive.", 'jase');
-  ui.tags([{ x: 108, y: 222, text: '"REEL ESTATE"' }]);
-  await say('LUCITA', 'Read the name on the boat. They named the boat Reel Estate.', 'lucita');
-  await say('LUCITA', "...That's clever. I hate that that's clever.", 'lucita');
-  ui.tags(null);
+  await say('LUCITA', 'They named a fishing boat Reel Estate?', 'lucita');
+  await say('LUCITA', "...I hate that that's clever.", 'lucita');
   let fill = ui.prompt('RAPID TAP', 'Hotwire it');
   await input.taps(8, p => { fill(p); sfx.play('grout'); });
   ui.prompt(null);
