@@ -25,6 +25,9 @@ const TIPS = [
 ];
 
 const MISSIONS = [beat1, beat2, beat3, beat4, beat5, beat6, beat7, beat8];
+// How each one is labelled in the game (the date is unnumbered, so the in-game numbers lag behind after it)
+const MISSION_NAMES = [['Mission 1', 'Where the Heart Is'], ['Mission 2', 'Coming Home'], ['Mission 3', 'Late Night Special'],
+  ['Date', 'Low Tide'], ['Mission 4', 'Cash for Gold'], ['Mission 5', 'In Deep Water'], ['Mission 6', 'The Job'], ['Finale', 'The Ending']];
 const NEXT_UP = { 6: ['Mission 5', 'In Deep Water', 'In development. A yacht named Reel Estate.'] };
 
 // Dev shortcuts: ?mission=2 jumps to a mission (with Mission 1's flags as given), ?skip skips the intro screens.
@@ -95,6 +98,20 @@ async function title(pad) {
   ui.el('title', 'title', `<div class="logo">Petit<br>Theft<br>Auto</div><div class="press">Tap to start</div><a class="host" href="https://www.netlify.com" target="_blank" rel="noopener">Powered by Netlify</a>`);
   await game.input.tap();
   sfx.play('click');
+  // A save past Mission 1: pick it up, or start over
+  const st = game.state;
+  if (st.mission > 1 && MISSION_NAMES[st.mission - 1] && !params.has('mission')) {
+    const [k, name] = MISSION_NAMES[st.mission - 1];
+    ui.hide('title');
+    ui.choices('Welcome back', [
+      ['continue', 'Continue', `${k}: ${name}  ·  Relationship level ${st.hearts}  ·  $${st.money.toLocaleString('en-US')}`],
+      ['new', 'New game', 'Start over from Mission 1. Your save is replaced.'],
+    ]);
+    const c = await game.input.pick();
+    sfx.play('click');
+    ui.choices(null);
+    if (c === 'new') game.reset();
+  }
   theme.stop(2);
   ui.hide('title');
   await game.wait(1200);
